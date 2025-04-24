@@ -3,6 +3,11 @@
  */
 export class StorageConstants {
   /**
+   * Context
+   * @description AppStorage
+   */
+  static readonly CONTEXT: string = 'Context'
+  /**
    * App 信息
    * @description AppStorage
    */

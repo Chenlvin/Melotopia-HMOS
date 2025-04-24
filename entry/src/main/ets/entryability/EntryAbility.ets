@@ -7,18 +7,16 @@ import { appInit } from '../common/functions/app/appInit';
 import { StorageConstants } from '../common/constants/StorageConstants';
 import { BusinessError } from '@kit.BasicServicesKit';
 import OrientationUtils from '../common/utils/system/WindowUtils';
-import Constants from '../common/constants/Constants';
 
 
 export default class EntryAbility extends UIAbility {
   private uiContext?: UIContext
   async onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): Promise<void> {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
-
-    CrashUtil.onError()
-
     // 初始化 Log
     LogUtil.init(0x1010, 'Melotopia', true)
+    AppStorage.setOrCreate(StorageConstants.CONTEXT, this.context)
+    CrashUtil.onError()
 
     // 初始化用户首选项
     await Promise.all([

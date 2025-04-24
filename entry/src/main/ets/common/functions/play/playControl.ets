@@ -80,7 +80,7 @@ export async function playMusicWithFile(song: Song, fileName: string) {
     let file = await fileIo.open(fileUrl)
     let fdPath = 'fd://' + file.fd
     const metadata = await fetchMetadata(fileUrl)
-    const artistsString = await getArtists(song.artists)
+    const artistsString = getArtists(song.artists)
     if(metadata) {
       song.duration = (metadata.duration) ? parseInt(metadata.duration) : 0
     }

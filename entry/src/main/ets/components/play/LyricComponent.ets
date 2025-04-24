@@ -87,22 +87,23 @@ export struct LyricComponent {
             index: index,
             item: item
           })
-          .offset({ y: this.Offset(index) })
-          .padding({
-            bottom: this.userScrolling
-              ? this.lyricStyle.size * 2
-              : (index - this.currentLyricIndex >= 0 ? this.lyricStyle.size : this.lyricStyle.size * 2)
-          })
-          .animation({
-            delay: this.userScrolling ? 0 : this.Delay(index),
-            duration: 500,
-            curve: Curve.Smooth,
-            expectedFrameRateRange: {
-              expected: 90,
-              min: 60,
-              max: 90
-            }
-          })
+            .offset({ y: this.Offset(index) })
+            .animation({
+              delay: this.userScrolling ? 0 : this.Delay(index),
+              duration: 600,
+              curve: Curve.Smooth,
+              expectedFrameRateRange: {
+                expected: 90,
+                min: 60,
+                max: 90
+              }
+            })
+            .padding({
+              bottom: !this.userScrolling
+                ? (index >= this.currentLyricIndex ? this.lyricStyle.size : this.lyricStyle.size * 2)
+                : this.lyricStyle.size * 2
+            })
+            .animation({ duration: 300, curve: Curve.Friction })
         })
         ListItem().height('30%')
       }
@@ -142,8 +143,7 @@ export struct LyricComponent {
   Delay(index: number) {
     if(this.userScrolling) return 0
     const delta = index - this.currentLyricIndex
-    if(delta > 10) return 10 * 60
-    return Math.max(delta * 60, 0)
+    return Math.max(delta * 80, 0)
   }
 
 }

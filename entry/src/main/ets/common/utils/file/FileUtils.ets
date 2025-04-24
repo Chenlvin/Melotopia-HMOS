@@ -1,4 +1,3 @@
-import { common } from '@kit.AbilityKit'
 import fileIo from '@ohos.file.fs'
 import {  FileUtil, LogUtil, PreviewUtil, ToastUtil } from '@pura/harmony-utils'
 import fs from '@ohos.file.fs'
@@ -9,6 +8,7 @@ import { LocalSong } from '../../entities/local/LocalData'
 import RelationalStoreUtils from '../data/RelationalStoreUtils'
 import { JSON } from '@kit.ArkTS'
 import { fetchSongInfo, getArtists } from '../../functions/common/convert'
+import { getContext_ } from '../system/AppUtils'
 
 /**
  * 文件管理
@@ -16,20 +16,16 @@ import { fetchSongInfo, getArtists } from '../../functions/common/convert'
 const TAG = '[FileUtils] '
 
 class FileUtils {
-  context = getContext(this) as common.UIAbilityContext
-  filesDir = this.context.filesDir
-  cacheDir = this.context.cacheDir
-
   getFilesDir() {
-    return this.filesDir
+    return getContext_().filesDir
   }
 
   getCacheDir() {
-    return this.cacheDir
+    return getContext_().cacheDir
   }
 
   async getFileName(): Promise<Array<string>> {
-    let list = await fileIo.listFile(this.filesDir, {
+    let list = await fileIo.listFile(getContext_().filesDir, {
       filter: {
         suffix: ['.mp3', '.MP3', '.flac', '.FLAC'],
       }
@@ -45,7 +41,7 @@ class FileUtils {
   async accessLocalFile(fileName: string): Promise<string> {
     const fileType: Array<string> = ['flac', 'FLAC', 'mp3', 'MP3']
     for(let type of fileType) {
-      let filePath = this.filesDir + `/${fileName}.${type}`
+      let filePath = getContext_().filesDir + `/${fileName}.${type}`
       if(await(FileUtil.access(filePath))) {
         let file = await fileIo.open(filePath)
         let fdPath = 'fd://' + file.fd
@@ -61,10 +57,10 @@ class FileUtils {
       for (const localSong of localSongs) {
         try {
           RelationalStoreUtils.deleteSong(localSong.id)
-          await FileUtil.unlink(this.filesDir + `/${localSong.songFile}`)
+          await FileUtil.unlink(getContext_().filesDir + `/${localSong.songFile}`)
           if(localSong.songId != 0) {
-            await FileUtil.unlink(this.filesDir + `/pic/${localSong.songId}.jpg`)
-            await FileUtil.unlink(this.filesDir + `/lyric/${localSong.songId}.lrc`)
+            await FileUtil.unlink(getContext_().filesDir + `/pic/${localSong.songId}.jpg`)
+            await FileUtil.unlink(getContext_().filesDir + `/lyric/${localSong.songId}.lrc`)
           }
           successCount++
         } catch (e) {
@@ -80,7 +76,7 @@ class FileUtils {
 
   async getFileUri(fileName:string): Promise<fileUri.FileUri | null> {
     try {
-      let uri = FileUtil.getFileUri(this.filesDir + `/${fileName}`)
+      let uri = FileUtil.getFileUri(getContext_().filesDir + `/${fileName}`)
       return uri
     } catch (e) {
       LogUtil.error(TAG, '获取文件Uri失败: ' + e.message())
@@ -114,7 +110,7 @@ class FileUtils {
             ? `/lyric/${localSongs[index].songId}.lrc`
                 : `/pic/${localSongs[index].songId}.jpg`
 
-            let srcPath = this.filesDir + fileName
+            let srcPath = getContext_().filesDir + fileName
             let descFile = fs.openSync(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE)
             await fs.copyFile(srcPath, descFile.fd)
             fs.closeSync(descFile.fd)
@@ -133,7 +129,7 @@ class FileUtils {
 
 
   async previewFile(fileName: string) {
-    let uri = FileUtil.getUriFromPath(this.filesDir + `/${fileName}`)
+    let uri = FileUtil.getUriFromPath(getContext_().filesDir + `/${fileName}`)
     let info = PreviewUtil.generatePreviewInfo(uri)
     PreviewUtil.openPreview(info).catch((error: BusinessError) => {
       LogUtil.error(TAG, 'preview file error: ' + error.message)
@@ -142,7 +138,7 @@ class FileUtils {
 
   async removeCache(): Promise<boolean> {
     try {
-      await FileUtil.rmdir(this.cacheDir)
+      await FileUtil.rmdir(getContext_().cacheDir)
       return true
     } catch (e) {
       LogUtil.error(TAG, e.message())
@@ -153,7 +149,7 @@ class FileUtils {
 
   getCacheSize(): number {
     try {
-      let size = FileUtil.getFileDirSize(this.cacheDir)
+      let size = FileUtil.getFileDirSize(getContext_().cacheDir)
       return size
     } catch (e) {
       LogUtil.error(TAG, '获取缓存大小失败: ' + e.message())
@@ -166,11 +162,11 @@ class FileUtils {
     try {
       for (const uri of uris) {
         let fileUriObject = new fileUri.FileUri(uri)
-        if(await FileUtil.access(this.filesDir + `/${fileUriObject.name}`)) {
+        if(await FileUtil.access(getContext_().filesDir + `/${fileUriObject.name}`)) {
           continue
         }
         let file = fs.openSync(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE)
-        let file2 = fs.openSync(this.filesDir + `/${fileUriObject.name}`, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE)
+        let file2 = fs.openSync(getContext_().filesDir + `/${fileUriObject.name}`, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE)
         fs.copyFileSync(file.fd, file2.fd)
         fs.closeSync(file)
         fs.closeSync(file2)
@@ -179,7 +175,7 @@ class FileUtils {
           id: 0,
           songId: 0,
           name: song.name,
-          artists: await getArtists(song.artists),
+          artists: getArtists(song.artists),
           picFile: "",
           songFile: fileUriObject.name,
           lyricFile: "",
@@ -200,7 +196,7 @@ class FileUtils {
       if (canIUse('SystemCapability.FileManagement.File.Environment.FolderObtain')) {
         dir = Environment.getUserDownloadDir()
       } else {
-        dir = this.context.filesDir
+        dir = getContext_().filesDir
       }
     } catch (e) {
       ToastUtil.showToast('获取公共目录失败: ' + e.message)
@@ -211,7 +207,7 @@ class FileUtils {
 
   async getSongCacheSize(): Promise<number> {
     try {
-      let path = this.context.filesDir + '/mc_media_cache'
+      let path = getContext_().filesDir + '/mc_media_cache'
       let sizeTotal = statfs.getTotalSizeSync(path)
       let sizeFree = statfs.getFreeSizeSync(path)
       return sizeTotal - sizeFree

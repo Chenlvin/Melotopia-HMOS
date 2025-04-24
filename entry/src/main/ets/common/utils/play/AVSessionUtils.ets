@@ -1,11 +1,11 @@
 import { avSession } from "@kit.AVSessionKit";
-import { AppUtil, LogUtil } from "@pura/harmony-utils";
+import { LogUtil } from "@pura/harmony-utils";
 import { StorageConstants } from "../../constants/StorageConstants";
 import { Song, SongItem } from "../../entities/song/Song";
 import { changeCycleMode,
   pauseMusic, playNext, playPre, resumeMusic, seekMusic } from "../../functions/play/playControl";
 import { likeThisSong } from "../../functions/play/songLike";
-import AVPlayerUtils from "./AVPlayerUtils";
+import { getContext_ } from "../system/AppUtils";
 import LyricUtils from "./LyricUtils";
 
 /**
@@ -14,9 +14,7 @@ import LyricUtils from "./LyricUtils";
 const TAG = '[AVSessionUtils] '
 
 class AVSessionUtils {
-  context = AppUtil.getContext()
-  session = this.createSession()
-
+  private instance: avSession.AVSession | null = null
   private isActivating = false
   private cycleMode: number = 0
   private currentSong: Song = SongItem
@@ -24,11 +22,14 @@ class AVSessionUtils {
   private currentPic: string | ResourceStr  = ''
   private lyric: string = ''
 
-  async createSession(): Promise<avSession.AVSession> {
-    if(this.session) {
-      return this.session
+  private async getInstance(): Promise<avSession.AVSession> {
+    if(!this.instance) {
+      this.instance = await this.createSession()
     }
-    let session = await avSession.createAVSession(this.context, 'cloudmusic', 'audio')
+    return this.instance
+  }
+  async createSession(): Promise<avSession.AVSession> {
+    let session = await avSession.createAVSession(getContext_(), 'cloudmusic', 'audio')
     try {
       let cycleMode: number | undefined = AppStorage.get('cycleMode')
       if(cycleMode) this.cycleMode = this.cycleMode
@@ -51,7 +52,7 @@ class AVSessionUtils {
       });
       session.on('toggleFavorite', (isFavor) => {
         likeThisSong().then(async () => {
-          (await this.session).setAVPlaybackState({ isFavorite: this.isFavorite() })
+          (await this.getInstance()).setAVPlaybackState({ isFavorite: this.isFavorite() })
         })
       })
       session.on('setLoopMode', (loopMode) => {
@@ -89,7 +90,7 @@ class AVSessionUtils {
       lyric: this.lyric
     };
 
-    (await this.session).setAVMetadata(metadata)
+    (await this.getInstance()).setAVMetadata(metadata)
   }
 
   /**
@@ -99,7 +100,7 @@ class AVSessionUtils {
     if (this.isActivating) return // 防止重复调用
     this.isActivating = true
     try {
-      await (await this.session).activate()
+      await (await this.getInstance()).activate()
     } finally {
       this.isActivating = false
     }
@@ -111,7 +112,7 @@ class AVSessionUtils {
   async deactive() {
     if (this.isActivating) return // 等待激活完成
     try {
-      (await this.session).deactivate()
+      (await this.getInstance()).deactivate()
     } catch (e) {
       LogUtil.error(TAG, '停用失败: ' + e)
     }
@@ -136,7 +137,7 @@ class AVSessionUtils {
       }
     };
 
-    (await this.session).setAVPlaybackState(playbackState)
+    (await this.getInstance()).setAVPlaybackState(playbackState)
   }
 
   /**
@@ -152,7 +153,7 @@ class AVSessionUtils {
         updateTime: new Date().getTime()
       }
     };
-    (await this.session).setAVPlaybackState(pausedState)
+    (await this.getInstance()).setAVPlaybackState(pausedState)
   }
 
   /**
@@ -166,7 +167,7 @@ class AVSessionUtils {
         updateTime: new Date().getTime(),
       }
     };
-    (await this.session).setAVPlaybackState(playbackState)
+    (await this.getInstance()).setAVPlaybackState(playbackState)
   }
 }
 
