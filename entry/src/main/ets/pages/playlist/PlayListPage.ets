@@ -252,7 +252,7 @@ export struct PlayListPage {
               playlist: this.param.playList,
               picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
               index: this.list.indexOf(item),
-              listPlayAction: async () => { await this.playSong(index) }
+              listPlayAction: async () => { await this.playSong(this.list.indexOf(item)) }
             })
               .layoutWeight(1)
             if(this.isSelecting) {
