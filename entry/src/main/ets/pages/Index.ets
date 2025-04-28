@@ -9,7 +9,7 @@ import { UserLists } from '../common/view/userLists/UserLists';
 import { Me } from '../common/view/Me';
 import { StorageConstants } from '../common/constants/StorageConstants';
 import BreakpointUtils from '../common/utils/system/BreakpointUtils';
-import { EmitterUtil } from '@pura/harmony-utils';
+import { EmitterUtil, LogUtil, ToastUtil } from '@pura/harmony-utils';
 import { EmitterConstants } from '../common/constants/EmitterConstants';
 import { PageMap } from '../common/model/PageMap';
 import WindowUtils from '../common/utils/system/WindowUtils';
@@ -59,8 +59,13 @@ struct Index {
 
   onPageShow(): void {
     this.currentHour = new Date().getHours()
+    AppStorage.setOrCreate(StorageConstants.IS_IN_FOREGROUND, true)
     // if(this.floatLyric.on) WindowUtils.createLyricsFloatWindow()
     if(this.floatLyric.on) lyricsPipManager.startPip()
+  }
+
+  onPageHide(): void {
+    AppStorage.setOrCreate(StorageConstants.IS_IN_FOREGROUND, false)
   }
 
   private getDynamicPageIndex(): number {

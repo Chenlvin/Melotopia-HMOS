@@ -203,6 +203,11 @@ export class StorageConstants {
    * @description AppStorage
    */
   static readonly DOWNLOADING_PROGRESS: string = 'downloadingProgress'
+  /**
+   * 是否处于前台
+   * @description AppStorage
+   */
+  static readonly IS_IN_FOREGROUND: string = 'isInForeground'
 
 
 

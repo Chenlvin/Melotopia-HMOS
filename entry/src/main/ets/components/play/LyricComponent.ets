@@ -1,4 +1,4 @@
-import { EmitterUtil } from "@pura/harmony-utils"
+import { EmitterUtil, LogUtil } from "@pura/harmony-utils"
 import { Lyric } from "../../common/entities/song/Lyric"
 import { seekMusic } from "../../common/functions/play/playControl"
 import { LengthUnit } from "@kit.ArkUI"
@@ -20,9 +20,18 @@ export struct LyricComponent {
   @State dataSource: LazyData<Lyric> = new LazyData()
   @State currentListIndex: number = 0
   @State isLoading: boolean = false
+  @State needUpdate: boolean = false
+  @StorageProp(StorageConstants.IS_IN_FOREGROUND) @Watch('onForegroundState') isInForeground: boolean = true
   @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyleItem
 
   private scroller: Scroller = new Scroller()
+
+  onForegroundState() {
+    if(this.isInForeground === true && this.needUpdate) {
+      this.refreshLyric()
+      this.needUpdate = false
+    }
+  }
 
   async aboutToAppear(): Promise<void> {
     await this.getLyric()
@@ -31,25 +40,29 @@ export struct LyricComponent {
     }, 10)
     this.StartAutoScrollTimer()
 
-    EmitterUtil.onSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE, async () => {
-      this.isLoading = true
-      this.currentLyricIndex = 0
-      setTimeout(async () => {
-        await this.getLyric()
-        this.isLoading = false
-      }, 100)
-    })
+    EmitterUtil.onSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE, this.refreshLyric)
+  }
+
+  refreshLyric = async () => {
+    this.needUpdate = true
+    this.isLoading = true
+    this.currentLyricIndex = 0
+    setTimeout(async () => {
+      await this.getLyric()
+      this.isLoading = false
+    }, 100)
   }
 
   aboutToDisappear(): void {
     clearInterval(this.userScrollingInterval)
+    EmitterUtil.unSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE)
   }
 
   private StartAutoScrollTimer() {
     this.userScrollingInterval = setInterval(() => {
       if(this.userScrolling > 0) {
         this.userScrolling -= 1
-      } else if(this.userScrolling === 0 && this.currentListIndex !== this.currentLyricIndex) {
+      } else if(this.userScrolling === 0) {
         this.ToCurrentLyric()
       }
     }, 1000)
@@ -91,7 +104,7 @@ export struct LyricComponent {
             .offset({ y: this.Offset(index) })
             .animation({
               delay: this.userScrolling ? 0 : this.Delay(index),
-              duration: 600,
+              duration: this.userScrolling ? 0 : 600,
               curve: Curve.Smooth,
               expectedFrameRateRange: {
                 expected: 90,
@@ -104,12 +117,12 @@ export struct LyricComponent {
                 ? (index >= this.currentLyricIndex ? this.lyricStyle.size : this.lyricStyle.size * 2)
                 : this.lyricStyle.size * 2
             })
-            .animation({ duration: 300, curve: Curve.Friction })
+            .animation({ duration: this.userScrolling ? 0 : 300, curve: Curve.Friction })
         })
         ListItem().height('30%')
       }
     }
-    .cachedCount(5)
+    .cachedCount(3)
     .alignListItem(ListItemAlign.End)
     .padding({ top: 30 })
     .width('100%')
