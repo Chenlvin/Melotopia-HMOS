@@ -40,7 +40,6 @@ export struct Explore {
   @Prop currentHour: number = 0
   @State totalOpacity: number = 0
   @State isShowApiSettings: boolean = false
-  @State ds_personalized: LazyData<PersonalListItem> = new LazyData()
   @Consume('pageInfos') pageInfos: NavPathStack
   private refreshCooldown: number = 5000
 
@@ -78,11 +77,7 @@ export struct Explore {
     if(this.isLogged && this.personalizedList.length == 0 && this.validApiUrl) {
       this.isLoadingPersonalized = true
       this.personalizedList = await getPersonalizedList()
-      this.ds_personalized.setData(this.personalizedList)
       setTimeout(() => { this.isLoadingPersonalized = false }, 100)
-    }
-    else {
-      this.ds_personalized.setData(this.personalizedList)
     }
   }
 
@@ -99,7 +94,6 @@ export struct Explore {
           this.topList = await getTopList(),
           this.personalizedList = await getPersonalizedList(),
         ])
-        this.ds_personalized.setData(this.personalizedList)
         this.lastRefreshTime = currentTime
         ToastUtil.showToast('刷新成功')
       } catch (e) {
@@ -153,7 +147,7 @@ export struct Explore {
                       PersonalizedSkeletion()
                     })
                   } else {
-                    LazyForEach(this.ds_personalized, (item: PersonalListItem, index) => {
+                    ForEach(this.personalizedList, (item: PersonalListItem) => {
                       PersonalizedCard({ item: item }).padding(5)
                     }, (item: PersonalListItem) => item.id.toString())
                   }

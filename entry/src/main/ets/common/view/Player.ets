@@ -566,6 +566,7 @@ export struct Player {
         }
         .padding({ top: px2vp(this.topRectHeight), bottom: px2vp(this.bottomRectHeight) })
       }
+      .disableSwipe(this.totalOpacity === 0.5 ? false : true)
       .indicator(
         new DotIndicator()
           .top(px2vp(this.topRectHeight) + 5)

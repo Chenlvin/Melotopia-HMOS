@@ -68,7 +68,6 @@ class AVPlayerUtils {
     try {
       await this.setAudioSession()
       LyricUtils.startInterval()
-      ContinuousTask.startTask()
       avPlayer.play()
       this.pauseFlag = false
       // this.updateAvSession = setInterval(() => {
@@ -190,6 +189,7 @@ class AVPlayerUtils {
           this.play()
           break
         case 'playing':
+          ContinuousTask.startTask()
           AVSessionUtils.playState(avPlayer.currentTime)
           AppStorage.setOrCreate(StorageConstants.IS_PLAYING, true)
           AppStorage.setOrCreate(StorageConstants.IS_PAUSED, false)
@@ -197,7 +197,6 @@ class AVPlayerUtils {
           break
         case 'paused':
           this.clearInterval()
-          ContinuousTask.stopTask()
           AppStorage.setOrCreate(StorageConstants.IS_PAUSED, true)
           AVSessionUtils.pauseState(avPlayer.currentTime)
           break
@@ -209,6 +208,9 @@ class AVPlayerUtils {
           ContinuousTask.stopTask()
           completeDo()
           break
+        case 'stopped':
+          this.clearInterval()
+          ContinuousTask.stopTask()
       }
     })
   }

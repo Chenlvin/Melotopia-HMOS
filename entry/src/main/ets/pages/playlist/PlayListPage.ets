@@ -94,6 +94,7 @@ export struct PlayListPage {
 
   private async playSong(songIndex: number) {
     try {
+      this.isPlayerLoading = true
       if(this.list.length === 0) return
       let queue: PlayQueue[] = this.list.map((item): PlayQueue => ({
         playmode: PLAYMODE.PLAYLIST,
@@ -112,6 +113,9 @@ export struct PlayListPage {
       await PlayQueueUtils.cleanQueue()
       await PlayQueueUtils.queueAdd_array(queue)
       playQueue(songIndex)
+      setTimeout(() => {
+        this.isPlayerLoading = false
+      }, 100)
     } catch (e) {
       ToastUtil.showToast('播放失败: ' + e.message)
       LogUtil.error(TAG, 'playSong Error: ' + e.stack)
@@ -234,7 +238,7 @@ export struct PlayListPage {
   }
 
   @Builder ContentList(dataSource: LazyData<PlayListSong>) {
-    LazyForEach(dataSource, (item: PlayListSong, index) => {
+    LazyForEach(dataSource, (item: PlayListSong) => {
         ListItem() {
           Row() {
             SongCard({

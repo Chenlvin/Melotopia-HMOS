@@ -1,5 +1,5 @@
 import { SongCard } from '../../components/cards/SongCard'
-import { LogUtil } from '@pura/harmony-utils'
+import { LogUtil, ToastUtil } from '@pura/harmony-utils'
 import { getCloudList } from '../../api/playListApi'
 import { BottomBarComponent } from '../../components/play/BottomBarComponent'
 import Constants from '../../common/constants/Constants'
@@ -11,6 +11,8 @@ import { PlayQueue } from '../../common/entities/local/PlayQueue'
 import PlayQueueUtils from '../../common/utils/play/PlayQueueUtils'
 import { playQueue } from '../../common/functions/play/playControl'
 import { PLAYMODE } from '../../common/model/Enum'
+import { PlayAllButton } from '../../components/buttons/PlayAllButton'
+import { BarLoading } from '../../components/cards/Loading'
 
 /**
  * 云盘
@@ -20,20 +22,22 @@ const TAG = '[CloudPage] '
 
 @Component
 export struct CloudPage {
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
-  @StorageProp('topRectHeight') topRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
+  @StorageLink(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
-  private currentOffset: number = 0
-  @State list: PlayListSong[] = new Array()
+  @State list: PlayListSong[] = []
   @State dataSource: LazyData<PlayListSong> = new LazyData()
   @State hasMore: boolean = true
   @State hasLoaded: boolean = false
   @State isLoading: boolean = true
   @State isLoadingMore: boolean = false
 
-  async aboutToAppear() {
+  private currentOffset: number = 0
+
+  aboutToAppear() {
     if (!this.hasLoaded) {
-      await this.loadSongs(200, 0)
+      this.loadSongs(200, 0)
     }
   }
 
@@ -67,6 +71,7 @@ export struct CloudPage {
 
   async playSong(songIndex: number) {
     try {
+      this.isPlayerLoading = true
       let queue: PlayQueue[] = this.list.map((item): PlayQueue => ({
         playmode: 2,
         song: {
@@ -84,7 +89,18 @@ export struct CloudPage {
       await PlayQueueUtils.cleanQueue()
       await PlayQueueUtils.queueAdd_array(queue)
       playQueue(songIndex)
+      setTimeout(() => {
+        this.isPlayerLoading = false
+      }, 100)
     } catch (e) {
+    }
+  }
+
+  private handlePlayAll = () => {
+    if (this.isPlayerLoading) {
+      ToastUtil.showToast('当前有正在加载的播放任务，请稍后再试')
+    } else {
+      this.playSong(0)
     }
   }
 
@@ -98,6 +114,11 @@ export struct CloudPage {
             }.height('100%').width('100%').justifyContent(FlexAlign.Center)
           } else {
             List() {
+              if(this.isPlayerLoading) {
+                BarLoading()
+              } else {
+                PlayAllButton({ count: this.list.length, clickAction: this.handlePlayAll })
+              }
               LazyForEach(this.dataSource, (item: PlayListSong, index) => {
                 ListItem() {
                   SongCard({

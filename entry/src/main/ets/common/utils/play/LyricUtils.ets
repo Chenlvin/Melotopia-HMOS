@@ -16,6 +16,7 @@ class LyricUtils {
   lyric: LyricResult = LyricResultClass
   lyricObjects: Array<Lyric> = []
   tLyricObjects: Array<Lyric> = []
+  rLyricObjects: Array<Lyric> = []
   currentLyricIndex: number = 0
   updateLyricInterval: number = 0
   isUpdating: boolean = false
@@ -24,6 +25,7 @@ class LyricUtils {
     this.lyric = LyricResultClass
     this.lyricObjects = []
     this.tLyricObjects = []
+    this.rLyricObjects = []
   }
 
   async setLyric(song: Song) {
@@ -40,9 +42,10 @@ class LyricUtils {
         lyricArr = this.lyric.lrc.lyric.split('\n')
       }
       this.lyricObjects = await this.parseLyricArray(lyricArr)
-      if(this.lyric.tlyric.lyric) { // 翻译
+      if(this.lyric.tlyric.lyric)
         this.tLyricObjects = await this.parseLyricArray(this.lyric.tlyric.lyric.split('\n'))
-      }
+      if(this.lyric.romalrc.lyric)
+        this.rLyricObjects = await this.parseLyricArray(this.lyric.romalrc.lyric.split('\n'))
     } catch (e) {
       LogUtil.error(TAG, 'Set Lyric Error: ' + e.message)
       this.lyric = {
@@ -56,12 +59,11 @@ class LyricUtils {
 
   async getLyricObjects(): Promise<Lyric[]> {
     const lyricStyle: LyricStyle = await AppStorage.get(StorageConstants.LYRIC_STYLE) as LyricStyle
-    if(lyricStyle.mode == 1 && this.lyric.tlyric.lyric) {
+    if(lyricStyle.mode == 1 && this.lyric.tlyric.lyric)
       return this.mergeLyrics(this.lyricObjects, this.tLyricObjects)
-    }
-    else {
-      return this.lyricObjects
-    }
+    else if(lyricStyle.mode == 2 && this.lyric.romalrc.lyric)
+      return this.mergeLyrics(this.lyricObjects, this.rLyricObjects)
+    return this.lyricObjects
   }
 
   async setLyricString(lyric: string) {

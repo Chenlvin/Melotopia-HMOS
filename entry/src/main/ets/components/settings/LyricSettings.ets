@@ -11,26 +11,43 @@ export struct LyricTranslate {
   @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyleItem
 
   build() {
-    Row() {
+    Column({ space: 5 }) {
       Text('启用歌词翻译')
         .fontSize(Constants.FONT_SIZE_COMMON)
         .fontWeight(FontWeight.Bold)
-      Toggle({ type: ToggleType.Switch, isOn: this.lyricStyle.mode == 1 })
-        .height(24)
-        .width(48)
-        .onChange((isOn) => {
-          if(!isOn) {
-            this.lyricStyle.mode = 0
-          } else {
-            this.lyricStyle.mode = 1
-          }
-          changeSettings(StorageConstants.LYRIC_STYLE, this.lyricStyle)
-        })
-        .selectedColor($r('app.color.app_red'))
+        .textAlign(TextAlign.Start)
+        .width('100%')
+
+      Row({ space: 10 }) {
+        this.LyricTranItem(0, '无')
+        this.LyricTranItem(1, '翻译')
+        this.LyricTranItem(2, '罗马音')
+      }
+      .width('100%')
+      .justifyContent(FlexAlign.Start)
     }
-    .height(Constants.HEIGHT_SETTINGS_ITEM)
-    .width('100%')
-    .justifyContent(FlexAlign.SpaceBetween)
+    .height(Constants.HEIGHT_SETTINGS_ITEM * 2)
+    .justifyContent(FlexAlign.SpaceEvenly)
+  }
+
+  @Builder LyricTranItem(type: number, text: string) {
+    Row() {
+      Radio({ value: `${type}` , group: 'lyricTranslation' })
+        .checked(this.lyricStyle.mode === type)
+        .radioStyle({ checkedBackgroundColor: $r('app.color.app_red') })
+        .onChange((isChecked) => {
+          if(isChecked) {
+            this.lyricStyle.mode = type
+            changeSettings(StorageConstants.LYRIC_STYLE, this.lyricStyle)
+          }
+        })
+      Text(text)
+        .fontColor($r('app.color.reverse'))
+        .fontSize(Constants.FONT_SIZE_COMMON)
+        .fontWeight(FontWeight.Medium)
+        .textAlign(TextAlign.Start)
+        .lineHeight(20)
+    }
   }
 }
 

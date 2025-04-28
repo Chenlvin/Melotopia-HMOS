@@ -76,6 +76,7 @@ export struct LyricComponent {
         }
         .align(Alignment.Center)
         .width('100%')
+        .height('100%')
         .layoutWeight(1)
       } else {
         ListItem().height('30%')
