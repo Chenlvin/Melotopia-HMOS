@@ -188,6 +188,21 @@ export class StorageConstants {
    * @description AppStorage
    */
   static readonly IS_PLAYER_SHOW: string = 'isPlayerShow'
+  /**
+   * 是否正在下载
+   * @description AppStorage
+   */
+  static readonly IS_DOWNLOADING: string = 'isDownloading'
+  /**
+   * 是否暂停下载
+   * @description AppStorage
+   */
+  static readonly IS_DOWNLOAD_PAUSED: string = 'isDownloadPaused'
+  /**
+   * 下载进度
+   * @description AppStorage
+   */
+  static readonly DOWNLOADING_PROGRESS: string = 'downloadingProgress'
 
 
 
@@ -312,4 +327,9 @@ export class StorageConstants {
    * @description AppStorage & Preference
    */
   static readonly API_SETTINGS: string = 'apiSettings'
+  /**
+   * Download Queue
+   * @description AppStorage & Preference
+   */
+  static readonly DOWNLOAD_QUEUE: string = 'downloadQueue'
 }

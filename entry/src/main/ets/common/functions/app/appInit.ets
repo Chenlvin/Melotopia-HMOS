@@ -17,6 +17,7 @@ import AudioCacheUtils from "../../utils/play/AudioCacheUtils"
 import { DjRadio } from "../../entities/dj/DjResult"
 import { Album } from "../../entities/song/Album"
 import { checkValidUrl } from "../common/get"
+import DownloadUtils from "../../utils/file/DownloadUtils"
 
 /**
  * App初始化
@@ -27,7 +28,7 @@ export async function appInit() {
   AppStorage.setOrCreate(StorageConstants.APP_LOADING, true)
   await initSettings()
   initApp()
-  await initPlayQueue()
+  await initLists()
   loadSavedSong()
   initPermission()
   initLocalData()
@@ -90,10 +91,11 @@ async function initLocalData() {
 }
 
 /**
- * 初始化播放列表
+ * 初始化列表
  */
-async function initPlayQueue() {
+async function initLists() {
   await PlayQueueUtils.init()
+  DownloadUtils.init()
 }
 
 /**

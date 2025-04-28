@@ -7,7 +7,8 @@
     "@pura/picker_utils": "^1.0.0",
     "@sj/mediacache": "^1.0.3",
     "@ohos/axios": "^2.2.6",
-    "@hw-agconnect/ui-skeleton": "^1.0.0"
+    "@hw-agconnect/ui-skeleton": "^1.0.0",
+    "@hadss/super_fast_file_trans": "^1.0.0-rc.0"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.19",

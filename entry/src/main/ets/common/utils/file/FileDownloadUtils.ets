@@ -10,6 +10,7 @@ import { MsgConstants } from '../../constants/MsgConstants'
 import NotificationUtils from '../system/NotificationUtils'
 import fileIo from '@ohos.file.fs'
 import RelationalStoreUtils from '../data/RelationalStoreUtils'
+import { getContext_ } from '../system/AppUtils'
 
 /**
  * 文件缓存
@@ -18,10 +19,6 @@ import RelationalStoreUtils from '../data/RelationalStoreUtils'
 const TAG = '[FileDownload] '
 
 class FileDownloadUtils {
-  context = getContext(this) as common.UIAbilityContext
-  filesDir = this.context.filesDir
-  cacheDir = this.context.cacheDir
-
   async downloadSong(songDownload: SongDownload, song: Song, artists: string) {
     if(song.name.length + artists.length >= 103) {
       try {
@@ -32,8 +29,8 @@ class FileDownloadUtils {
     }
 
     let fileName = sanitizeFileName(`${artists} - ${song.name}.${songDownload.data[0].type}`)
-    let cachePath = this.cacheDir + `/${fileName}`
-    let descPath = this.filesDir + `/${fileName}`
+    let cachePath = getContext_().cacheDir + `/${fileName}`
+    let descPath = getContext_().filesDir + `/${fileName}`
     if(await FileUtil.access(descPath)) {
       DialogUtil.showConfirmDialog({ title:'提示', message:'文件已存在'})
       return
@@ -41,7 +38,7 @@ class FileDownloadUtils {
     else {
       try {
         ToastUtil.showToast(`开始下载：${song.name}.${songDownload.data[0].type}`)
-        request.downloadFile(this.context, {
+        request.downloadFile(getContext_(), {
           url: songDownload.data[0].url,
           filePath: cachePath
         }).then(async (downloadTask: request.DownloadTask) => {
@@ -90,12 +87,12 @@ class FileDownloadUtils {
   }
 
   async download(url: string, fileName: string, dir: string = '') {
-    const targetDir = dir ? `${this.filesDir}/${dir}` : this.filesDir
-    const cachePath = `${this.cacheDir}/${fileName}`
+    const targetDir = dir ? `${getContext_().filesDir}/${dir}` : getContext_().filesDir
+    const cachePath = `${getContext_().cacheDir}/${fileName}`
     const descPath = `${targetDir}/${fileName}`
     if(dir && !fileIo.accessSync(targetDir)) fileIo.mkdirSync(targetDir)
     try {
-      request.downloadFile(this.context, {
+      request.downloadFile(getContext_(), {
         url: url,
         filePath: cachePath
       }).then((downloadTask: request.DownloadTask) => {

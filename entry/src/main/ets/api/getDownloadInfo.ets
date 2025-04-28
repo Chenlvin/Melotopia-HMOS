@@ -12,7 +12,7 @@ interface SongUrlResponse {
  * @returns data:SongDownload
  */
 export const getDownloadInfo = async (
-  id: number,
+  id: string,
   quality: QualityType,
   isLogged: boolean
 ): Promise<SongDownload> => {

@@ -86,7 +86,7 @@ export struct PlayerActionSheet {
             }
 
             if(this.song.id !== 0) {
-              this.Item($r('app.media.ic_arrow_down_o_icon'), '缓存到本地', () => {
+              this.Item($r('app.media.ic_arrow_down_o_icon'), '下载到本地', () => {
                 this.isShow = false
                 this.dialogController.open()
               }, 21)

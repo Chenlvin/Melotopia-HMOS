@@ -5,7 +5,7 @@ import { StorageConstants } from '../../constants/StorageConstants'
 import { Api } from '../../entities/local/Api'
 import { getApiUrl, getCookie } from '../../functions/common/get'
 
-const TAG = '[RequestUtil] '
+const TAG = 'RequestUtil'
 
 let isLogged = AppStorage.prop<boolean>(StorageConstants.IS_LOGGED)
 let baseUrl = AppStorage.prop<string>(StorageConstants.API_URL)

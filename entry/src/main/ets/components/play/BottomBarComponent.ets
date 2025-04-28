@@ -8,6 +8,8 @@ import Constants from "../../common/constants/Constants"
 import { ClickUtil } from "@pura/harmony-utils"
 import { PLAYMODE } from "../../common/model/Enum"
 import { lyricsPipManager } from "../../pages/lyrics/PipLyrics"
+import { DownloadListSheet } from "../sheets/DownloadListSheet"
+import { DownloadItem } from "../../common/entities/local/Download"
 
 /**
  * 底部播控组件
@@ -20,8 +22,24 @@ export struct BottomBarComponent {
   @StorageProp(StorageConstants.PLAY_ARTISTS) artists: string = ''
   @StorageProp(StorageConstants.IS_PAUSED) isPaused: boolean = true
   @StorageProp(StorageConstants.PIC_URL) picUrl: string = ''
+  @StorageProp(StorageConstants.DOWNLOAD_QUEUE) downloadQueue: DownloadItem[] = []
   @StorageProp(StorageConstants.CURRENT_LYRIC) @Watch('updateLyrics') currentLyric: string = ''
   @State isShow: boolean = false
+  @State isShowDownload: boolean = false
+
+  private downloadSheetOptions: SheetOptions = {
+    preferType: SheetType.CENTER,
+    height: '60%',
+    dragBar: false,
+    showClose: false,
+    backgroundColor: $r('app.color.background'),
+    onDisappear: (() => { this.isShowDownload = false })
+  }
+
+  updateLyrics() {
+    lyricsPipManager.updateLyrics(this.currentLyric)
+  }
+
   private handlePlayClick = async () => {
     if(!this.isPlaying) {
       await playQueue(playQueueUtils.currentQueueIndex)
@@ -32,48 +50,67 @@ export struct BottomBarComponent {
   }
 
   build() {
-    Row() {
-      Image(this.playmode === PLAYMODE.LOCAL ? this.picUrl : this.picUrl + '?param=512y512')
-        .gesture(GestureGroup(GestureMode.Exclusive,
-          TapGesture({ count: 2 })
-            .onAction(() => {
-              lyricsPipManager.handleClickPip()
-            }),
-        ))
-        .height(Constants.HEIGHT_MINI)
-        .aspectRatio(1)
-        .borderRadius(Constants.RADIUS_IMG)
-        .padding(5)
-
-      Column({ space: 5 }) {
-        Text(this.song.name).textStyle(16).fontWeight(FontWeight.Medium)
-        Text((!this.currentLyric || this.currentLyric === '暂无歌词') ?
-        this.artists : this.currentLyric)
-          .textStyle(12)
-          .textOverflow({ overflow: TextOverflow.MARQUEE })
-          .layoutWeight(1)
-          .fontColor(Color.Gray)
+    Column({ space: 5 }) {
+      Row() {
+        Image($r('app.media.ic_public_cloud_download'))
+          .width(Constants.SIZE_ICON_BUTTON_COMMON)
+          .fillColor($r('app.color.app_red'))
+          .backgroundColor($r('app.color.main'))
+          .borderRadius(Constants.RADIUS_FULL)
+          .padding(5)
+          .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.7 })
+          .opacity(0.8)
+          .draggable(false)
+          .bindSheet(this.isShowDownload, this.DownloadSheet(), this.downloadSheetOptions)
+          .onClick(() => { this.isShowDownload = true })
       }
-      .padding({ top: 10, bottom: 10 })
-      .layoutWeight(1)
+      .width('100%')
+      .justifyContent(FlexAlign.End)
+      .visibility(this.downloadQueue.length > 0 ? Visibility.Visible : Visibility.None)
 
-      this.ControlButton()
+      Row() {
+        Image(this.playmode === PLAYMODE.LOCAL ? this.picUrl : this.picUrl + '?param=512y512')
+          .gesture(GestureGroup(GestureMode.Exclusive,
+            TapGesture({ count: 2 })
+              .onAction(() => {
+                lyricsPipManager.handleClickPip()
+              }),
+          ))
+          .height(Constants.HEIGHT_MINI)
+          .aspectRatio(1)
+          .borderRadius(Constants.RADIUS_IMG)
+          .padding(5)
+
+        Column({ space: 5 }) {
+          Text(this.song.name).textStyle(16).fontWeight(FontWeight.Medium)
+          Text((!this.currentLyric || this.currentLyric === '暂无歌词') ?
+          this.artists : this.currentLyric)
+            .textStyle(12)
+            .textOverflow({ overflow: TextOverflow.MARQUEE })
+            .layoutWeight(1)
+            .fontColor(Color.Gray)
+        }
+        .padding({ top: 10, bottom: 10 })
+        .layoutWeight(1)
+
+        this.ControlButton()
+      }
+      .justifyContent(FlexAlign.SpaceBetween)
+      .borderRadius(Constants.RADIUS_IMG)
+      .background(this.Background())
+      .height(Constants.HEIGHT_MINI)
+      .width('100%')
+      .backdropBlur(100)
+      .constraintSize({
+        minWidth: 100,
+        maxWidth: 500
+      })
+      .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.9 })
+      .onClick(this.handlePlayClick)
+      .bindContentCover($$this.isShow, this.Cover(), {
+        modalTransition: ModalTransition.DEFAULT
+      })
     }
-    .justifyContent(FlexAlign.SpaceBetween)
-    .borderRadius(Constants.RADIUS_IMG)
-    .background(this.Background())
-    .height(Constants.HEIGHT_MINI)
-    .width('100%')
-    .backdropBlur(100)
-    .constraintSize({
-      minWidth: 100,
-      maxWidth: 500
-    })
-    .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.9 })
-    .onClick(this.handlePlayClick)
-    .bindContentCover($$this.isShow, this.Cover(), {
-      modalTransition: ModalTransition.DEFAULT
-    })
   }
 
   @Builder Background() {
@@ -84,6 +121,7 @@ export struct BottomBarComponent {
       .backgroundColor($r('app.color.main'))
       .opacity(0.5)
   }
+
   @Builder Cover() {
     Player({ isShow: this.isShow })
       .height('100%')
@@ -128,8 +166,8 @@ export struct BottomBarComponent {
     .padding({ right: 5 })
   }
 
-  updateLyrics() {
-    lyricsPipManager.updateLyrics(this.currentLyric)
+  @Builder DownloadSheet() {
+    DownloadListSheet()
   }
 }
 
