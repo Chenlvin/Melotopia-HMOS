@@ -2,13 +2,13 @@ export class AppConstants {
   /**
    * App Version
    */
-  static readonly VERSION: string = '1.5.1'
+  static readonly VERSION: string = '1.5.2'
   /**
    * App Version Code
    */
-  static readonly VERSIONCODE: number = 10514
+  static readonly VERSIONCODE: number = 10520
   /**
    * Version Description
    */
-  static readonly VER_DESC: string = 'Patch 4'
+  static readonly VER_DESC: string = 'Beta'
 }
