@@ -434,14 +434,17 @@ export struct PlayListPage {
     Column() {
       if(!this.isSelecting) {
         Search({
-          placeholder: $r('app.string.Search_content'),
+          placeholder: '',
           icon: '/resources/base/media/ic_public_search_filled.svg',
           value: this.searchKeyword
         })
           .backgroundBlurStyle(BlurStyle.Thin)
           .height(Constants.HEIGHT_SEARCH)
           .layoutWeight(1)
-          .searchButton('搜索')
+          .searchButton('搜索', {
+            fontSize: 13,
+            fontColor: $r('app.color.app_red')
+          })
           .onChange((value) => {
             if(value == '') {
               this.filteredList = []
