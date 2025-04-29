@@ -204,6 +204,7 @@ export struct LocalSongPage {
                     .height(30)
                     .justifyContent(FlexAlign.SpaceBetween)
                     .width('100%')
+                    .padding({ right: Constants.PADDING_EDGE_DEFAULT })
                   }
                   else {
                     Column({ space: 20 }) {
@@ -235,7 +236,6 @@ export struct LocalSongPage {
               .backgroundColor($r('app.color.background'))
               .height('100%')
               .width('100%')
-              .padding({ left: 10, right: 10 })
               .layoutWeight(1)
               .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
               .backToTop(true)
@@ -340,7 +340,7 @@ export struct LocalSongPage {
             }
           }
           .width('100%')
-          .padding({ bottom: Constants.PADDING_EDGE_DEFAULT })
+          .padding({ bottom: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
         }
         .key(item.id + this.searchKeyword)
       },(item: LocalSong) => item.songFile.toString() + this.searchKeyword)

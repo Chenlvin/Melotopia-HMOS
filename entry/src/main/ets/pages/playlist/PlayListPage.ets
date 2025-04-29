@@ -3,7 +3,7 @@ import { PlayList, PlayListItem } from '../../common/entities/playlist/PlayList'
 import { DialogUtil, EmitterUtil, LogUtil, PasteboardUtil, ToastUtil } from '@pura/harmony-utils'
 import { deletePlayList, getPlayListSongs, subscribePlayList } from '../../api/playListApi'
 import { BottomBarComponent } from '../../components/play/BottomBarComponent'
-import { formatNumber, getArtists } from '../../common/functions/common/convert'
+import { formatNumber } from '../../common/functions/common/convert'
 import { cleanLastPlayInfo } from '../../common/functions/play/playListOp'
 import Constants from '../../common/constants/Constants'
 import { LoadingMoreButton, NoMoreButton } from '../../components/buttons/LoadMoreButtons'
@@ -21,7 +21,9 @@ import { PlayAllButton } from '../../components/buttons/PlayAllButton'
 import { BarLoading } from '../../components/cards/Loading'
 import { PlayListSkeleton } from '../../components/skeleton/Skeleton'
 import { ListSelectSheet } from '../../components/sheets/ListSelectSheet'
-import { SimpleSong } from '../../common/entities/song/Song'
+import { Song } from '../../common/entities/song/Song'
+import { AlbumItem } from '../../common/entities/song/Album'
+import DownloadUtils from '../../common/utils/file/DownloadUtils'
 
 /**
  * 歌单二级页面
@@ -36,8 +38,8 @@ export struct PlayListPage {
     isShowHeart: false,
     useTimestamp: true
   }
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
-  @StorageProp('topRectHeight') topRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
   @StorageProp(StorageConstants.USER) user: User = UserItem
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
@@ -57,7 +59,9 @@ export struct PlayListPage {
   @State showTitleBar: boolean = false
   @State isPageActive: boolean = false
   @State showSelectSheet: boolean = false
-  @State simpleSongs: SimpleSong[] = []
+  @State isSelecting: boolean = false
+  @State selectedIndex: number[] = []
+  @State selectedSongs: PlayListSong[] = []
 
   menus: NavigationMenuItem[] = [
     {
@@ -71,19 +75,21 @@ export struct PlayListPage {
         }, remove: true }
         EmitterUtil.post(EmitterConstants.PUSH_PAGE, param)
       }
+    },
+    {
+      value: 'Select',
+      icon: $r('app.media.ic_public_select_all'),
+      action: () => { this.handleSelect() }
     }
   ]
   private currentOffset: number = 0
   private useTimestamp: boolean = true
 
   private handleSelect = () => {
-    let temp: SimpleSong[] = this.list.map((item): SimpleSong => ({
-      songId: item.id,
-      name: item.name,
-      artists: item.ar
-    }))
-    this.simpleSongs = temp
-    this.showSelectSheet = true
+    this.isSelecting = !this.isSelecting
+    this.selectedIndex = []
+    this.selectedSongs = []
+    // this.showSelectSheet = true
   }
 
   private selectSheetOptions: SheetOptions = {
@@ -143,6 +149,38 @@ export struct PlayListPage {
       ToastUtil.showToast('播放失败: ' + e.message)
       LogUtil.error(TAG, 'playSong Error: ' + e.stack)
     }
+  }
+
+  private handleDownload = () => {
+    if(this.selectedSongs.length === 0) {
+      ToastUtil.showToast('请先选择需要操作的内容')
+      return
+    }
+    DialogUtil.showPrimaryDialog({
+      title: '下载',
+      message: `是否下载所选的 ${this.selectedSongs.length} 项内容`,
+      primaryButton: "取消",
+      secondaryButton: {
+        value: '确认',
+        action: () => {
+          this.isSelecting = false
+          let temp: Song[] = this.selectedSongs.map((item): Song => ({
+            id: item.id,
+            artists: item.ar,
+            name: item.name,
+            alias: [],
+            album: AlbumItem,
+            duration: 0,
+            fee: 0
+          }))
+
+          DownloadUtils.addItem(temp, 3)
+
+          this.selectedIndex = []
+          this.selectedSongs = []
+        }
+      }
+    })
   }
 
   async loadSongs(limit: number, offset: number): Promise<void> {
@@ -250,29 +288,21 @@ export struct PlayListPage {
                   BarLoading()
                 } else {
                   Row() {
-                    Row() {
-                      PlayAllButton({
-                        count: this.list.length,
-                        clickAction: () => {
-                          if (this.isPlayerLoading) {
-                            ToastUtil.showToast('当前有正在加载的播放任务，请稍后再试')
-                          } else {
-                            this.playSong(0)
-                          }
+                    PlayAllButton({
+                      count: this.list.length,
+                      clickAction: () => {
+                        if (this.isPlayerLoading) {
+                          ToastUtil.showToast('当前有正在加载的播放任务，请稍后再试')
+                        } else {
+                          this.playSong(0)
                         }
-                      })
-                      LoadingProgress()
-                        .width(Constants.SIZE_ICON_BUTTON_BAR)
-                        .visibility(this.hasMore ? Visibility.Visible : Visibility.None)
-                    }
-                    Image($r('app.media.ic_public_select_all'))
-                      .width(Constants.SIZE_ICON_BUTTON_BAR_SMALL)
-                      .fillColor($r('app.color.reverse'))
-                      .onClick(this.handleSelect)
+                      }
+                    })
+                    LoadingProgress()
+                      .width(Constants.SIZE_ICON_BUTTON_BAR)
+                      .visibility(this.hasMore ? Visibility.Visible : Visibility.None)
                   }
                   .width('100%')
-                  .padding({ right: Constants.PADDING_MEDIUM })
-                  .justifyContent(FlexAlign.SpaceBetween)
                 }
               }
               .justifyContent(FlexAlign.SpaceBetween)
@@ -324,7 +354,7 @@ export struct PlayListPage {
               }
             })
           })
-          .bindSheet(this.showSelectSheet, this.SelectSheet(), this.selectSheetOptions)
+          // .bindSheet(this.showSelectSheet, this.SelectSheet(), this.selectSheetOptions)
         }
         .height('100%')
 
@@ -337,7 +367,7 @@ export struct PlayListPage {
       .height('100%')
       .backgroundColor($r('app.color.background'))
     }
-    .title(this.showTitleBar || this.searchKeyword !== '' ? this.ToolBar : '',
+    .title(this.showTitleBar || this.searchKeyword !== '' || this.isSelecting ? this.ToolBar : '',
       {
         backgroundColor: Color.Transparent,
         barStyle: BarStyle.STACK,
@@ -348,58 +378,100 @@ export struct PlayListPage {
   }
 
   @Builder ContentList(dataSource: LazyData<PlayListSong>) {
-    LazyForEach(dataSource, (item: PlayListSong) => {
-      SongCard({
-        playmode: PLAYMODE.PLAYLIST,
-        song: {
-          id: item.id,
-          artists: item.ar,
-          album: item.al,
-          name: item.name,
-          duration: item.dt,
-          alias: [],
-          fee: item.fee
-        },
-        sid: this.list.indexOf(item),
-        playlist: this.param.playList,
-        picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
-        index: this.list.indexOf(item),
-        listPlayAction: async () => { await this.playSong(this.list.indexOf(item)) }
-      })
-        .translate({ y: this.translateY })
-        .animation({
-          duration: 600,
-          curve: Curve.LinearOutSlowIn
+    LazyForEach(dataSource, (item: PlayListSong, index) => {
+      Row() {
+        SongCard({
+          playmode: PLAYMODE.PLAYLIST,
+          song: {
+            id: item.id,
+            artists: item.ar,
+            album: item.al,
+            name: item.name,
+            duration: item.dt,
+            alias: [],
+            fee: item.fee
+          },
+          sid: this.list.indexOf(item),
+          playlist: this.param.playList,
+          picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
+          index: this.list.indexOf(item),
+          listPlayAction: async () => { await this.playSong(this.list.indexOf(item)) }
         })
-        .onAppear(() => { this.translateY = 0 })
+          .translate({ y: this.translateY })
+          .animation({
+            duration: 600,
+            curve: Curve.LinearOutSlowIn
+          })
+          .onAppear(() => { this.translateY = 0 })
+          .layoutWeight(1)
+
+        Checkbox({ group: 'selectSongs' })
+          .select(this.selectedIndex.includes(index))
+          .padding({ right: 5 })
+          .shape(CheckBoxShape.ROUNDED_SQUARE)
+          .width(Constants.SIZE_ICON_BUTTON_BAR)
+          .aspectRatio(1)
+          .visibility(this.isSelecting ? Visibility.Visible : Visibility.None)
+          .onChange((value) => {
+            if(this.selectedSongs.length >= 50) {
+              ToastUtil.showToast('至多选择 50 首')
+              return
+            }
+            if(value) {
+              this.selectedSongs.push(item)
+              this.selectedIndex.push(index)
+            } else {
+              this.selectedSongs = this.selectedSongs.filter(songItem => songItem.id !== item.id)
+              this.selectedIndex = this.selectedIndex.filter(songIndex => songIndex !== index)
+            }
+          })
       }
+    }
       ,(item: PlayListSong, index) => item.name + index)
   }
 
   @Builder ToolBar() {
     Column() {
-      Search({
-        placeholder: $r('app.string.Search_content'),
-        icon: '/resources/base/media/ic_public_search_filled.svg',
-        value: this.searchKeyword
-      })
-        .backgroundBlurStyle(BlurStyle.Thin)
-        .height(Constants.HEIGHT_SEARCH)
+      if(!this.isSelecting) {
+        Search({
+          placeholder: $r('app.string.Search_content'),
+          icon: '/resources/base/media/ic_public_search_filled.svg',
+          value: this.searchKeyword
+        })
+          .backgroundBlurStyle(BlurStyle.Thin)
+          .height(Constants.HEIGHT_SEARCH)
+          .layoutWeight(1)
+          .searchButton('搜索')
+          .onChange((value) => {
+            if(value == '') {
+              this.filteredList = []
+              this.searchKeyword = ''
+            }
+          })
+          .onSubmit((value) => {
+            this.searchKeyword = value
+            this.handelSearch()
+          })
+      }
+      else {
+        Row({ space: 15 }) {
+          Text(`已选 ${this.selectedSongs.length} 项`)
+            .fontSize(Constants.FONT_SIZE_COMMON)
+            .fontWeight(Constants.FONT_WEIGHT_BOLD)
+
+          Image($r('app.media.ic_public_download_filled'))
+            .width(Constants.SIZE_ICON_BUTTON_BAR_SMALL)
+            .aspectRatio(1)
+            .onClick(this.handleDownload)
+            .fillColor($r('app.color.reverse'))
+            .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.8 })
+        }
         .layoutWeight(1)
-        .searchButton('搜索')
-        .onChange((value) => {
-          if(value == '') {
-            this.filteredList = []
-            this.searchKeyword = ''
-          }
-        })
-        .onSubmit((value) => {
-          this.searchKeyword = value
-          this.handelSearch()
-        })
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+      }
     }
     .padding({ left: 20, right: 20 })
-    .justifyContent(FlexAlign.Center)
     .layoutWeight(1)
   }
 
@@ -525,6 +597,6 @@ export struct PlayListPage {
   }
 
   @Builder SelectSheet() {
-    ListSelectSheet({ songs: this.simpleSongs, isShow: this.showSelectSheet })
+    ListSelectSheet({ songs: this.list, isShow: this.showSelectSheet })
   }
 }

@@ -34,12 +34,6 @@ export interface SongsData {
   result: Result
 }
 
-export interface SimpleSong {
-  songId: number
-  name: string
-  artists: Artist[]
-}
-
 export const SongItem: Song = {
   id: 0,
   name: '',

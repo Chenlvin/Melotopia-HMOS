@@ -41,7 +41,6 @@ class DownloadUtils {
         AppStorage.setOrCreate(StorageConstants.IS_DOWNLOAD_PAUSED, true)
       },
       onResume: () => {
-        AppStorage.setOrCreate(StorageConstants.IS_DOWNLOADING, true)
         AppStorage.setOrCreate(StorageConstants.IS_DOWNLOAD_PAUSED, false)
       },
       onCancel: () => {
@@ -68,7 +67,6 @@ class DownloadUtils {
           })
         })
         this.deleteByIndex(0)
-        AppStorage.setOrCreate(StorageConstants.IS_DOWNLOADING, false)
         AppStorage.setOrCreate(StorageConstants.IS_DOWNLOAD_PAUSED, false)
         AppStorage.setOrCreate(StorageConstants.DOWNLOADING_PROGRESS, '0')
         setTimeout(() => {
@@ -78,7 +76,6 @@ class DownloadUtils {
       onFail: (err) => {
         LogUtil.error(TAG, `err: ${err.code} - ${err.message}`)
         this.deleteByIndex(0)
-        AppStorage.setOrCreate(StorageConstants.IS_DOWNLOADING, false)
         AppStorage.setOrCreate(StorageConstants.IS_DOWNLOAD_PAUSED, false)
         AppStorage.setOrCreate(StorageConstants.DOWNLOADING_PROGRESS, '0')
         setTimeout(() => {
@@ -123,7 +120,10 @@ class DownloadUtils {
       })
     }
     await this.syncQueue()
-    this.startTask(0)
+    let isDownloading = await AppStorage.get(StorageConstants.IS_DOWNLOADING) as boolean
+    if(!isDownloading) {
+      this.startTask(0)
+    }
   }
 
   async deleteByIndex(index: number) {
@@ -132,13 +132,12 @@ class DownloadUtils {
   }
 
   async startTask(index: number) {
-    let isDownloading = await AppStorage.get(StorageConstants.IS_DOWNLOADING) as boolean
-    if(isDownloading) return
+    AppStorage.setOrCreate(StorageConstants.IS_DOWNLOADING, true)
 
     let item = this.list[index]
 
     if (!item) {
-      ToastUtil.showToast('列表内容已全部下载完毕')
+      ToastUtil.showToast('已完成所有下载任务')
       AppStorage.setOrCreate(StorageConstants.IS_DOWNLOADING, false)
       AppStorage.setOrCreate(StorageConstants.IS_DOWNLOAD_PAUSED, false)
       return
