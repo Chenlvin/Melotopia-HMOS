@@ -4,11 +4,12 @@ import { LazyData } from "@pie/lazy-data"
 import { StorageConstants } from "../../common/constants/StorageConstants"
 import { getArtists } from "../../common/functions/common/convert"
 import DownloadUtils from "../../common/utils/file/DownloadUtils"
+import { DialogUtil } from "@pura/harmony-utils"
 
 @Component
 export struct DownloadListSheet {
 
-  @StorageProp(StorageConstants.DOWNLOAD_QUEUE) downloadQueue: DownloadItem[] = []
+  @StorageProp(StorageConstants.DOWNLOAD_QUEUE) @Watch('updateDataSource') downloadQueue: DownloadItem[] = []
   @StorageProp(StorageConstants.IS_DOWNLOADING) isDownloading: boolean = false
   @StorageProp(StorageConstants.IS_DOWNLOAD_PAUSED) isDownloadPaused: boolean = false
   @StorageProp(StorageConstants.DOWNLOADING_PROGRESS) progress: string = '0'
@@ -16,7 +17,12 @@ export struct DownloadListSheet {
 
   private deleteItem(index: number) {
     DownloadUtils.deleteByIndex(index)
-    this.dataSource.deleteData(index)
+    // this.dataSource.deleteData(index)
+    // this.dataSource.notifyDataReload()
+  }
+
+  updateDataSource() {
+    this.dataSource.setData(this.downloadQueue)
     this.dataSource.notifyDataReload()
   }
 
@@ -40,17 +46,16 @@ export struct DownloadListSheet {
         .padding(Constants.PADDING_EDGE_DEFAULT)
 
         this.ActionButton()
-
       }
 
       List({ space: 5 }) {
-        ForEach(this.downloadQueue, (item: DownloadItem, index) => {
+        LazyForEach(this.dataSource, (item: DownloadItem, index) => {
           this.DownloadItemCard(item, index)
-        })
+        }, (item: DownloadItem, index) => item.song.name + index)
       }
-      .layoutWeight(1)
       .width('100%')
       .height('100%')
+      .layoutWeight(1)
       .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
       .backToTop(true)
     }
@@ -84,17 +89,48 @@ export struct DownloadListSheet {
   }
 
   @Builder ActionButton() {
-    Button() {
-      Text('开始下载')
-        .fontColor($r('app.color.reverse'))
+    Row({ space: 10 }) {
+      Button() {
+        Text('下载')
+          .fontColor($r('app.color.reverse'))
+      }
+      .borderRadius(1)
+      .borderColor($r('app.color.reverse'))
+      .backgroundColor(Color.Transparent)
+      .padding(5)
+      .visibility(!this.isDownloading ? Visibility.Visible : Visibility.None)
+      .onClick(() => {
+        DownloadUtils.startTask(0)
+      })
+
+      Button() {
+        Text('清空')
+          .fontColor($r('app.color.reverse'))
+      }
+      .borderRadius(1)
+      .borderColor($r('app.color.reverse'))
+      .backgroundColor(Color.Transparent)
+      .padding(5)
+      .onClick(() => {
+        DialogUtil.showPrimaryDialog({
+          title: '确认',
+          message: '清空下载列表',
+          primaryButton: "取消",
+          secondaryButton: {
+            value: '清空',
+            fontColor: Color.Red,
+            action: () => {
+              DownloadUtils.clearTask()
+              this.dataSource.setData([])
+              this.dataSource.notifyDataReload()
+            }
+          }
+        })
+      })
     }
-    .borderColor($r('app.color.reverse'))
-    .backgroundColor(Color.Transparent)
-    .padding(5)
-    .visibility(!this.isDownloading ? Visibility.Visible : Visibility.None)
-    .onClick(() => {
-      DownloadUtils.startTask(0)
-    })
+    .layoutWeight(1)
+    .width('100%')
+    .justifyContent(FlexAlign.End)
   }
 }
 

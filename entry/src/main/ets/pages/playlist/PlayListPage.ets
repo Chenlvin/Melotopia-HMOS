@@ -3,7 +3,7 @@ import { PlayList, PlayListItem } from '../../common/entities/playlist/PlayList'
 import { DialogUtil, EmitterUtil, LogUtil, PasteboardUtil, ToastUtil } from '@pura/harmony-utils'
 import { deletePlayList, getPlayListSongs, subscribePlayList } from '../../api/playListApi'
 import { BottomBarComponent } from '../../components/play/BottomBarComponent'
-import { formatNumber } from '../../common/functions/common/convert'
+import { formatNumber, getArtists } from '../../common/functions/common/convert'
 import { cleanLastPlayInfo } from '../../common/functions/play/playListOp'
 import Constants from '../../common/constants/Constants'
 import { LoadingMoreButton, NoMoreButton } from '../../components/buttons/LoadMoreButtons'
@@ -20,6 +20,8 @@ import { COMMENT_TYPE, PLAYMODE } from '../../common/model/Enum'
 import { PlayAllButton } from '../../components/buttons/PlayAllButton'
 import { BarLoading } from '../../components/cards/Loading'
 import { PlayListSkeleton } from '../../components/skeleton/Skeleton'
+import { ListSelectSheet } from '../../components/sheets/ListSelectSheet'
+import { SimpleSong } from '../../common/entities/song/Song'
 
 /**
  * 歌单二级页面
@@ -49,13 +51,14 @@ export struct PlayListPage {
   @State filteredDataSource: LazyData<PlayListSong> = new LazyData()
   @State hasMore: boolean = true
   @State isLoading: boolean = true
-  @State isSelecting: boolean = false
   @State translateY: number = 40
-  @State selectedSongs: PlayListSong[] = []
   @State searchKeyword: string = ''
   @State trackCount: number = -1
   @State showTitleBar: boolean = false
   @State isPageActive: boolean = false
+  @State showSelectSheet: boolean = false
+  @State simpleSongs: SimpleSong[] = []
+
   menus: NavigationMenuItem[] = [
     {
       value: 'Comment',
@@ -70,8 +73,28 @@ export struct PlayListPage {
       }
     }
   ]
-  private currentOffset: number = 0 // 歌曲偏移量
+  private currentOffset: number = 0
   private useTimestamp: boolean = true
+
+  private handleSelect = () => {
+    let temp: SimpleSong[] = this.list.map((item): SimpleSong => ({
+      songId: item.id,
+      name: item.name,
+      artists: item.ar
+    }))
+    this.simpleSongs = temp
+    this.showSelectSheet = true
+  }
+
+  private selectSheetOptions: SheetOptions = {
+    preferType: SheetType.CENTER,
+    height: SheetSize.LARGE,
+    dragBar: false,
+    showClose: false,
+    scrollSizeMode: ScrollSizeMode.FOLLOW_DETENT,
+    backgroundColor: $r('app.color.background'),
+    onDisappear: () => { this.showSelectSheet = false }
+  }
 
   async aboutToAppear(): Promise<void> {
     this.isPageActive = true
@@ -122,6 +145,94 @@ export struct PlayListPage {
     }
   }
 
+  async loadSongs(limit: number, offset: number): Promise<void> {
+    if (!this.hasMore || !this.isPageActive) return // 直接返回
+    if (offset == 0) {
+      this.isLoading = true // 初次加载
+    }
+    try {
+      const result = await getPlayListSongs(this.param.playList.id, limit <= 1000 ? limit : 1000, offset, this.useTimestamp)
+      this.list = [...this.list, ...result] // 合并歌曲列表
+      this.listDataSource.setData(this.list)
+      this.listDataSource.notifyDataReload()
+      this.currentOffset += limit <= 1000 ? limit : 1000
+      if (this.list.length >= this.param.playList.trackCount) {
+        this.hasMore = false
+      }
+      limit -= 1000
+      if(limit > 0) {
+        this.loadSongs(limit, this.currentOffset)
+      }
+    } catch (e) {
+      LogUtil.error(TAG, 'Error fetching songs: ', e.message)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  private UnSubScribe() {
+    DialogUtil.showPrimaryDialog({
+      title: '取消收藏歌单',
+      message: `《${this.param.playList.name}》`,
+      primaryButton: "取消",
+      secondaryButton: {
+        value: '确认',
+        fontColor: Color.Red,
+        action: async () => {
+          let res: boolean = await subscribePlayList(this.param.playList.id, 2)
+          if(res) {
+            ToastUtil.showToast('取消收藏歌单')
+            this.isSubscribed = false
+          }
+        }
+      }
+    })
+  }
+
+  private handelSearch() {
+    try {
+      if (!this.searchKeyword) {
+        this.filteredList = []
+        this.filteredDataSource.setData([])
+      }
+      const keyword = this.searchKeyword.toLowerCase()
+      this.filteredDataSource.setData(this.list.filter((item: PlayListSong) => {
+        const idMatch = item.name.toString().toLowerCase().includes(keyword)
+        const artistMatch = item.ar.some(artist =>
+        artist.name.toLowerCase().includes(keyword))
+        return idMatch || artistMatch
+      }))
+    } catch (e) {
+      ToastUtil.showToast('搜索时出错: ' + (e as Error).message)
+      LogUtil.error(TAG, 'Error while handelSearch: ' + (e as Error).message)
+    }
+  }
+
+  private deleteButtonAction() {
+    DialogUtil.showPrimaryDialog({
+      title: '确认删除歌单',
+      message:`《${this.param.playList.name}》`,
+      primaryButton: "取消",
+      secondaryButton: {
+        value: '删除',
+        fontColor: Color.Red,
+        action: async () => {
+          await this.handleDelete()
+        }
+      }
+    })
+  }
+
+  private async handleDelete() {
+    const result = await deletePlayList(this.param.playList.id)
+    if(result) {
+      ToastUtil.showToast('成功删除歌单')
+      this.pageInfos.pop()
+    } else {
+      ToastUtil.showToast('删除歌单失败')
+    }
+  }
+
   build() {
     NavDestination() {
       Stack({ alignContent: Alignment.Bottom }) {
@@ -139,20 +250,29 @@ export struct PlayListPage {
                   BarLoading()
                 } else {
                   Row() {
-                    PlayAllButton({
-                      count: this.list.length,
-                      clickAction: () => {
-                        if (this.isPlayerLoading) {
-                          ToastUtil.showToast('当前有正在加载的播放任务，请稍后再试')
-                        } else {
-                          this.playSong(0)
+                    Row() {
+                      PlayAllButton({
+                        count: this.list.length,
+                        clickAction: () => {
+                          if (this.isPlayerLoading) {
+                            ToastUtil.showToast('当前有正在加载的播放任务，请稍后再试')
+                          } else {
+                            this.playSong(0)
+                          }
                         }
-                      }
-                    })
-                    LoadingProgress()
-                      .width(Constants.SIZE_ICON_BUTTON_BAR)
-                      .visibility(this.hasMore ? Visibility.Visible : Visibility.None)
+                      })
+                      LoadingProgress()
+                        .width(Constants.SIZE_ICON_BUTTON_BAR)
+                        .visibility(this.hasMore ? Visibility.Visible : Visibility.None)
+                    }
+                    Image($r('app.media.ic_public_select_all'))
+                      .width(Constants.SIZE_ICON_BUTTON_BAR_SMALL)
+                      .fillColor($r('app.color.reverse'))
+                      .onClick(this.handleSelect)
                   }
+                  .width('100%')
+                  .padding({ right: Constants.PADDING_MEDIUM })
+                  .justifyContent(FlexAlign.SpaceBetween)
                 }
               }
               .justifyContent(FlexAlign.SpaceBetween)
@@ -177,17 +297,6 @@ export struct PlayListPage {
                   LoadingMoreButton()
                 }
               }
-              // else if (this.hasMore) {
-              //   ListItem() {
-              //     ClickToLoadButton()
-              //       .onClick(async () => {
-              //         await this.loadSongs(100, this.currentOffset)
-              //         if(this.searchKeyword) {
-              //           this.handelSearch()
-              //         }
-              //       })
-              //   }
-              // }
               else if (!this.hasMore) {
                 ListItem() {
                   NoMoreButton()
@@ -215,6 +324,7 @@ export struct PlayListPage {
               }
             })
           })
+          .bindSheet(this.showSelectSheet, this.SelectSheet(), this.selectSheetOptions)
         }
         .height('100%')
 
@@ -227,7 +337,7 @@ export struct PlayListPage {
       .height('100%')
       .backgroundColor($r('app.color.background'))
     }
-    .title(this.showTitleBar || (this.searchKeyword !== '' || this.isSelecting) ? this.ToolBar : '',
+    .title(this.showTitleBar || this.searchKeyword !== '' ? this.ToolBar : '',
       {
         backgroundColor: Color.Transparent,
         barStyle: BarStyle.STACK,
@@ -239,31 +349,23 @@ export struct PlayListPage {
 
   @Builder ContentList(dataSource: LazyData<PlayListSong>) {
     LazyForEach(dataSource, (item: PlayListSong) => {
-        ListItem() {
-          Row() {
-            SongCard({
-              playmode: PLAYMODE.PLAYLIST,
-              song: {
-                id: item.id,
-                artists: item.ar,
-                album: item.al,
-                name: item.name,
-                duration: item.dt,
-                alias: [],
-                fee: item.fee
-              },
-              sid: this.list.indexOf(item),
-              playlist: this.param.playList,
-              picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
-              index: this.list.indexOf(item),
-              listPlayAction: async () => { await this.playSong(this.list.indexOf(item)) }
-            })
-              .layoutWeight(1)
-            if(this.isSelecting) {
-              this.CardCheckBox(item)
-            }
-          }
-        }
+      SongCard({
+        playmode: PLAYMODE.PLAYLIST,
+        song: {
+          id: item.id,
+          artists: item.ar,
+          album: item.al,
+          name: item.name,
+          duration: item.dt,
+          alias: [],
+          fee: item.fee
+        },
+        sid: this.list.indexOf(item),
+        playlist: this.param.playList,
+        picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
+        index: this.list.indexOf(item),
+        listPlayAction: async () => { await this.playSong(this.list.indexOf(item)) }
+      })
         .translate({ y: this.translateY })
         .animation({
           duration: 600,
@@ -276,43 +378,25 @@ export struct PlayListPage {
 
   @Builder ToolBar() {
     Column() {
-      if(this.isSelecting) {
-        Row({ space: 5 }) {
-          // Image($r('app.media.ic_public_folder'))
-          //   .width(Constants.SIZE_ICON_BUTTON_BAR)
-          //   .aspectRatio(1)
-          //   .fillColor(Color.Gray)
-          //   .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.8 })
-
-          CheckboxGroup({ group: 'playListSongs' })
-            .width(Constants.SIZE_ICON_BUTTON_BAR_SMALL)
-            .aspectRatio(1)
-        }
+      Search({
+        placeholder: $r('app.string.Search_content'),
+        icon: '/resources/base/media/ic_public_search_filled.svg',
+        value: this.searchKeyword
+      })
+        .backgroundBlurStyle(BlurStyle.Thin)
         .height(Constants.HEIGHT_SEARCH)
-        .width('100%')
         .layoutWeight(1)
-        .justifyContent(FlexAlign.End)
-      } else {
-        Search({
-          placeholder: $r('app.string.Search_content'),
-          icon: '/resources/base/media/ic_public_search_filled.svg',
-          value: this.searchKeyword
+        .searchButton('搜索')
+        .onChange((value) => {
+          if(value == '') {
+            this.filteredList = []
+            this.searchKeyword = ''
+          }
         })
-          .backgroundBlurStyle(BlurStyle.Thin)
-          .height(Constants.HEIGHT_SEARCH)
-          .layoutWeight(1)
-          .searchButton('搜索')
-          .onChange((value) => {
-            if(value == '') {
-              this.filteredList = []
-              this.searchKeyword = ''
-            }
-          })
-          .onSubmit((value) => {
-            this.searchKeyword = value
-            this.handelSearch()
-          })
-      }
+        .onSubmit((value) => {
+          this.searchKeyword = value
+          this.handelSearch()
+        })
     }
     .padding({ left: 20, right: 20 })
     .justifyContent(FlexAlign.Center)
@@ -420,21 +504,6 @@ export struct PlayListPage {
     .width('100%')
   }
 
-  @Builder CardCheckBox(item: PlayListSong) {
-    Checkbox({ group: 'playListSongs' })
-      .padding({ right: 5 })
-      .shape(CheckBoxShape.ROUNDED_SQUARE)
-      .width(Constants.SIZE_ICON_BUTTON_BAR)
-      .aspectRatio(1)
-      .onChange((value) => {
-        if(value) {
-          this.selectedSongs.push(item)
-        } else {
-          this.selectedSongs = this.selectedSongs.filter(item => item.id != item.id)
-        }
-      })
-  }
-
   @Builder ToolButton(icon: ResourceStr, text: string, action: () => void) {
     Button() {
       Row({ space: 5 }) {
@@ -455,98 +524,7 @@ export struct PlayListPage {
     .onClick(() => { action() })
   }
 
-  async loadSongs(limit: number, offset: number): Promise<void> {
-    if (!this.hasMore || !this.isPageActive) return // 直接返回
-    if (offset == 0) {
-      this.isLoading = true // 初次加载
-    }
-    try {
-      const result = await getPlayListSongs(this.param.playList.id, limit <= 1000 ? limit : 1000, offset, this.useTimestamp)
-      this.list = [...this.list, ...result] // 合并歌曲列表
-      this.listDataSource.setData(this.list)
-      this.listDataSource.notifyDataReload()
-      this.currentOffset += limit <= 1000 ? limit : 1000
-      if (this.list.length >= this.param.playList.trackCount) {
-        this.hasMore = false
-      }
-      limit -= 1000
-      if(limit > 0) {
-        this.loadSongs(limit, this.currentOffset)
-      }
-    } catch (e) {
-      LogUtil.error(TAG, 'Error fetching songs: ', e.message)
-    } finally {
-      this.isLoading = false
-    }
-  }
-
-  private selectButtonAction() {
-    animateTo({ duration: 200, curve: Curve.EaseInOut }, () => {
-      this.isSelecting = !this.isSelecting
-    })
-    this.selectedSongs = []
-  }
-
-  private UnSubScribe() {
-    DialogUtil.showPrimaryDialog({
-      title: '取消收藏歌单',
-      message: `《${this.param.playList.name}》`,
-      primaryButton: "取消",
-      secondaryButton: {
-        value: '确认',
-        fontColor: Color.Red,
-        action: async () => {
-          let res: boolean = await subscribePlayList(this.param.playList.id, 2)
-          if(res) {
-            ToastUtil.showToast('取消收藏歌单')
-            this.isSubscribed = false
-          }
-        }
-      }
-    })
-  }
-
-  private handelSearch() {
-    try {
-      if (!this.searchKeyword) {
-        this.filteredList = []
-        this.filteredDataSource.setData([])
-      }
-      const keyword = this.searchKeyword.toLowerCase()
-      this.filteredDataSource.setData(this.list.filter((item: PlayListSong) => {
-        const idMatch = item.name.toString().toLowerCase().includes(keyword)
-        const artistMatch = item.ar.some(artist =>
-        artist.name.toLowerCase().includes(keyword))
-        return idMatch || artistMatch
-      }))
-    } catch (e) {
-      ToastUtil.showToast('搜索时出错: ' + (e as Error).message)
-      LogUtil.error(TAG, 'Error while handelSearch: ' + (e as Error).message)
-    }
-  }
-
-  private deleteButtonAction() {
-    DialogUtil.showPrimaryDialog({
-      title: '确认删除歌单',
-      message:`《${this.param.playList.name}》`,
-      primaryButton: "取消",
-      secondaryButton: {
-        value: '删除',
-        fontColor: Color.Red,
-        action: async () => {
-          await this.handleDelete()
-        }
-      }
-    })
-  }
-
-  private async handleDelete() {
-    const result = await deletePlayList(this.param.playList.id)
-    if(result) {
-      ToastUtil.showToast('成功删除歌单')
-      this.pageInfos.pop()
-    } else {
-      ToastUtil.showToast('删除歌单失败')
-    }
+  @Builder SelectSheet() {
+    ListSelectSheet({ songs: this.simpleSongs, isShow: this.showSelectSheet })
   }
 }
