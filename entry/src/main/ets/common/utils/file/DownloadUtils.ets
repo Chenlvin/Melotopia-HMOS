@@ -14,6 +14,7 @@ import FileDownloadUtils from "./FileDownloadUtils"
 import { getLyricString } from "../../../api/LyricApi"
 import LyricUtils from "../play/LyricUtils"
 import { getSongPicUrl } from "../../../api/songApi"
+import { SongDownloadItem } from "../../entities/song/SongDownload"
 
 const TAG = '[DownloadUtils] '
 
@@ -112,11 +113,14 @@ class DownloadUtils {
     }
     const songIds = song.map(item => item.id).join(',')
     let downloadInfo = await getDownloadInfo(songIds, PlayConstants.QUALITY[quality], isLogged)
-    downloadInfo.data.reverse()
+    const songIdArray = songIds.split(',').map(Number)
+    const dataMap = new Map<number, SongDownloadItem>()
+    downloadInfo.data.forEach(item => dataMap.set(item.id, item))
+    let data = songIdArray.map(id => dataMap.get(id)!).filter(Boolean)
     for(let i = 0; i < song.length; i++) {
       this.list.push({
         song: song[i],
-        downloadItem: downloadInfo.data[i]
+        downloadItem: data[i]
       })
     }
     await this.syncQueue()

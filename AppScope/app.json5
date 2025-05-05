@@ -2,7 +2,7 @@
   "app": {
     "bundleName": "cn.chenlvin.melotopia.hm",
     "vendor": "chenlvin",
-    "versionCode": 10520,
+    "versionCode": 10521,
     "versionName": "1.5.2",
     "icon": "$media:appIcon_startwindow",
     "label": "$string:app_name",

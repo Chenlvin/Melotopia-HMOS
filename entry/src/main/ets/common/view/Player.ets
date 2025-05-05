@@ -20,7 +20,6 @@ import OrientationUtils from "../utils/system/WindowUtils"
 import { EmitterConstants } from "../constants/EmitterConstants"
 import { PLAYMODE } from "../model/Enum"
 import { PersonalFmMenu } from "../../components/menu/PersonalFmMenu"
-import { BreakpointType } from "../model/Breakpoint"
 import { PlaySettingSinglePage } from "../../pages/settings/PlaySettingsPage"
 
 @Component
@@ -112,7 +111,7 @@ export struct Player {
 
   private handleLike = async () => {
     if(this.isLikeProcessing) return
-    else if(this.song.id === 0 || this.playmode === PLAYMODE.DJRADIO) {
+    else if(this.song.id === 0 || this.playmode === PLAYMODE.DJRADIO || this.playmode === PLAYMODE.LOCAL) {
       ToastUtil.showToast('当前播放歌曲不支持该操作')
       return
     }

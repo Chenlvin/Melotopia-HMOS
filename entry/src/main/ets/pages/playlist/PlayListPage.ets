@@ -113,7 +113,7 @@ export struct PlayListPage {
       cleanLastPlayInfo()
     }))
     await this.loadSongs(200, 0)
-    await this.loadSongs(this.param.playList.trackCount - 200, 150)
+    await this.loadSongs(this.param.playList.trackCount - 200, 200)
   }
 
   aboutToDisappear(): void {
@@ -190,7 +190,7 @@ export struct PlayListPage {
     }
     try {
       const result = await getPlayListSongs(this.param.playList.id, limit <= 1000 ? limit : 1000, offset, this.useTimestamp)
-      this.list = [...this.list, ...result] // 合并歌曲列表
+      this.list.push(...result) // 合并歌曲列表
       this.listDataSource.setData(this.list)
       this.listDataSource.notifyDataReload()
       this.currentOffset += limit <= 1000 ? limit : 1000
@@ -227,19 +227,20 @@ export struct PlayListPage {
     })
   }
 
-  private handelSearch() {
+  private handleSearch() {
     try {
       if (!this.searchKeyword) {
         this.filteredList = []
         this.filteredDataSource.setData([])
       }
       const keyword = this.searchKeyword.toLowerCase()
-      this.filteredDataSource.setData(this.list.filter((item: PlayListSong) => {
+      this.filteredList = this.list.filter((item: PlayListSong) => {
         const idMatch = item.name.toString().toLowerCase().includes(keyword)
         const artistMatch = item.ar.some(artist =>
         artist.name.toLowerCase().includes(keyword))
         return idMatch || artistMatch
-      }))
+      })
+      this.filteredDataSource.setData(this.filteredList)
     } catch (e) {
       ToastUtil.showToast('搜索时出错: ' + (e as Error).message)
       LogUtil.error(TAG, 'Error while handelSearch: ' + (e as Error).message)
@@ -453,7 +454,7 @@ export struct PlayListPage {
           })
           .onSubmit((value) => {
             this.searchKeyword = value
-            this.handelSearch()
+            this.handleSearch()
           })
       }
       else {

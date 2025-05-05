@@ -11,13 +11,13 @@ import { BottomBarComponent } from "../../components/play/BottomBarComponent"
 @Component
 export struct CommentPage {
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @State param: CommentParam = { id: 0, name: '', type: 0 }
   @State comments: Comment[] = []
   @State isLoading: boolean = true
   @State isLoadingMore: boolean = false
   @State currentPage: number = 1
-  @State sortType: 1 | 2 | 3 = 1 // 1-按推荐排序, 2-按热度排序, 3-按时间排序
+  @State sortType: 1 | 2 | 3 = 3 // 1-按推荐排序, 2-按热度排序, 3-按时间排序
   @State dataSource: LazyData<Comment> = new LazyData()
   @State hasMore: boolean = true
   showMiniPlayer: boolean = true
