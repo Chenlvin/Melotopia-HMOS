@@ -24,7 +24,8 @@ instance.interceptors.request.use(async (request: InternalAxiosRequestConfig ) =
   // Cookie
   if(!request.params.noCookie) {
     const cookie = await getCookie()
-    request.params.cookie = cookie
+    // request.params.cookie = cookie
+    request.headers['cookie'] = await getCookie()
   }
   // realIP
   if(!request.url?.includes('/login')) {

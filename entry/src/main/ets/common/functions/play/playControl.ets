@@ -24,48 +24,61 @@ import AudioCacheUtils from "../../utils/play/AudioCacheUtils";
 const TAG = '[playerControl] '
 const pref = StorageConstants.QUEUE_PREF
 
+let flag = 0 // New Song Flag
+
 export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: string | ResourceStr = '', mode: number = 1) {
   try {
+    flag = 0
+    let accessible: boolean = true
     if(isLogged) {
       const isAccessible = await checkMusic(song.id)
       if(!isAccessible) {
-        ToastUtil.showToast('当前歌曲无版权或不可用, 自动播放下一首')
+        accessible = false
+        flag = 1
+        ToastUtil.showToast('当前歌曲无版权或不可用, 尝试播放下一首')
         setTimeout(() => {
-          playNext()
+          if(flag === 1) {
+            playNext()
+            flag = 0
+          }
           return
         }, 2000)
       }
     }
-    isThisSongLiked(song.id)
-    let artists = getArtists(song.artists)
-    setPlayData(mode, song, artists)
-    let localPath: string = ''
-    let tempArtists: string = artists
-    if(song.name.length + artists.length >= 103) {
-      try { tempArtists = artists.slice(0, 100 - song.name.length) }
-      catch (e) { artists = '未知' }
+
+    if(accessible) {
+      isThisSongLiked(song.id)
+      let artists = getArtists(song.artists)
+      setPlayData(mode, song, artists)
+      let localPath: string = ''
+      let tempArtists: string = artists
+      if(song.name.length + artists.length >= 103) {
+        try { tempArtists = artists.slice(0, 100 - song.name.length) }
+        catch (e) { artists = '未知' }
+      }
+
+      localPath = await FileUtils.accessLocalFile(sanitizeFileName(`${tempArtists} - ${song.name}`))
+
+      if(localPath != '') { // 是否存在本地文件
+        AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, true)
+        await AVPlayerUtils.setUrl(localPath)
+      } else {
+        const quality: number | undefined = await AppStorage.get(StorageConstants.PLAY_QUALITY)
+        const songPlay: SongPlay = await getSongUrl(song.id, quality ? PlayConstants.QUALITY[quality] : "standard", isLogged)
+        AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, false)
+        let proxyUrl = await AudioCacheUtils.getProxyUrl(songPlay.data[0].url)
+        await AVPlayerUtils.setUrl(proxyUrl ?? songPlay.data[0].url)
+      }
+      if(!picUrl) {
+        picUrl = await getSongPicUrl(song.id)
+      }
+      setPicUrl(picUrl)
+      await LyricUtils.setLyric(song)
+      await AVSessionUtils.setMetadata(song, artists, picUrl)
+      AVSessionUtils.activate()
+      saveCurrentSongInfo(mode, song, artists, picUrl)
     }
 
-    localPath = await FileUtils.accessLocalFile(sanitizeFileName(`${tempArtists} - ${song.name}`))
-
-    if(localPath != '') { // 是否存在本地文件
-      AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, true)
-      await AVPlayerUtils.setUrl(localPath)
-    } else {
-      const quality: number | undefined = await AppStorage.get(StorageConstants.PLAY_QUALITY)
-      const songPlay: SongPlay = await getSongUrl(song.id, quality ? PlayConstants.QUALITY[quality] : "standard", isLogged)
-      AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, false)
-      let proxyUrl = await AudioCacheUtils.getProxyUrl(songPlay.data[0].url)
-      await AVPlayerUtils.setUrl(proxyUrl ?? songPlay.data[0].url)
-    }
-    if(!picUrl) {
-      picUrl = await getSongPicUrl(song.id)
-    }
-    setPicUrl(picUrl)
-    await LyricUtils.setLyric(song)
-    await AVSessionUtils.setMetadata(song, artists, picUrl)
-    AVSessionUtils.activate()
-    saveCurrentSongInfo(mode, song, artists, picUrl)
   } catch (e) {
     LogUtil.error(TAG, '播放出错: ' + e)
     playNext()

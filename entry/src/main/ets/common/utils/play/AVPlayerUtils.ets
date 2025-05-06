@@ -55,6 +55,7 @@ class AVPlayerUtils {
     await avPlayer.reset()
     if(avPlayer.state === 'idle') {
       avPlayer.url = url
+      AVSessionUtils.pauseState(0)
     }
   }
 
@@ -190,10 +191,10 @@ class AVPlayerUtils {
           break
         case 'playing':
           ContinuousTask.startTask()
-          AVSessionUtils.playState(avPlayer.currentTime)
           AppStorage.setOrCreate(StorageConstants.IS_PLAYING, true)
           AppStorage.setOrCreate(StorageConstants.IS_PAUSED, false)
           LyricUtils.startInterval()
+          AVSessionUtils.playState(avPlayer.currentTime)
           break
         case 'paused':
           this.clearInterval()

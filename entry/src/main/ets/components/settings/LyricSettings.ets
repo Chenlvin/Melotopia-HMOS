@@ -1,9 +1,10 @@
+import { EmitterUtil } from "@pura/harmony-utils";
 import Constants from "../../common/constants/Constants";
+import { EmitterConstants } from "../../common/constants/EmitterConstants";
 import { StorageConstants } from "../../common/constants/StorageConstants";
 import { FloatLyric, FloatLyricItem,
   LyricStyle, LyricStyleItem } from "../../common/entities/local/Settings";
 import { changeSettings } from "../../common/functions/app/settings";
-import WindowUtils from "../../common/utils/system/WindowUtils";
 import { lyricsPipManager } from "../../pages/lyrics/PipLyrics";
 
 @Component
@@ -35,10 +36,11 @@ export struct LyricTranslate {
       Radio({ value: `${type}` , group: 'lyricTranslation' })
         .checked(this.lyricStyle.mode === type)
         .radioStyle({ checkedBackgroundColor: $r('app.color.app_red') })
-        .onChange((isChecked) => {
+        .onChange(async (isChecked) => {
           if(isChecked) {
             this.lyricStyle.mode = type
-            changeSettings(StorageConstants.LYRIC_STYLE, this.lyricStyle)
+            await changeSettings(StorageConstants.LYRIC_STYLE, this.lyricStyle)
+            EmitterUtil.post(EmitterConstants.EMITTER_LYRIC_UPDATE, () => {})
           }
         })
       Text(text)

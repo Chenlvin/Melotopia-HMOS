@@ -31,6 +31,7 @@ class LyricUtils {
   async setLyric(song: Song) {
     this.resetLyric()
     AppStorage.setOrCreate(StorageConstants.CURRENT_LYRIC, `《${song.name}》`)
+    const lyricStyle = await AppStorage.get(StorageConstants.LYRIC_STYLE) as LyricStyle
     this.currentLyricIndex = 0
     let lyricArr: string[] = []
     try {

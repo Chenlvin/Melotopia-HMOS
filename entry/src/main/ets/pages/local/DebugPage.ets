@@ -35,11 +35,11 @@ export struct DebugPage {
             .textStyle()
           Text(`Height Breakpoint: ${this.heightBp}`)
             .textStyle()
-          Button('Reset Lyric Persistent Settings')
-            .onClick(() => {
-              PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.FLOAT_LYRIC_STYLE, FloatLyricItem)
-              PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.LYRIC_STYLE, LyricStyleItem)
-            })
+          // Button('Reset Lyric Persistent Settings')
+          //   .onClick(() => {
+          //     PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.FLOAT_LYRIC_STYLE, FloatLyricItem)
+          //     PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.LYRIC_STYLE, LyricStyleItem)
+          //   })
           Row({ space: 10 }) {
             TextInput()
               .onChange((text) => { this.apiUrl = text })
