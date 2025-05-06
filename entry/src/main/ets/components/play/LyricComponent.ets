@@ -1,4 +1,4 @@
-import { EmitterUtil, LogUtil } from "@pura/harmony-utils"
+import { EmitterUtil, LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { Lyric } from "../../common/entities/song/Lyric"
 import { seekMusic } from "../../common/functions/play/playControl"
 import { LengthUnit } from "@kit.ArkUI"
@@ -11,7 +11,7 @@ import Constants from "../../common/constants/Constants"
 
 @Component
 export struct LyricComponent {
-  @StorageProp('topRectHeight') topRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.CURRENT_LYRIC_INDEX) @Watch('ToCurrentLyric') currentLyricIndex: number = 0
   @State firstLoad: boolean = true
   @State userScrolling: number = 0
@@ -39,11 +39,10 @@ export struct LyricComponent {
       this.scroller.scrollToIndex(this.currentLyricIndex + 1, false, ScrollAlign.CENTER)
     }, 10)
     this.StartAutoScrollTimer()
-
-    EmitterUtil.onSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE, this.refreshLyric)
   }
 
   refreshLyric = async () => {
+    LogUtil.info('Refresh Lyric')
     this.needUpdate = true
     this.isLoading = true
     this.currentLyricIndex = 0
@@ -56,7 +55,6 @@ export struct LyricComponent {
 
   aboutToDisappear(): void {
     clearInterval(this.userScrollingInterval)
-    EmitterUtil.unSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE)
   }
 
   private StartAutoScrollTimer() {
@@ -144,6 +142,12 @@ export struct LyricComponent {
       if (event.type === TouchType.Move) {
         this.userScrolling = 2
       }
+    })
+    .onAppear(() => {
+      EmitterUtil.onSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE, this.refreshLyric)
+    })
+    .onDisAppear(() => {
+      EmitterUtil.unSubscribe(EmitterConstants.EMITTER_LYRIC_UPDATE)
     })
   }
 
