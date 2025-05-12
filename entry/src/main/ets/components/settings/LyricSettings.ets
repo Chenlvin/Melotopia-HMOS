@@ -2,14 +2,14 @@ import { EmitterUtil } from "@pura/harmony-utils";
 import Constants from "../../common/constants/Constants";
 import { EmitterConstants } from "../../common/constants/EmitterConstants";
 import { StorageConstants } from "../../common/constants/StorageConstants";
-import { FloatLyric, FloatLyricItem,
-  LyricStyle, LyricStyleItem } from "../../common/entities/local/Settings";
+import { FloatLyric, FloatLyric_INITIAL,
+  LyricStyle, LyricStyle_INITIAL } from "../../common/model/Settings";
 import { changeSettings } from "../../common/functions/app/settings";
 import { lyricsPipManager } from "../../pages/lyrics/PipLyrics";
 
 @Component
 export struct LyricTranslate {
-  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyleItem
+  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyle_INITIAL
 
   build() {
     Column({ space: 5 }) {
@@ -55,8 +55,8 @@ export struct LyricTranslate {
 
 @Component
 export struct SetLyricStyle {
-  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyleItem
-  @State style: LyricStyle = LyricStyleItem
+  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyle_INITIAL
+  @State style: LyricStyle = LyricStyle_INITIAL
   @State isCenter: boolean = false
   @State fontSize: number = 0
 
@@ -111,7 +111,7 @@ export struct SetLyricStyle {
 
 @Component
 export struct SetFloatLyric {
-  @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) floatLyric: FloatLyric = FloatLyricItem
+  @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) floatLyric: FloatLyric = FloatLyric_INITIAL
   @State wid: number = 0
   @State fontsize: number = 0
   @State fontopacity: number = 0

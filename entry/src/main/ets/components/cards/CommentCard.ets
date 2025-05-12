@@ -1,9 +1,9 @@
 import Constants from "../../common/constants/Constants"
-import { Comment, CommentItem } from "../../common/entities/song/Comment"
+import { Comment, Comment_INITIAL } from "../../common/entities/Comment"
 
 @Component
 export struct CommentCard {
-  comment: Comment = CommentItem
+  comment: Comment = Comment_INITIAL
 
   build() {
     Column({ space: Constants.PADDING_EDGE_DEFAULT }) {

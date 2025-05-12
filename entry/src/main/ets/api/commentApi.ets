@@ -1,4 +1,4 @@
-import { CommentResult } from "../common/entities/song/Comment";
+import { CommentResult } from "../common/entities/Comment";
 import { COMMENT_SORT_TYPE, COMMENT_TYPE } from "../common/model/Enum";
 import commonRequest from "../common/utils/request/RequestUtil";
 

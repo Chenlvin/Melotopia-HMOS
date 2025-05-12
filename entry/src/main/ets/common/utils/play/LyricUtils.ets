@@ -2,18 +2,18 @@ import { EmitterUtil, LogUtil } from "@pura/harmony-utils"
 import { getLyric } from "../../../api/LyricApi"
 import { EmitterConstants } from "../../constants/EmitterConstants"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { EmptyLrcItem, Lyric, LyricResult, LyricResultClass } from "../../entities/song/Lyric"
-import { Song } from "../../entities/song/Song"
+import { Lrc_INITIAL, Lyric, LyricResult, LyricResult_INITIAL } from "../../entities/Lyric"
+import { Song } from "../../entities/Song"
 import FileUtils from "../file/FileUtils"
 import { fileIo, ReadOptions } from "@kit.CoreFileKit"
 import { buffer } from "@kit.ArkTS"
-import { LyricStyle } from "../../entities/local/Settings"
+import { LyricStyle } from "../../model/Settings"
 
 const TAG = '[LyricUtils] '
 
 class LyricUtils {
   // Lyric Entity
-  lyric: LyricResult = LyricResultClass
+  lyric: LyricResult = LyricResult_INITIAL
   lyricObjects: Array<Lyric> = []
   tLyricObjects: Array<Lyric> = []
   rLyricObjects: Array<Lyric> = []
@@ -22,7 +22,7 @@ class LyricUtils {
   isUpdating: boolean = false
 
   private resetLyric() {
-    this.lyric = LyricResultClass
+    this.lyric = LyricResult_INITIAL
     this.lyricObjects = []
     this.tLyricObjects = []
     this.rLyricObjects = []
@@ -50,7 +50,7 @@ class LyricUtils {
     } catch (e) {
       LogUtil.error(TAG, 'Set Lyric Error: ' + e.message)
       this.lyric = {
-        code: 200, lrc: EmptyLrcItem, tlyric: EmptyLrcItem, klyric: EmptyLrcItem, romalrc: EmptyLrcItem
+        code: 200, lrc: Lrc_INITIAL, tlyric: Lrc_INITIAL, klyric: Lrc_INITIAL, romalrc: Lrc_INITIAL
       }
       this.lyricObjects = [{ time: 0, content: '暂无歌词' }]
     } finally {

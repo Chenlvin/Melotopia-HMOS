@@ -1,9 +1,8 @@
-import { ArtistInfo } from "../common/entities/song/ArtistInfo"
-import { ArtistItem, ArtistsResult } from "../common/entities/song/ArtistsResult"
+import { ArtistInfo, ArtistItem, ArtistsResult } from "../common/entities/Artists"
 import commonRequest from "../common/utils/request/RequestUtil"
 
 /**
- * 获取歌手信息
+ * 获取艺术家信息
  * @param id
  * @returns
  */
@@ -15,7 +14,7 @@ export const getArtistInfo = async (id: number): Promise<ArtistInfo> => {
 }
 
 /**
- * 搜索歌手列表
+ * 搜索艺术家列表
  * @param keyword
  * @returns
  */

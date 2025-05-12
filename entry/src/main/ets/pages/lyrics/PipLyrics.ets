@@ -2,7 +2,7 @@ import { BuilderNode, NodeController, PiPWindow } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { ClickUtil } from '@pura/harmony-utils';
 import { StorageConstants } from '../../common/constants/StorageConstants';
-import { FloatLyric } from '../../common/entities/local/Settings';
+import { FloatLyric } from '../../common/model/Settings';
 import { changeSettings } from '../../common/functions/app/settings';
 import { pauseMusic, playNext, playPre, playQueue, resumeMusic } from '../../common/functions/play/playControl';
 import playQueueUtils from '../../common/utils/play/PlayQueueUtils';

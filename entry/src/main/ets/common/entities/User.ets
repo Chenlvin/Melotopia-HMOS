@@ -21,7 +21,7 @@ export interface User {
   data:Data
 }
 
-export const UserItem: User = {
+export const User_INITIAL: User = {
   data: {
     account: {
       id: 0,

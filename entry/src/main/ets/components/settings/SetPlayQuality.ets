@@ -1,7 +1,7 @@
 import Constants from "../../common/constants/Constants"
 import { PlayConstants } from "../../common/constants/PlayConstants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { QualityType } from "../../common/entities/song/SongDownload"
+import { QualityType } from "../../common/entities/Song"
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 
 /**
@@ -9,7 +9,7 @@ import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
  */
 @Component
 export struct SetPlayQuality {
-  @StorageLink(StorageConstants.PLAY_QUALITY) playQuality:QualityType = "standard"
+  @StorageLink(StorageConstants.PLAY_QUALITY) playQuality: QualityType = "standard"
   @State selected:number | undefined = 0
 
   async aboutToAppear(): Promise<void> {

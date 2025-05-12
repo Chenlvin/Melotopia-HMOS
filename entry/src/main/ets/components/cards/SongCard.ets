@@ -1,6 +1,6 @@
-import { Song, SongItem } from "../../common/entities/song/Song"
+import { Song, Song_INITIAL } from "../../common/entities/Song"
 import { getArtists } from "../../common/functions/common/convert"
-import { PlayList, PlayListItem } from "../../common/entities/playlist/PlayList"
+import { PlayList, PlayList_INITIAL } from "../../common/entities/PlayList"
 import Constants from "../../common/constants/Constants"
 import { cleanLastPlayInfo } from "../../common/functions/play/playListOp"
 import { ToastUtil } from "@pura/harmony-utils"
@@ -11,22 +11,21 @@ import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
 import { playQueue } from "../../common/functions/play/playControl"
 import { SongInfoSheet } from "../sheets/SongInfoSheet"
 import { PlayListAddSheet } from "../sheets/PlayListAddSheet"
-import { DjRadio, djRadioItem } from "../../common/entities/dj/DjResult"
 import { PLAYMODE } from "../../common/model/Enum"
 
 @Component
 export struct SongCard {
   @StorageProp(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
   @StorageProp(StorageConstants.SONG_CLICK_ACTION) clickAction: number = 0
-  @StorageProp(StorageConstants.PLAY_SONG) playSong: Song = SongItem
+  @StorageProp(StorageConstants.PLAY_SONG) playSong: Song = Song_INITIAL
   @State index: number = 0
   @State sid: number = -1
   @State isShowSheet: boolean = false
   @State isShowAddSheet: boolean = false
   @State isShowArtistSheet: boolean = false
   @State playmode: PLAYMODE = PLAYMODE.SINGLE
-  playlist: PlayList = PlayListItem
-  song: Song = SongItem
+  playlist: PlayList = PlayList_INITIAL
+  song: Song = Song_INITIAL
   artists: string = ''
   picUrl: string | ResourceStr = ''
   reason: string = ''

@@ -1,5 +1,4 @@
-import { SongDownload, SongDownloadClass } from "../../common/entities/song/SongDownload"
-import { Song, SongItem } from "../../common/entities/song/Song"
+import { Song, Song_INITIAL } from "../../common/entities/Song"
 import { PlayConstants } from "../../common/constants/PlayConstants"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
@@ -8,7 +7,7 @@ import DownloadUtils from "../../common/utils/file/DownloadUtils"
 @CustomDialog
 export struct DownloadDialog {
   @StorageProp(StorageConstants.IS_LOGGED) isLogged: boolean = false
-  @State song: Song = SongItem
+  @State song: Song = Song_INITIAL
   @State picUrl: string | ResourceStr = ''
   @State artists: string = ''
   @State duration: string = ''

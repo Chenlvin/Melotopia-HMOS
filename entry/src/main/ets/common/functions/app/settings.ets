@@ -1,11 +1,11 @@
 import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { CacheSet, CacheSetItem,
+import { CacheSet, CacheSet_INITIAL,
   FloatLyric,
-  FloatLyricItem, LyricStyle, LyricStyleItem } from "../../entities/local/Settings"
+  FloatLyric_INITIAL, LyricStyle, LyricStyle_INITIAL } from "../../model/Settings"
 import PreferencesUtils from "../../utils/data/PreferencesUtils"
 import { preferences } from "@kit.ArkData"
-import { Api, EmptyApi } from "../../entities/local/Api"
+import { Api, Api_INITIAL } from "../../model/Api"
 
 /**
  * 设置项
@@ -29,15 +29,15 @@ export async function initSettings() {
     // SongCard Click Action
     handleSetting<number>(StorageConstants.SONG_CLICK_ACTION, 2),
     // Lyric
-    handleSetting<LyricStyle>(StorageConstants.LYRIC_STYLE, LyricStyleItem),
+    handleSetting<LyricStyle>(StorageConstants.LYRIC_STYLE, LyricStyle_INITIAL),
     // CacheSettings
-    handleSetting<CacheSet>(StorageConstants.CACHE_SETTINGS, CacheSetItem),
+    handleSetting<CacheSet>(StorageConstants.CACHE_SETTINGS, CacheSet_INITIAL),
     // mixWithOthers
     handleSetting<boolean>(StorageConstants.MIX_WITH_OTHERS, false),
     // floatLyricStyle
-    handleSetting<FloatLyric>(StorageConstants.FLOAT_LYRIC_STYLE, FloatLyricItem),
+    handleSetting<FloatLyric>(StorageConstants.FLOAT_LYRIC_STYLE, FloatLyric_INITIAL),
     // apiSettings
-    handleSetting<Api>(StorageConstants.API_SETTINGS, EmptyApi)
+    handleSetting<Api>(StorageConstants.API_SETTINGS, Api_INITIAL)
   ])
 
   // 处理关联配置项（API URL）

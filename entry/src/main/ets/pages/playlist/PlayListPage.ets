@@ -1,5 +1,5 @@
 import { SongCard } from '../../components/cards/SongCard'
-import { PlayList, PlayListItem } from '../../common/entities/playlist/PlayList'
+import { PlayList, PlayList_INITIAL, PlayListSong } from '../../common/entities/PlayList'
 import { DialogUtil, EmitterUtil, LogUtil, PasteboardUtil, ToastUtil } from '@pura/harmony-utils'
 import { deletePlayList, getPlayListSongs, subscribePlayList } from '../../api/playListApi'
 import { BottomBarComponent } from '../../components/play/BottomBarComponent'
@@ -7,22 +7,20 @@ import { formatNumber } from '../../common/functions/common/convert'
 import { cleanLastPlayInfo } from '../../common/functions/play/playListOp'
 import Constants from '../../common/constants/Constants'
 import { LoadingMoreButton, NoMoreButton } from '../../components/buttons/LoadMoreButtons'
-import { CommentParam, CommonParam, PlayListPageParam } from '../../common/entities/local/PageParams'
+import { CommentParam, CommonParam, PlayListPageParam } from '../../common/model/PageParams'
 import { StorageConstants } from '../../common/constants/StorageConstants'
-import { PlayListSong } from '../../common/entities/playlist/PlayListSongs'
-import { User, UserItem } from '../../common/entities/user/User'
+import { User, User_INITIAL } from '../../common/entities/User'
 import { LazyData } from '@pie/lazy-data'
 import { EmitterConstants } from '../../common/constants/EmitterConstants'
 import PlayQueueUtils from '../../common/utils/play/PlayQueueUtils'
-import { PlayQueue } from '../../common/entities/local/PlayQueue'
+import { PlayQueue } from '../../common/model/PlayQueue'
 import { playQueue } from '../../common/functions/play/playControl'
 import { COMMENT_TYPE, PLAYMODE } from '../../common/model/Enum'
 import { PlayAllButton } from '../../components/buttons/PlayAllButton'
 import { BarLoading } from '../../components/cards/Loading'
 import { PlayListSkeleton } from '../../components/skeleton/Skeleton'
-import { ListSelectSheet } from '../../components/sheets/ListSelectSheet'
-import { Song } from '../../common/entities/song/Song'
-import { AlbumItem } from '../../common/entities/song/Album'
+import { Song } from '../../common/entities/Song'
+import { Album_INITIAL } from '../../common/entities/Album'
 import DownloadUtils from '../../common/utils/file/DownloadUtils'
 
 /**
@@ -34,14 +32,14 @@ const TAG = '[PlayListPage] '
 @Component
 export struct PlayListPage {
   @State param: PlayListPageParam = {
-    playList: PlayListItem,
+    playList: PlayList_INITIAL,
     isShowHeart: false,
     useTimestamp: true
   }
   @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
-  @StorageProp(StorageConstants.USER) user: User = UserItem
+  @StorageProp(StorageConstants.USER) user: User = User_INITIAL
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
   @StorageProp(StorageConstants.USER_PLAYLISTS) userPlayLists: PlayList[] = []
   @StorageProp(StorageConstants.IS_LOGGED) isLogged: boolean = false
@@ -58,7 +56,6 @@ export struct PlayListPage {
   @State trackCount: number = -1
   @State showTitleBar: boolean = false
   @State isPageActive: boolean = false
-  @State showSelectSheet: boolean = false
   @State isSelecting: boolean = false
   @State selectedIndex: number[] = []
   @State selectedSongs: PlayListSong[] = []
@@ -89,17 +86,6 @@ export struct PlayListPage {
     this.isSelecting = !this.isSelecting
     this.selectedIndex = []
     this.selectedSongs = []
-    // this.showSelectSheet = true
-  }
-
-  private selectSheetOptions: SheetOptions = {
-    preferType: SheetType.CENTER,
-    height: SheetSize.LARGE,
-    dragBar: false,
-    showClose: false,
-    scrollSizeMode: ScrollSizeMode.FOLLOW_DETENT,
-    backgroundColor: $r('app.color.background'),
-    onDisappear: () => { this.showSelectSheet = false }
   }
 
   async aboutToAppear(): Promise<void> {
@@ -169,7 +155,7 @@ export struct PlayListPage {
             artists: item.ar,
             name: item.name,
             alias: [],
-            album: AlbumItem,
+            album: Album_INITIAL,
             duration: 0,
             fee: 0
           }))
@@ -598,9 +584,5 @@ export struct PlayListPage {
     .backdropBlur(BlurStyle.Regular)
     .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.9 })
     .onClick(() => { action() })
-  }
-
-  @Builder SelectSheet() {
-    ListSelectSheet({ songs: this.list, isShow: this.showSelectSheet })
   }
 }

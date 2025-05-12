@@ -1,8 +1,8 @@
 import { DialogUtil, ToastUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { CacheSet, CacheSetItem } from "../../common/entities/local/Settings"
-import { Song } from "../../common/entities/song/Song"
+import { CacheSet, CacheSet_INITIAL } from "../../common/model/Settings"
+import { Song } from "../../common/entities/Song"
 import { changeSettings } from "../../common/functions/app/settings"
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 import FileUtils from "../../common/utils/file/FileUtils"
@@ -15,8 +15,8 @@ import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
 export struct CacheManagePage {
   @State cacheDirSize: number = -1
   @State songCacheSize: number = -1
-  @StorageProp(StorageConstants.CACHE_SETTINGS) cacheSet: CacheSet = CacheSetItem
-  @State set: CacheSet = CacheSetItem
+  @StorageProp(StorageConstants.CACHE_SETTINGS) cacheSet: CacheSet = CacheSet_INITIAL
+  @State set: CacheSet = CacheSet_INITIAL
 
   async aboutToAppear(): Promise<void> {
     this.set = this.cacheSet

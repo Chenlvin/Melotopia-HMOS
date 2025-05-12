@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequ
 import { LogUtil } from '@pura/harmony-utils'
 import Constants from '../../constants/Constants'
 import { StorageConstants } from '../../constants/StorageConstants'
-import { Api } from '../../entities/local/Api'
+import { Api } from '../../model/Api'
 import { getApiUrl, getCookie } from '../../functions/common/get'
 
 const TAG = 'RequestUtil'

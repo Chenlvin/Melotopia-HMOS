@@ -55,7 +55,6 @@ class AVPlayerUtils {
     await avPlayer.reset()
     if(avPlayer.state === 'idle') {
       avPlayer.url = url
-      AVSessionUtils.pauseState(0)
     }
   }
 
@@ -97,14 +96,14 @@ class AVPlayerUtils {
     AVSessionUtils.pauseState(avPlayer.currentTime)
     this.clearInterval()
     avPlayer.stop()
-    AVSessionUtils.deactive()
+    AVSessionUtils.deactivate()
     ContinuousTask.stopTask()
   }
 
   async pause() {
     const avPlayer = await this.init()
     this.clearInterval()
-    await avPlayer.pause()
+    avPlayer.pause()
   }
 
   async seek(time: number) {
@@ -113,8 +112,18 @@ class AVPlayerUtils {
     this.isSeeking = true
     this.updateFlag = true
     AppStorage.setOrCreate(StorageConstants.PLAY_TIME, time)
+    AVSessionUtils.bufferingState(time)
     avPlayer.seek(time)
     avPlayer.play()
+  }
+
+  async syncSessionState() {
+    const avPlayer = await this.init()
+    if(avPlayer.state === 'playing') {
+      AVSessionUtils.playState(avPlayer.currentTime)
+    } else if(avPlayer.state === 'paused') {
+      AVSessionUtils.pauseState(avPlayer.currentTime)
+    }
   }
 
   private clearInterval() {
@@ -177,7 +186,7 @@ class AVPlayerUtils {
       switch (state) {
         case 'idle':
           this.clearInterval()
-          AVSessionUtils.deactive()
+          AVSessionUtils.deactivate()
           break
         case 'initialized':
           avPlayer.audioRendererInfo = {
@@ -206,7 +215,6 @@ class AVPlayerUtils {
           AVSessionUtils.pauseState(avPlayer.currentTime)
           avPlayer.reset()
           AppStorage.setOrCreate(StorageConstants.IS_PAUSED, true)
-          ContinuousTask.stopTask()
           completeDo()
           break
         case 'stopped':

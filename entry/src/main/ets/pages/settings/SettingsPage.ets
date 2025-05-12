@@ -1,7 +1,7 @@
 import { VersionCard } from '../../components/settings/TextContent'
 import Constants from '../../common/constants/Constants'
 import { SetDefaultHomePage } from '../../components/settings/SetDefaultHomePage'
-import { WebPageParam } from '../../common/entities/local/PageParams'
+import { WebPageParam } from '../../common/model/PageParams'
 import { CommonSettingsCard } from '../../components/cards/SettingsCard'
 import { SettingsPageMap } from '../../common/model/PageMap'
 

@@ -2,7 +2,7 @@ import { DialogUtil, ToastUtil } from "@pura/harmony-utils"
 import { getLoginStatus, logOut } from "../../api/loginApi"
 import Constants from "../constants/Constants"
 import { StorageConstants } from "../constants/StorageConstants"
-import { User, UserItem } from "../entities/user/User"
+import { User, User_INITIAL } from "../entities/User"
 import { initUserInfo } from "../functions/app/appInit"
 import { SettingsPage } from "../../pages/settings/SettingsPage"
 import { CircleImageButton } from "../../components/buttons/CircleButton"
@@ -10,7 +10,7 @@ import { CircleImageButton } from "../../components/buttons/CircleButton"
 @Component
 export struct Me {
   @StorageProp(StorageConstants.IS_LOGGED) isLogged: boolean = false
-  @StorageProp(StorageConstants.USER) user: User = UserItem
+  @StorageProp(StorageConstants.USER) user: User = User_INITIAL
   @StorageProp(StorageConstants.VALID_API_URL) isValidAPI: boolean = true
   @StorageProp(StorageConstants.VALID_COOKIE) isValidCookie: boolean = true
   @StorageProp(StorageConstants.COOKIE) cookie: string = ''

@@ -3,10 +3,10 @@ import { PlayListOperation } from "../../api/playListApi"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { AlbumParam, CommentParam, CommonParam } from "../../common/entities/local/PageParams"
-import { PlayList, PlayListItem } from "../../common/entities/playlist/PlayList"
-import { Song, SongItem } from "../../common/entities/song/Song"
-import { User, UserItem } from "../../common/entities/user/User"
+import { AlbumParam, CommentParam, CommonParam } from "../../common/model/PageParams"
+import { PlayList, PlayList_INITIAL } from "../../common/entities/PlayList"
+import { Song, Song_INITIAL } from "../../common/entities/Song"
+import { User, User_INITIAL } from "../../common/entities/User"
 import { changeDuration } from "../../common/functions/common/convert"
 import { playQueue } from "../../common/functions/play/playControl"
 import { cleanLastPlayInfo } from "../../common/functions/play/playListOp"
@@ -16,10 +16,10 @@ import { DownloadDialog } from "../dialog/DownloadDialog"
 
 @Component
 export struct SongInfoSheet {
-  song: Song = SongItem
+  song: Song = Song_INITIAL
   artists: string = ''
   picUrl: string | ResourceStr = ''
-  playlist: PlayList = PlayListItem
+  playlist: PlayList = PlayList_INITIAL
   index: number = 0
   allowToArtist: boolean = true
   allowToAlbum: boolean = true
@@ -27,7 +27,7 @@ export struct SongInfoSheet {
   listAction: () => void = () => {}
   @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
   @StorageProp(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
-  @StorageProp(StorageConstants.USER) user: User = UserItem
+  @StorageProp(StorageConstants.USER) user: User = User_INITIAL
   @Link isShow: boolean
   @Link isShowArtistsSheet: boolean
   @Link isShowAddSheet: boolean
@@ -140,7 +140,7 @@ export struct SongInfoSheet {
         }
         if(this.allowToArtist && this.song?.artists[0].id !== 0) {
           ListItem() {
-            this.Item($r('app.media.ic_user_portrait'), '查看歌手', () => { this.isShowArtistsSheet = true })
+            this.Item($r('app.media.ic_user_portrait'), '查看艺术家', () => { this.isShowArtistsSheet = true })
           }
         }
         if(this.song.album?.id !== 0 && this.allowToAlbum) {

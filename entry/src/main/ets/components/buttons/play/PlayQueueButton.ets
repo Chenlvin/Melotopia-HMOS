@@ -1,5 +1,5 @@
 import { StorageConstants } from "../../../common/constants/StorageConstants"
-import { PlayQueue } from "../../../common/entities/local/PlayQueue"
+import { PlayQueue } from "../../../common/model/PlayQueue"
 import { PlayQueueSheet } from "../../sheets/PlayQueueSheet"
 
 @Component

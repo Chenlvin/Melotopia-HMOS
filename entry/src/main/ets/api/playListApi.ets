@@ -1,14 +1,17 @@
 import { ToastUtil } from "@pura/harmony-utils"
-import { PlayList, PlayListOperationRes,
+import {
+  CloudResult,
+  PlayList, PlayListOperationResult,
   PlayListResult,
-  PlayListSearchResult } from "../common/entities/playlist/PlayList"
-import { CloudResult, PlayListSong, PlayListSongs } from "../common/entities/playlist/PlayListSongs"
-import { Song } from "../common/entities/song/Song"
-import { User, UserItem } from "../common/entities/user/User"
+  PlayListSearchResult,
+  PlayListSong,
+  PlayListSongsResult} from "../common/entities/PlayList"
+import { Song } from "../common/entities/Song"
+import { User, User_INITIAL } from "../common/entities/User"
 import PreferencesUtils from "../common/utils/data/PreferencesUtils"
 import { StorageConstants } from "../common/constants/StorageConstants"
-import { Personalized, PersonalListItem } from "../common/entities/recommend/Personalized"
 import commonRequest from "../common/utils/request/RequestUtil"
+import { Personalized, PersonalListItem } from "../common/entities/Recommend"
 
 export interface PlayListsResult {
   more:boolean
@@ -21,7 +24,7 @@ export interface PlayListsResult {
  */
 export const getPlayLists = async (offset: number): Promise<PlayListsResult> => {
   let list: PlayList[] = new Array()
-  const user = await PreferencesUtils.getPreferenceValue<User>(StorageConstants.USER_PREF, StorageConstants.USER, UserItem)
+  const user = await PreferencesUtils.getPreferenceValue<User>(StorageConstants.USER_PREF, StorageConstants.USER, User_INITIAL)
   if(user.data.account.id === 0) {
     return { more: false, playlist: [] }
   }
@@ -48,7 +51,7 @@ export const getPlayListSongs = async (
   offset: number,
   usetimestamp: boolean = true
 ): Promise<PlayListSong[]> => {
-  const result = await commonRequest<PlayListSongs>({
+  const result = await commonRequest<PlayListSongsResult>({
     url: '/playlist/track/all',
     params: { id, limit, offset, timestamp: new Date().getTime() }
   })
@@ -70,7 +73,7 @@ export const PlayListOperation = async (
   pid:number,
   tracks:number
 ): Promise<boolean> => {
-  const result = await commonRequest<PlayListOperationRes>({
+  const result = await commonRequest<PlayListOperationResult>({
     url: '/playlist/tracks',
     params: { op: op, pid, tracks, timestamp: new Date().getTime() }
   })
@@ -148,6 +151,7 @@ interface delResponse {
   code: number
   message: string
 }
+
 /**
  * 删除歌单
  * @param pid

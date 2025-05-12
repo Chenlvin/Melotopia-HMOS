@@ -1,8 +1,4 @@
 /**
- * 歌词类
- */
-
-/**
  * 歌词格式 time + content
  */
 export interface Lyric {
@@ -10,13 +6,13 @@ export interface Lyric {
   content: string
 }
 
-/**
- * HTTP Result
- */
 interface Lrc {
   lyric: string
 }
 
+/**
+ * 歌词返回结果
+ */
 export interface LyricResult {
   code: number
   lrc: Lrc
@@ -25,7 +21,7 @@ export interface LyricResult {
   romalrc: Lrc // 音
 }
 
-export const LyricResultClass: LyricResult = {
+export const LyricResult_INITIAL: LyricResult = {
   code: 200,
   lrc: {
     lyric: ''
@@ -41,6 +37,6 @@ export const LyricResultClass: LyricResult = {
   },
 }
 
-export const EmptyLrcItem: Lrc = {
+export const Lrc_INITIAL: Lrc = {
   lyric: '[00:00:00] 暂无歌词'
 }

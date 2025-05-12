@@ -1,6 +1,6 @@
 import Constants from "../../../common/constants/Constants"
 import { StorageConstants } from "../../../common/constants/StorageConstants"
-import { Song, SongItem } from "../../../common/entities/song/Song"
+import { Song, Song_INITIAL } from "../../../common/entities/Song"
 import { PlayListAddSheet } from "../../sheets/PlayListAddSheet"
 
 @Component

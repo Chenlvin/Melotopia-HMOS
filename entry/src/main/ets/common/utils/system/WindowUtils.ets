@@ -2,7 +2,7 @@ import { display, window } from '@kit.ArkUI'
 import { LogUtil, PermissionUtil, ToastUtil } from '@pura/harmony-utils'
 import Constants from '../../constants/Constants'
 import { StorageConstants } from '../../constants/StorageConstants'
-import { FloatLyric } from '../../entities/local/Settings'
+import { FloatLyric } from '../../model/Settings'
 
 const TAG = '[WindowUtils] '
 

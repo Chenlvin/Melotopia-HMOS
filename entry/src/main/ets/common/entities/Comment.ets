@@ -24,7 +24,7 @@ export interface CommentResult {
   data: CommentData
 }
 
-export const CommentResultItem: CommentResult = {
+export const CommentResult_INITIAL: CommentResult = {
   code: 200,
   data: {
     commentsTitle: '',
@@ -32,7 +32,7 @@ export const CommentResultItem: CommentResult = {
   }
 }
 
-export const CommentItem: Comment = {
+export const Comment_INITIAL: Comment = {
   user: {
     avatarUrl: '',
     nickname: '',

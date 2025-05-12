@@ -2,8 +2,8 @@ import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { getPlayLists, PlayListOperation } from "../../api/playListApi"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { PlayList } from "../../common/entities/playlist/PlayList"
-import { User, UserItem } from "../../common/entities/user/User"
+import { PlayList } from "../../common/entities/PlayList"
+import { User, User_INITIAL } from "../../common/entities/User"
 
 /**
  * 添加至歌单Sheet
@@ -14,7 +14,7 @@ const TAG = '[PlayListAddSheet] '
 export struct PlayListAddSheet {
   @StorageProp('currentQueueIndex') currentQueueIndex: number = 0
   @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
-  @StorageProp(StorageConstants.USER) user: User = UserItem
+  @StorageProp(StorageConstants.USER) user: User = User_INITIAL
   @StorageLink(StorageConstants.USER_PLAYLISTS) playLists: PlayList[] = []
   @State isLoading: boolean = false
   @State isRefreshing: boolean = false

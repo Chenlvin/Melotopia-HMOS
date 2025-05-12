@@ -1,4 +1,4 @@
-import { QualityType, SongDownload } from "../common/entities/song/SongDownload"
+import { QualityType, SongDownload } from "../common/entities/Song"
 import commonRequest from "../common/utils/request/RequestUtil"
 
 interface SongUrlResponse {

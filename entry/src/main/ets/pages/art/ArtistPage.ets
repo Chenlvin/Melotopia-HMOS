@@ -3,14 +3,14 @@ import { DialogUtil, ToastUtil } from "@pura/harmony-utils"
 import { getArtistInfo } from "../../api/artistApi"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { ArtistInfo, ArtistInfoItem } from "../../common/entities/song/ArtistInfo"
-import { ArtistParam } from "../../common/entities/local/PageParams"
-import { PlayListSong } from "../../common/entities/playlist/PlayListSongs"
+import { ArtistParam } from "../../common/model/PageParams"
 import { SongCard } from "../../components/cards/SongCard"
 import { BottomBarComponent } from "../../components/play/BottomBarComponent"
 import { PLAYMODE } from "../../common/model/Enum"
 import { PlayAllButton } from "../../components/buttons/PlayAllButton"
 import { playListToQueue } from "../../common/functions/play/playListOp"
+import { PlayListSong } from "../../common/entities/PlayList"
+import { ArtistInfo, ArtistInfo_INITIAL } from "../../common/entities/Artists"
 
 @Component
 export struct ArtistPage {
@@ -22,7 +22,7 @@ export struct ArtistPage {
   }
   @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
-  @State artist: ArtistInfo = ArtistInfoItem
+  @State artist: ArtistInfo = ArtistInfo_INITIAL
   @State isLoading: boolean = true
   @State showTitleBar: boolean = false
   @State dataSource: LazyData<PlayListSong> = new LazyData()
@@ -177,7 +177,7 @@ export struct ArtistPage {
       this.dataSource.setData(this.artist.hotSongs)
       this.dataSource.notifyDataReload()
     } catch (e) {
-      ToastUtil.showToast('获取歌手信息失败')
+      ToastUtil.showToast('获取艺术家信息失败')
     } finally {
       this.isLoading = false
     }

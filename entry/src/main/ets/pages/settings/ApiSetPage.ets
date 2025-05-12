@@ -1,7 +1,7 @@
 import { ToastUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { Api, EmptyApi } from "../../common/entities/local/Api"
+import { Api, Api_INITIAL } from "../../common/model/Api"
 import { checkValidUrl } from "../../common/functions/common/get"
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 import { ExplainButton } from "../../components/buttons/ExplainButton"
@@ -17,7 +17,7 @@ export struct ApiSetPage {
   @StorageProp(StorageConstants.API_URL) customApiUrl: string = ''
   @StorageProp(StorageConstants.VALID_API_URL) validApiUrl: boolean = false
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
-  @StorageProp(StorageConstants.API_SETTINGS) apiSettings: Api = EmptyApi
+  @StorageProp(StorageConstants.API_SETTINGS) apiSettings: Api = Api_INITIAL
   @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @State selected: number = 0
 

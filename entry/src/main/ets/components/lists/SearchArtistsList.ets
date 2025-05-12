@@ -1,11 +1,11 @@
 import { LogUtil } from "@pura/harmony-utils"
 import { searchArtists } from "../../api/artistApi"
 import Constants from "../../common/constants/Constants"
-import { ArtistItem } from "../../common/entities/song/ArtistsResult"
-import { ArtistCard } from "../../components/cards/ArtistCard"
+import { ArtistItem } from "../../common/entities/Artists"
+import { ArtistCard } from "../cards/ArtistCard"
 
 /**
- * 歌手搜索结果列表
+ * 艺术家搜索结果列表
  */
 const TAG = "[SearchArtistsList] "
 

@@ -3,7 +3,7 @@ import { setHeartMode } from "../../api/songApi"
 import { IndexCard } from "../../components/cards/IndexCard"
 import Constants from "../constants/Constants"
 import { StorageConstants } from "../constants/StorageConstants"
-import { PlayList } from "../entities/playlist/PlayList"
+import { PlayList } from "../entities/PlayList"
 import { playNext, playQueue } from "../functions/play/playControl"
 import PlayQueueUtils from "../utils/play/PlayQueueUtils"
 

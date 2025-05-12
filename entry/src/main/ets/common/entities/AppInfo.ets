@@ -1,4 +1,4 @@
-import { AppConstants } from "../../constants/AppConstants"
+import { AppConstants } from "../constants/AppConstants"
 
 interface Version {
   currentVersion: string

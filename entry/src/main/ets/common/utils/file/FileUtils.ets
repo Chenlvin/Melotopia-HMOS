@@ -4,11 +4,11 @@ import fs from '@ohos.file.fs'
 import { Environment, fileUri, statfs } from '@kit.CoreFileKit'
 import { picker } from '@kit.CoreFileKit'
 import { BusinessError } from '@kit.BasicServicesKit'
-import { LocalSong } from '../../entities/local/LocalData'
 import RelationalStoreUtils from '../data/RelationalStoreUtils'
 import { JSON } from '@kit.ArkTS'
 import { fetchSongInfo, getArtists } from '../../functions/common/convert'
 import { getContext_ } from '../system/AppUtils'
+import { LocalSong } from '../../entities/Song'
 
 /**
  * 文件管理

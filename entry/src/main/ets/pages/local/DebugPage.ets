@@ -1,16 +1,16 @@
 import { StorageConstants } from "../../common/constants/StorageConstants";
-import { User, UserItem } from "../../common/entities/user/User";
+import { User, User_INITIAL } from "../../common/entities/User";
 import { JSON } from "@kit.ArkTS";
 import Constants from "../../common/constants/Constants";
 import { resourceManager } from "@kit.LocalizationKit";
 import { AppConstants } from "../../common/constants/AppConstants";
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils";
-import { FloatLyricItem, LyricStyleItem } from "../../common/entities/local/Settings";
+import { FloatLyric_INITIAL, LyricStyle_INITIAL } from "../../common/model/Settings";
 
 @Component
 export struct DebugPage {
   @StorageProp(StorageConstants.COOKIE) cookie: string = ''
-  @StorageProp(StorageConstants.USER) user: User = UserItem
+  @StorageProp(StorageConstants.USER) user: User = User_INITIAL
   @StorageProp(StorageConstants.DEVICE_TYPE) deviceType: resourceManager.DeviceType = resourceManager.DeviceType.DEVICE_TYPE_PHONE
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) widBp: string = 'sm'
   @StorageProp(StorageConstants.BREAKPOINT_HEIGHT) heightBp: string = 'sm'

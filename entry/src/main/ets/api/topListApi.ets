@@ -1,5 +1,5 @@
 import { StorageConstants } from "../common/constants/StorageConstants"
-import { TopList, TopListItem } from "../common/entities/recommend/TopList"
+import { TopList, TopListItem } from "../common/entities/Recommend"
 import PreferencesUtils from "../common/utils/data/PreferencesUtils"
 import commonRequest from "../common/utils/request/RequestUtil"
 

@@ -1,10 +1,10 @@
 import { DialogUtil, EmitterUtil, ToastUtil } from "@pura/harmony-utils"
-import { PlayQueue } from "../../common/entities/local/PlayQueue"
+import { PlayQueue } from "../../common/model/PlayQueue"
 import { playQueue } from "../../common/functions/play/playControl"
 import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
 import { LazyData } from '@pie/lazy-data';
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { PlayList } from "../../common/entities/playlist/PlayList"
+import { PlayList } from "../../common/entities/PlayList"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
 import { cleanLastPlayInfo } from "../../common/functions/play/playListOp"

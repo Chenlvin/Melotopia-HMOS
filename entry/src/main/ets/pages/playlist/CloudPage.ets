@@ -5,14 +5,14 @@ import { BottomBarComponent } from '../../components/play/BottomBarComponent'
 import Constants from '../../common/constants/Constants'
 import { ClickToLoadButton, LoadingMoreButton, NoMoreButton } from '../../components/buttons/LoadMoreButtons'
 import { StorageConstants } from '../../common/constants/StorageConstants'
-import { PlayListSong } from '../../common/entities/playlist/PlayListSongs'
 import { LazyData } from '@pie/lazy-data'
-import { PlayQueue } from '../../common/entities/local/PlayQueue'
+import { PlayQueue } from '../../common/model/PlayQueue'
 import PlayQueueUtils from '../../common/utils/play/PlayQueueUtils'
 import { playQueue } from '../../common/functions/play/playControl'
 import { PLAYMODE } from '../../common/model/Enum'
 import { PlayAllButton } from '../../components/buttons/PlayAllButton'
 import { BarLoading } from '../../components/cards/Loading'
+import { PlayListSong } from '../../common/entities/PlayList'
 
 /**
  * 云盘

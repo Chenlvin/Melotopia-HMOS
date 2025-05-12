@@ -1,4 +1,4 @@
-import { Song, SongItem } from "../entities/song/Song"
+import { Song, Song_INITIAL } from "../entities/Song"
 import { changeDuration } from "../functions/common/convert"
 import { pauseMusic, playNext, playPre, resumeMusic, seekMusic } from "../functions/play/playControl"
 import { AddToPlayListCircleButton } from "../../components/buttons/play/AddToPlayListButton"
@@ -21,13 +21,14 @@ import { EmitterConstants } from "../constants/EmitterConstants"
 import { PLAYMODE } from "../model/Enum"
 import { PersonalFmMenu } from "../../components/menu/PersonalFmMenu"
 import { PlaySettingSinglePage } from "../../pages/settings/PlaySettingsPage"
+import AVPlayerUtils from "../utils/play/AVPlayerUtils"
 
 @Component
 export struct Player {
   @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @StorageProp(StorageConstants.PLAY_MODE) playmode: PLAYMODE = PLAYMODE.SINGLE
-  @StorageProp(StorageConstants.PLAY_SONG) song: Song = SongItem
+  @StorageProp(StorageConstants.PLAY_SONG) song: Song = Song_INITIAL
   @StorageProp(StorageConstants.PLAY_ARTISTS) artists: string = ''
   @StorageProp(StorageConstants.IS_PAUSED) isPaused: boolean = false
   @StorageProp(StorageConstants.PIC_URL) picUrl: string = ''
@@ -118,6 +119,7 @@ export struct Player {
     this.isLikeProcessing = true
     try {
       await likeThisSong()
+      AVPlayerUtils.syncSessionState()
     } finally {
       this.isLikeProcessing = false
     }

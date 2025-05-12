@@ -1,12 +1,12 @@
 import { EmitterUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
-import { AlbumParam, CommonParam } from "../../common/entities/local/PageParams"
-import { Album, AlbumItem } from "../../common/entities/song/Album"
+import { AlbumParam, CommonParam } from "../../common/model/PageParams"
+import { Album, Album_INITIAL } from "../../common/entities/Album"
 
 @Component
 export struct AlbumCard {
-  album: Album = AlbumItem
+  album: Album = Album_INITIAL
   @Prop breakpoint: string = 'sm'
 
   build() {

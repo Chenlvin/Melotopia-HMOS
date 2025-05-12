@@ -2,10 +2,10 @@ import { EmitterUtil, LogUtil } from "@pura/harmony-utils"
 import { searchSongs } from "../../api/songApi"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
-import { Song } from "../../common/entities/song/Song"
-import { ClickToLoadButton, LoadingMoreButton, NoMoreButton } from "../../components/buttons/LoadMoreButtons"
-import { AddToPlayListButton } from "../../components/buttons/play/AddToPlayListButton"
-import { SongCard } from "../../components/cards/SongCard"
+import { Song } from "../../common/entities/Song"
+import { ClickToLoadButton, LoadingMoreButton, NoMoreButton } from "../buttons/LoadMoreButtons"
+import { AddToPlayListButton } from "../buttons/play/AddToPlayListButton"
+import { SongCard } from "../cards/SongCard"
 
 /**
  * 搜索结果——单曲列表

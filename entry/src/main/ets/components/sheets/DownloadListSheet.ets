@@ -1,5 +1,5 @@
 import Constants from "../../common/constants/Constants"
-import { DownloadItem } from "../../common/entities/local/Download"
+import { DownloadItem } from "../../common/model/Download"
 import { LazyData } from "@pie/lazy-data"
 import { StorageConstants } from "../../common/constants/StorageConstants"
 import { getArtists } from "../../common/functions/common/convert"

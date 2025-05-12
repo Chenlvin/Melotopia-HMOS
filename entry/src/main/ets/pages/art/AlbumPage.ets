@@ -1,16 +1,16 @@
 import { DialogUtil } from "@pura/harmony-utils"
 import { getAlbumInfo } from "../../api/albumApi"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { AlbumParam } from "../../common/entities/local/PageParams"
-import { PlayListSong } from "../../common/entities/playlist/PlayListSongs"
+import { AlbumParam } from "../../common/model/PageParams"
 import { SongCard } from "../../components/cards/SongCard"
 import Constants from "../../common/constants/Constants"
 import { BottomBarComponent } from "../../components/play/BottomBarComponent"
-import { AlbumResult, AlbumResultItem } from "../../common/entities/song/Album"
+import { AlbumInfoResult, AlbumInfoResult_INITIAL } from "../../common/entities/Album"
 import { playListToQueue } from "../../common/functions/play/playListOp"
 import { PLAYMODE } from "../../common/model/Enum"
 import { PlayAllButton } from "../../components/buttons/PlayAllButton"
 import { AlbumCommentSheet } from "../../components/sheets/AlbumCommentSheet"
+import { PlayListSong } from "../../common/entities/PlayList"
 
 @Component
 export struct AlbumPage {
@@ -20,7 +20,7 @@ export struct AlbumPage {
   @StorageLink(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
   @State songs: PlayListSong[] = []
   @State isLoading: boolean = true
-  @State albumInfo: AlbumResult = AlbumResultItem
+  @State albumInfo: AlbumInfoResult = AlbumInfoResult_INITIAL
   @State isShowComment: boolean = false
   @State param: AlbumParam = {
     album: {

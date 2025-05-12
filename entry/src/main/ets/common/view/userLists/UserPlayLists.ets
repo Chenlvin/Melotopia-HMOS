@@ -2,8 +2,8 @@ import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { getPlayLists } from "../../../api/playListApi"
 import Constants from "../../constants/Constants"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { PlayList } from "../../entities/playlist/PlayList"
-import { User, UserItem } from "../../entities/user/User"
+import { PlayList } from "../../entities/PlayList"
+import { User, User_INITIAL } from "../../entities/User"
 import { PlayListCard } from "../../../components/cards/PlayListCard"
 import { PlayListSkeleton } from "../../../components/skeleton/Skeleton"
 
@@ -12,7 +12,7 @@ export struct UserPlayLists {
   @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
   @StorageProp(StorageConstants.IS_LOGGED) @Watch('getPlayLists') isLogged: boolean = false
-  @StorageProp(StorageConstants.USER) user: User = UserItem
+  @StorageProp(StorageConstants.USER) user: User = User_INITIAL
   @StorageProp(StorageConstants.USER_PLAYLISTS) playLists: Array<PlayList> = []
   @State playListTabIndex: number = 0
   @State isRefreshing: boolean = false

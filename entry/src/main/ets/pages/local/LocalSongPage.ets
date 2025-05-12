@@ -4,19 +4,18 @@ import { BottomBarComponent } from '../../components/play/BottomBarComponent';
 import Constants from '../../common/constants/Constants';
 import { StorageConstants } from '../../common/constants/StorageConstants';
 import { DialogUtil, EmitterUtil, LogUtil, ToastUtil } from '@pura/harmony-utils';
-import { LocalSong } from '../../common/entities/local/LocalData';
 import RelationalStoreUtils from '../../common/utils/data/RelationalStoreUtils';
 import { LazyData } from '@pie/lazy-data';
 import { PickerUtil } from '@pura/picker_utils';
 import { EmitterConstants } from '../../common/constants/EmitterConstants';
 import { PlayAllButton } from '../../components/buttons/PlayAllButton';
 import PlayQueueUtils from '../../common/utils/play/PlayQueueUtils';
-import { Song } from '../../common/entities/song/Song';
-import { fetchMetadata, getArtists } from '../../common/functions/common/convert';
+import { LocalSong, Song } from '../../common/entities/Song';
+import { fetchMetadata } from '../../common/functions/common/convert';
 import { getLocalSongArtists } from '../../common/functions/common/get';
-import { AlbumItem } from '../../common/entities/song/Album';
+import { Album_INITIAL } from '../../common/entities/Album';
 import { playQueue } from '../../common/functions/play/playControl';
-import { PlayQueue } from '../../common/entities/local/PlayQueue';
+import { PlayQueue } from '../../common/model/PlayQueue';
 
 /**
  * 缓存管理页
@@ -59,7 +58,7 @@ export struct LocalSongPage {
           title: '上传文件',
           message: '支持上传本机音频文件至本地曲库\n' +
             '支持格式为.mp3 .flac\n\n' +
-            '* 文件名格式：歌手 - 歌名.flac* \n\n' +
+            '* 文件名格式：艺术家 - 歌名.flac* \n\n' +
             '文件名格式不正确会导致无法识别\n',
           primaryButton: "取消",
           secondaryButton: {
@@ -95,7 +94,7 @@ export struct LocalSongPage {
         const fileUrl = rootUrl + `/${localSong.songFile}`
         const metadata = await fetchMetadata(fileUrl)
         let artists = await getLocalSongArtists(localSong.artists)
-        let song: Song = { id: localSong.songId, name: localSong.name, artists: artists, album: AlbumItem,
+        let song: Song = { id: localSong.songId, name: localSong.name, artists: artists, album: Album_INITIAL,
           duration: metadata ? ((metadata.duration) ? parseInt(metadata.duration) : 0) : 0, alias: [], fee: 0
         }
         playSongs.push({ playmode: 0, song: song, fileName: localSong.songFile, picUrl: '' })

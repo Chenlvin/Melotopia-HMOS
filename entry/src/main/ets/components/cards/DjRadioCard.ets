@@ -1,15 +1,14 @@
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { RecommendDjRadio, RecommendDjRadioItem } from "../../common/entities/dj/DjRecommend"
-import { DjRadio, djRadioItem } from "../../common/entities/dj/DjResult"
-import { DjRadioParam } from "../../common/entities/local/PageParams"
+import { DjRadio, DjRadio_INITIAL, RecommendDjRadio, RecommendDjRadio_INITIAL } from "../../common/entities/DjRadio"
+import { DjRadioParam } from "../../common/model/PageParams"
 
 const recommendCoverHeight: number = Constants.HEIGHT_EXPLORE_LARGECARD
 const recommendCardHeight: number = recommendCoverHeight + 30
 
 @Component
 export struct DjRadioCard {
-  djRadio: DjRadio = djRadioItem
+  djRadio: DjRadio = DjRadio_INITIAL
   @Prop breakpoint: string = 'sm'
   @Consume('pageInfos') pageInfos: NavPathStack
 
@@ -54,7 +53,7 @@ export struct DjRadioCard {
 
 @Component
 export struct DjRadioRecommendCard {
-  djRadio: RecommendDjRadio = RecommendDjRadioItem
+  djRadio: RecommendDjRadio = RecommendDjRadio_INITIAL
   @Consume('pageInfos') pageInfos: NavPathStack
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
 

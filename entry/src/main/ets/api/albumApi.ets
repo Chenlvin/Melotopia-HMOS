@@ -1,9 +1,9 @@
 import { StorageConstants } from "../common/constants/StorageConstants";
 import {
   Album,
-  AlbumResult,
+  AlbumInfoResult,
   AlbumSearchResult,
-  SubAlbumResult, SubAlbumResultItem } from "../common/entities/song/Album";
+  SubAlbumResult, SubAlbumResult_INITIAL } from "../common/entities/Album";
 import PreferencesUtils from "../common/utils/data/PreferencesUtils";
 import commonRequest from "../common/utils/request/RequestUtil";
 
@@ -12,7 +12,7 @@ import commonRequest from "../common/utils/request/RequestUtil";
  * @param id
  * @returns
  */
-export const getAlbumInfo = async (id: number): Promise<AlbumResult> =>
+export const getAlbumInfo = async (id: number): Promise<AlbumInfoResult> =>
   commonRequest({
     url: '/album',
     params: { id }
@@ -29,7 +29,7 @@ export const getSubAlbum = async (): Promise<SubAlbumResult> => {
     params: {}
   })
   PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_SUB_ALBUM, result.data)
-  return result ?? SubAlbumResultItem
+  return result ?? SubAlbumResult_INITIAL
 }
 
 /**

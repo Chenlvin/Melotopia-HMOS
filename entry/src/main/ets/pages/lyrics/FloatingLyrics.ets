@@ -2,7 +2,7 @@ import { StorageConstants } from "../../common/constants/StorageConstants"
 import { display, window } from "@kit.ArkUI"
 import Constants from "../../common/constants/Constants";
 import { LogUtil } from "@pura/harmony-utils";
-import { FloatLyric, FloatLyricItem, LyricPosition } from "../../common/entities/local/Settings";
+import { FloatLyric, FloatLyric_INITIAL, LyricPosition } from "../../common/model/Settings";
 import WindowUtils from "../../common/utils/system/WindowUtils";
 import { changeSettings } from "../../common/functions/app/settings";
 
@@ -88,7 +88,7 @@ export struct FloatingLyrics {
   @StorageProp(StorageConstants.IS_PLAYER_SHOW) isPlayerShow: boolean = false
   @StorageProp(StorageConstants.CURRENT_LYRIC) currentLyric: string = '';
   @StorageProp(StorageConstants.PLAY_ARTISTS) artists: string = '';
-  @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) @Watch('onLyricStyleChange') floatLyricStyle: FloatLyric = FloatLyricItem
+  @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) @Watch('onLyricStyleChange') floatLyricStyle: FloatLyric = FloatLyric_INITIAL
   private controller: FloatingLyricsController = new FloatingLyricsController();
 
   aboutToAppear(): void {

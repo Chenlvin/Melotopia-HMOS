@@ -2,8 +2,8 @@ import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { PlayListOperation } from "../../../api/playListApi"
 import { getLikeList, likeMusic } from "../../../api/songApi"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { PlayList } from "../../entities/playlist/PlayList"
-import { Song } from "../../entities/song/Song"
+import { PlayList } from "../../entities/PlayList"
+import { Song } from "../../entities/Song"
 
 const TAG = '[songLike] '
 

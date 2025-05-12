@@ -1,7 +1,7 @@
 import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { putDjRadioInQueue } from "../../../api/djApi"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { PlayingPlayList } from "../../entities/playlist/PlayList"
+import { PlayingPlayList } from "../../entities/PlayList"
 import { playQueue } from "./playControl"
 
 const TAG = '[playListOp] '

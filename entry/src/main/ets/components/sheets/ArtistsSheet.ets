@@ -1,6 +1,6 @@
 import Constants from "../../common/constants/Constants"
-import { ArtistParam } from "../../common/entities/local/PageParams"
-import { Artist } from "../../common/entities/song/Song"
+import { ArtistParam } from "../../common/model/PageParams"
+import { Artist } from "../../common/entities/Song"
 
 @Component
 export struct ArtistsSheet {
@@ -13,7 +13,7 @@ export struct ArtistsSheet {
   build() {
     List({ space: 10 }) {
       ListItem() {
-        Text('歌手')
+        Text('艺术家')
           .fontSize(Constants.FONT_SIZE_TITLE)
           .fontWeight(FontWeight.Bold)
           .width('100%')

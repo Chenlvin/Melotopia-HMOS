@@ -1,8 +1,8 @@
-import { COMMENT_TYPE } from "../../model/Enum";
-import { DjRadio } from "../dj/DjResult";
-import { PlayList } from "../playlist/PlayList";
-import { Album } from "../song/Album";
-import { Artist } from "../song/Song";
+import { COMMENT_TYPE } from "./Enum";
+import { DjRadio } from "../entities/DjRadio";
+import { PlayList } from "../entities/PlayList";
+import { Album } from "../entities/Album";
+import { Artist } from "../entities/Song";
 
 /**
  * 歌单详情页参数
@@ -22,7 +22,7 @@ export interface WebPageParam {
 }
 
 /**
- * 歌手信息参数
+ * 艺术家信息参数
  */
 export interface ArtistParam {
   artist: Artist
@@ -50,6 +50,7 @@ export interface CommentParam {
   name: string
   type: COMMENT_TYPE
 }
+
 /**
  * 通用参数
  */

@@ -1,6 +1,6 @@
 import { relationalStore } from '@kit.ArkData'
 import { LogUtil } from '@pura/harmony-utils'
-import { LocalSong } from '../../entities/local/LocalData'
+import { LocalSong } from '../../entities/Song'
 
 const TAG = '[RelationalStoreUtils] '
 const STORE_CONFIG: relationalStore.StoreConfig = {

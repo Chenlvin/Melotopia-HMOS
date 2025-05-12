@@ -1,8 +1,8 @@
 import { EmitterUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
-import { CommonParam, PlayListPageParam } from "../../common/entities/local/PageParams"
-import { TopListItem } from "../../common/entities/recommend/TopList"
+import { CommonParam, PlayListPageParam } from "../../common/model/PageParams"
+import { TopListItem } from "../../common/entities/Recommend"
 
 const cardHeight = Constants.HEIGHT_EXPLORE_LARGECARD
 

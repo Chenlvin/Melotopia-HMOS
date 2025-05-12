@@ -1,6 +1,6 @@
-import { PlayList } from "../../common/entities/playlist/PlayList"
-import { PlayListItem } from "../../common/entities/playlist/PlayList"
-import { PlayListPageParam } from "../../common/entities/local/PageParams"
+import { PlayList } from "../../common/entities/PlayList"
+import { PlayList_INITIAL } from "../../common/entities/PlayList"
+import { PlayListPageParam } from "../../common/model/PageParams"
 import Constants from "../../common/constants/Constants"
 
 @Component
@@ -8,7 +8,7 @@ export struct PlayListCard {
   @Consume('pageInfos') pageInfos: NavPathStack
   @State isShowHeart: boolean = true
   @Prop breakpoint: string = 'sm'
-  playList: PlayList = PlayListItem
+  playList: PlayList = PlayList_INITIAL
 
   build() {
     Button() {

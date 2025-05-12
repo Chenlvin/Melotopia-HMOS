@@ -27,7 +27,7 @@ import {
   CommentParam,
   DjRadioParam,
   PlayListPageParam,
-  WebPageParam } from "../entities/local/PageParams"
+  WebPageParam } from "./PageParams"
 
 @Builder
 export function PageMap(name: string, param: Object) {

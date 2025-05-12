@@ -1,16 +1,16 @@
 import Constants from "../../common/constants/Constants"
-import { LocalSong, LocalSongItem } from "../../common/entities/local/LocalData"
 import FileUtils from "../../common/utils/file/FileUtils"
 import { MatchSongSheet } from "../sheets/MatchSongSheet"
 import { getLocalSongArtistsString } from "../../common/functions/common/get"
 import { FileCardClickMenu } from "../menu/FileCardClickMenu"
+import { LocalSong, LocalSong_INITIAL } from "../../common/entities/Song"
 
 /**
  * 文件卡片组件
  */
 @Component
 export struct FileCard {
-  @State localSong: LocalSong = LocalSongItem
+  @State localSong: LocalSong = LocalSong_INITIAL
   @State showMatchSheet: boolean = false
   @State filesDir: string = ''
   @State artistsString: string = ''

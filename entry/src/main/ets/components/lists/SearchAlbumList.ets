@@ -1,8 +1,8 @@
 import { LogUtil } from "@pura/harmony-utils"
 import { searchAlbums } from "../../api/albumApi"
 import Constants from "../../common/constants/Constants"
-import { Album } from "../../common/entities/song/Album"
-import { AlbumCard } from "../../components/cards/AlbumCard"
+import { Album } from "../../common/entities/Album"
+import { AlbumCard } from "../cards/AlbumCard"
 
 /**
  * 专辑搜索结果列表

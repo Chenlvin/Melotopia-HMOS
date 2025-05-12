@@ -1,8 +1,7 @@
 import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { PlayQueue } from "../../entities/local/PlayQueue"
-import { PlayingPlayList } from "../../entities/playlist/PlayList"
-import { PlayListSong } from "../../entities/playlist/PlayListSongs"
+import { PlayQueue } from "../../model/PlayQueue"
+import { PlayingPlayList, PlayListSong } from "../../entities/PlayList"
 import PlayQueueUtils from "../../utils/play/PlayQueueUtils"
 import { playQueue } from "./playControl"
 

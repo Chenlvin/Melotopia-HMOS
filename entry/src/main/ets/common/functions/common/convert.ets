@@ -1,9 +1,8 @@
-import { Artist, Song } from "../../entities/song/Song"
+import { Artist, Song } from "../../entities/Song"
 import { util } from "@kit.ArkTS"
 import { media } from "@kit.MediaKit"
 import { fileIo } from "@kit.CoreFileKit"
 import { LogUtil } from "@pura/harmony-utils"
-import { PlayListSong } from "../../entities/playlist/PlayListSongs"
 
 /**
  * 获取metadata

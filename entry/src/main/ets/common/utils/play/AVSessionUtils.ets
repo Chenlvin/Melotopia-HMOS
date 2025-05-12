@@ -1,7 +1,7 @@
 import { avSession } from "@kit.AVSessionKit";
-import { LogUtil } from "@pura/harmony-utils";
+import { LogUtil, RandomUtil } from "@pura/harmony-utils";
 import { StorageConstants } from "../../constants/StorageConstants";
-import { Song, SongItem } from "../../entities/song/Song";
+import { Song, Song_INITIAL } from "../../entities/Song";
 import { changeCycleMode,
   pauseMusic, playNext, playPre, resumeMusic, seekMusic } from "../../functions/play/playControl";
 import { likeThisSong } from "../../functions/play/songLike";
@@ -17,10 +17,11 @@ class AVSessionUtils {
   private instance: avSession.AVSession | null = null
   private isActivating = false
   private cycleMode: number = 0
-  private currentSong: Song = SongItem
+  private currentSong: Song = Song_INITIAL
   private currentArtists: string = ''
   private currentPic: string | ResourceStr  = ''
   private lyric: string = ''
+  private controller: avSession.AVSessionController | null = null
 
   private async getInstance(): Promise<avSession.AVSession> {
     if(!this.instance) {
@@ -28,6 +29,15 @@ class AVSessionUtils {
     }
     return this.instance
   }
+
+  async getController(): Promise<avSession.AVSessionController> {
+    if(!this.controller) {
+      const instance = await this.getInstance()
+      this.controller = await instance.getController()
+    }
+    return this.controller
+  }
+
   async createSession(): Promise<avSession.AVSession> {
     let session = await avSession.createAVSession(getContext_(), 'cloudmusic', 'audio')
     try {
@@ -62,11 +72,18 @@ class AVSessionUtils {
         else { changeCycleMode(0) }
       })
 
+      this.controller = await session.getController()
+
     } catch (e) {
       LogUtil.error(TAG, '创建session失败 / create session error: ' + JSON.stringify(e))
     } finally {
       return session
     }
+  }
+
+  async sendControlCommand(command: avSession.AVControlCommand) {
+    const controller = await this.getController()
+    controller.sendControlCommand(command, () => {})
   }
 
   /**
@@ -84,13 +101,15 @@ class AVSessionUtils {
     let metadata: avSession.AVMetadata = {
       assetId: `${song.id}`,
       title: song.name,
-      mediaImage: typeof picUrl === 'string' ? picUrl : '/resources/base/media/app.media.ic_public_music.svg',
+      mediaImage: typeof picUrl === 'string' ? `${picUrl}?param=256y256` : '/resources/base/media/app.media.ic_public_music.svg',
       artist: artists != 'null' ? artists : '未知',
       duration: song.duration,
       lyric: this.lyric
     };
 
-    (await this.getInstance()).setAVMetadata(metadata)
+    const instance = await this.getInstance()
+    instance.setAVMetadata(metadata)
+    let controller = await instance.getController()
   }
 
   /**
@@ -98,10 +117,12 @@ class AVSessionUtils {
    */
   async activate() {
     if (this.isActivating) return // 防止重复调用
-    this.isActivating = true
     try {
-      await (await this.getInstance()).activate()
-    } finally {
+      const instance = await this.getInstance()
+      await instance.activate()
+      this.isActivating = true
+    } catch (e) {
+      LogUtil.error(TAG, 'Error while activating: ' + e)
       this.isActivating = false
     }
   }
@@ -109,12 +130,14 @@ class AVSessionUtils {
   /**
    * 停用
    */
-  async deactive() {
+  async deactivate() {
     if (this.isActivating) return // 等待激活完成
     try {
-      (await this.getInstance()).deactivate()
+      const instance = await this.getInstance()
+      await instance.activate()
+      this.isActivating = false
     } catch (e) {
-      LogUtil.error(TAG, '停用失败: ' + e)
+      LogUtil.error(TAG, 'Error while deactivating' + e)
     }
   }
 
@@ -122,6 +145,7 @@ class AVSessionUtils {
     const is: boolean = AppStorage.get(StorageConstants.ISLIKED) as boolean
     return is
   }
+
   /**
    * 设置为播放状态
    */
@@ -148,22 +172,26 @@ class AVSessionUtils {
     let pausedState: avSession.AVPlaybackState = {
       state: avSession.PlaybackState.PLAYBACK_STATE_PAUSE,
       loopMode: loopMode,
+      isFavorite: this.isFavorite(),
       position: {
         elapsedTime: time,
         updateTime: new Date().getTime()
       }
     };
-    (await this.getInstance()).setAVPlaybackState(pausedState)
+    (await this.getInstance()).setAVPlaybackState(pausedState);
   }
 
   /**
    * 设置为缓冲状态
    */
-  async bufferingState() {
+  async bufferingState(time: number) {
+    let loopMode = await getLoopMode()
     let playbackState: avSession.AVPlaybackState = {
       state: avSession.PlaybackState.PLAYBACK_STATE_BUFFERING,
+      loopMode: loopMode,
+      isFavorite: this.isFavorite(),
       position: {
-        elapsedTime: 0,
+        elapsedTime: time,
         updateTime: new Date().getTime(),
       }
     };

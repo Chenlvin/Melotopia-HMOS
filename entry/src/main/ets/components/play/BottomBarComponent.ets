@@ -1,4 +1,4 @@
-import { Song, SongItem } from "../../common/entities/song/Song"
+import { Song, Song_INITIAL } from "../../common/entities/Song"
 import { pauseMusic, playNext, playPre, playQueue, resumeMusic } from "../../common/functions/play/playControl"
 import playQueueUtils from "../../common/utils/play/PlayQueueUtils"
 import { PlayQueueButton } from "../buttons/play/PlayQueueButton"
@@ -9,7 +9,7 @@ import { ClickUtil } from "@pura/harmony-utils"
 import { PLAYMODE } from "../../common/model/Enum"
 import { lyricsPipManager } from "../../pages/lyrics/PipLyrics"
 import { DownloadListSheet } from "../sheets/DownloadListSheet"
-import { DownloadItem } from "../../common/entities/local/Download"
+import { DownloadItem } from "../../common/model/Download"
 
 /**
  * 底部播控组件
@@ -18,10 +18,11 @@ import { DownloadItem } from "../../common/entities/local/Download"
 export struct BottomBarComponent {
   @StorageLink(StorageConstants.IS_PLAYING) isPlaying: boolean = false
   @StorageProp(StorageConstants.PLAY_MODE) playmode: PLAYMODE = PLAYMODE.SINGLE
-  @StorageProp(StorageConstants.PLAY_SONG) song: Song = SongItem
+  @StorageProp(StorageConstants.PLAY_SONG) song: Song = Song_INITIAL
   @StorageProp(StorageConstants.PLAY_ARTISTS) artists: string = ''
   @StorageProp(StorageConstants.IS_PAUSED) isPaused: boolean = true
   @StorageProp(StorageConstants.PIC_URL) picUrl: string = ''
+  @StorageProp(StorageConstants.PLAY_TIME) playTime: number = 0
   @StorageProp(StorageConstants.DOWNLOAD_QUEUE) downloadQueue: DownloadItem[] = []
   @StorageProp(StorageConstants.CURRENT_LYRIC) @Watch('updateLyrics') currentLyric: string = ''
   @State isShow: boolean = false
@@ -130,7 +131,8 @@ export struct BottomBarComponent {
   @Builder ControlButton() {
     Row({ space: 10 }) {
       // Last
-      Image($r('app.media.ic_public_play_last')).buttonImgStyle()
+      Image($r('app.media.ic_public_play_last'))
+        .buttonImgStyle()
         .fillColor($r('app.color.app_red'))
         .onClick(() => {
           ClickUtil.throttle(() => {
@@ -139,21 +141,38 @@ export struct BottomBarComponent {
         })
 
       // Play & Pause
-      Image(this.isPaused ? $r('app.media.ic_public_play_norm') : $r('app.media.ic_public_pause_norm')).buttonImgStyle()
-        .fillColor($r('app.color.app_red'))
-        .onClick(() => {
-          if(!this.isPlaying) {
-            setTimeout(() => {
-              playQueue(playQueueUtils.currentQueueIndex)
-            }, 100)
-          } else {
-            if(this.isPaused) resumeMusic()
-            else pauseMusic()
-          }
+      Stack() {
+        Progress({
+          value: this.playTime,
+          total: this.song.duration,
+          type: ProgressType.Ring
         })
+          .width(30)
+          .style({
+            strokeWidth: 2
+          })
+          .color($r('app.color.app_red'))
+
+        Image(this.isPaused ? $r('app.media.ic_play_fill') : $r('app.media.ic_public_pause'))
+          .buttonImgStyle()
+          .width(20)
+          .padding({ left: this.isPaused ? 3 : 0})
+          .fillColor($r('app.color.app_red'))
+          .onClick(() => {
+            if(!this.isPlaying) {
+              setTimeout(() => {
+                playQueue(playQueueUtils.currentQueueIndex)
+              }, 100)
+            } else {
+              if(this.isPaused) resumeMusic()
+              else pauseMusic()
+            }
+          })
+      }
 
       // Next
-      Image($r('app.media.ic_public_play_next')).buttonImgStyle()
+      Image($r('app.media.ic_public_play_next'))
+        .buttonImgStyle()
         .fillColor($r('app.color.app_red'))
         .onClick(() => {
           ClickUtil.throttle(() => {

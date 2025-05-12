@@ -35,19 +35,19 @@ export interface CacheSet {
   staticCacheMaxSize: number
 }
 
-export const CacheSetItem: CacheSet = {
+export const CacheSet_INITIAL: CacheSet = {
   songCacheMaxSize: 1024 * 1024 * 1024,
   staticCacheMaxSize: 1024 * 1024 * 1024
 }
 
-export const LyricStyleItem: LyricStyle = {
+export const LyricStyle_INITIAL: LyricStyle = {
   size: 20,
   color: Color.White,
   align: 'center',
   mode: 0
 }
 
-export const FloatLyricItem: FloatLyric = {
+export const FloatLyric_INITIAL: FloatLyric = {
   on: false,
   position: {
     x: 0,

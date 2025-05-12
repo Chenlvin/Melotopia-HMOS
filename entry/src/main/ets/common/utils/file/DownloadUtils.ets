@@ -1,8 +1,8 @@
-import { DownloadItem } from "../../entities/local/Download"
+import { DownloadItem } from "../../model/Download"
 import { getContext_ } from "../system/AppUtils"
 import { DownloadConfig, DownloadListener, DownloadManager, DownloadTask } from "@hadss/super_fast_file_trans"
 import { StorageConstants } from "../../constants/StorageConstants"
-import { Song } from "../../entities/song/Song"
+import { Song, SongDownloadItem } from "../../entities/Song"
 import { getDownloadInfo } from "../../../api/getDownloadInfo"
 import { getArtists, sanitizeFileName } from "../../functions/common/convert"
 import FileUtils from "./FileUtils"
@@ -14,7 +14,6 @@ import FileDownloadUtils from "./FileDownloadUtils"
 import { getLyricString } from "../../../api/LyricApi"
 import LyricUtils from "../play/LyricUtils"
 import { getSongPicUrl } from "../../../api/songApi"
-import { SongDownloadItem } from "../../entities/song/SongDownload"
 
 const TAG = '[DownloadUtils] '
 

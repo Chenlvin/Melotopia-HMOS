@@ -2,7 +2,7 @@ import { LogUtil, ToastUtil } from "@pura/harmony-utils";
 import Constants from "../../constants/Constants";
 import { StorageConstants } from "../../constants/StorageConstants";
 import { getSubAlbum } from "../../../api/albumApi";
-import { Album } from "../../entities/song/Album";
+import { Album } from "../../entities/Album";
 import { AlbumCard } from "../../../components/cards/AlbumCard";
 import { PlayListSkeleton } from "../../../components/skeleton/Skeleton";
 

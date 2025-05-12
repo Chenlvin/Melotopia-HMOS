@@ -1,9 +1,8 @@
 import { EmitterUtil, LogUtil } from '@pura/harmony-utils'
 import { EmitterConstants } from '../../constants/EmitterConstants'
 import { StorageConstants } from '../../constants/StorageConstants'
-import { PlayQueue } from '../../entities/local/PlayQueue'
-import { PlayListSong } from '../../entities/playlist/PlayListSongs'
-import { Song, SongItem } from '../../entities/song/Song'
+import { PlayQueue } from '../../model/PlayQueue'
+import { Song, Song_INITIAL } from '../../entities/Song'
 import PreferencesUtils from '../data/PreferencesUtils'
 
 /**
@@ -121,9 +120,9 @@ class PlayQueueUtils {
     try {
       if(this.queue[this.currentQueueIndex].playmode !== 0 ) {
         return this.queue[this.currentQueueIndex].song as Song
-      } else return SongItem
+      } else return Song_INITIAL
     } catch (e) {
-      return SongItem
+      return Song_INITIAL
     }
   }
 

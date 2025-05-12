@@ -1,11 +1,11 @@
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { Song, SongItem } from "../../common/entities/song/Song"
+import { Song, Song_INITIAL } from "../../common/entities/Song"
 import { changeDuration } from "../../common/functions/common/convert"
 import OrientationUtils from "../../common/utils/system/WindowUtils"
 import { DownloadDialog } from "../dialog/DownloadDialog"
 import { window } from "@kit.ArkUI"
-import { AlbumParam, CommentParam, CommonParam } from "../../common/entities/local/PageParams"
+import { AlbumParam, CommentParam, CommonParam } from "../../common/model/PageParams"
 import { EmitterUtil } from "@pura/harmony-utils"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
 import { COMMENT_TYPE } from "../../common/model/Enum"
@@ -17,7 +17,7 @@ export struct PlayerActionSheet {
   @Link isShowAddSheet: boolean
   @Link isShowArtists: boolean
   @Link isShowSettings: boolean
-  @StorageProp(StorageConstants.PLAY_SONG) song: Song = SongItem
+  @StorageProp(StorageConstants.PLAY_SONG) song: Song = Song_INITIAL
   @StorageProp(StorageConstants.PLAY_ARTISTS) artists: string = ''
   @StorageProp(StorageConstants.PIC_URL) picUrl: string = ''
   @StorageProp(StorageConstants.PLAY_MODE) playmode: number = 1
@@ -113,7 +113,7 @@ export struct PlayerActionSheet {
             }
 
             if(this.playmode !== 3) {
-              this.Item($r('app.media.ic_user_portrait'), `查看歌手: ${this.artists}`, () => {
+              this.Item($r('app.media.ic_user_portrait'), `查看艺术家: ${this.artists}`, () => {
                 this.isShow = false
                 setTimeout(() => {
                   this.isShowArtists = true

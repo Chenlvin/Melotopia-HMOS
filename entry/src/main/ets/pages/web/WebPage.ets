@@ -1,5 +1,5 @@
 import { webview } from '@kit.ArkWeb';
-import { WebPageParam } from '../../common/entities/local/PageParams';
+import { WebPageParam } from '../../common/model/PageParams';
 
 @Component
 export struct WebPage {

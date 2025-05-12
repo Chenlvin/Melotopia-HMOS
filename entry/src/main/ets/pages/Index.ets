@@ -4,7 +4,7 @@ import Constants from '../common/constants/Constants';
 import {
   AlbumParam,
   ArtistParam,
-  CommonParam } from '../common/entities/local/PageParams';
+  CommonParam } from '../common/model/PageParams';
 import { UserLists } from '../common/view/userLists/UserLists';
 import { Me } from '../common/view/Me';
 import { StorageConstants } from '../common/constants/StorageConstants';
@@ -13,7 +13,7 @@ import { EmitterUtil, LogUtil, ToastUtil } from '@pura/harmony-utils';
 import { EmitterConstants } from '../common/constants/EmitterConstants';
 import { PageMap } from '../common/model/PageMap';
 import WindowUtils from '../common/utils/system/WindowUtils';
-import { FloatLyric, FloatLyricItem } from '../common/entities/local/Settings';
+import { FloatLyric, FloatLyric_INITIAL } from '../common/model/Settings';
 import { App } from '@kit.ArkUI';
 import { lyricsPipManager } from './lyrics/PipLyrics';
 
@@ -26,7 +26,7 @@ struct Index {
   @StorageProp(StorageConstants.VALID_API_URL) validApiUrl: boolean = true
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) widBp: string = 'sm'
   @StorageProp(StorageConstants.DEFAULT_PAGE_INDEX) index: number = 0
-  @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) floatLyric: FloatLyric = FloatLyricItem
+  @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) floatLyric: FloatLyric = FloatLyric_INITIAL
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpointWD: string = 'sm'
   @State currentHour: number = 0
   @State tabCurrentIndex: number = 0

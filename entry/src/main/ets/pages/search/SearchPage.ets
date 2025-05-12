@@ -1,13 +1,13 @@
 import { ToastUtil } from '@pura/harmony-utils';
 import { BottomBarComponent } from '../../components/play/BottomBarComponent';
-import { SearchPlayListsList } from './SearchPlayListsList';
-import { SearchSongsList } from './SearchSongsList';
+import { SearchPlayListsList } from '../../components/lists/SearchPlayListsList';
+import { SearchSongsList } from '../../components/lists/SearchSongsList';
 import Constants from '../../common/constants/Constants';
 import { StorageConstants } from '../../common/constants/StorageConstants';
-import { SearchHistoryComponent } from './SearchHistoryComponent';
-import { SearchArtistsList } from './SearchArtistsList';
-import { SearchDjRadioList } from './SearchDjRadioList';
-import { SearchAlbumList } from './SearchAlbumList';
+import { SearchHistoryComponent } from '../../components/lists/SearchHistoryComponent';
+import { SearchArtistsList } from '../../components/lists/SearchArtistsList';
+import { SearchDjRadioList } from '../../components/lists/SearchDjRadioList';
+import { SearchAlbumList } from '../../components/lists/SearchAlbumList';
 
 /**
  * 歌曲列表页（搜索结果）
@@ -107,7 +107,7 @@ export struct SearchPage {
     Row({ space: 5 }) {
       this.TabBarButton('单曲', 0)
       this.TabBarButton('歌单', 1)
-      this.TabBarButton('歌手', 2)
+      this.TabBarButton('艺术家', 2)
       this.TabBarButton('专辑', 3)
       this.TabBarButton('播客', 4)
     }

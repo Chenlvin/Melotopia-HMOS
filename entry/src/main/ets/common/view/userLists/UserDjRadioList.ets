@@ -2,10 +2,10 @@ import { LogUtil, ToastUtil } from "@pura/harmony-utils";
 import { getDjSublist } from "../../../api/djApi";
 import Constants from "../../constants/Constants";
 import { StorageConstants } from "../../constants/StorageConstants";
-import { DjRadio } from "../../entities/dj/DjResult";
-import { DjRadioParam } from "../../entities/local/PageParams";
+import { DjRadioParam } from "../../model/PageParams";
 import { DjRadioCard } from "../../../components/cards/DjRadioCard";
 import { PlayListSkeleton } from "../../../components/skeleton/Skeleton";
+import { DjRadio } from "../../entities/DjRadio";
 
 @Component
 export struct UserDjRadioList {

@@ -2,11 +2,11 @@ import { CrashUtil, DialogUtil, LogUtil, PasteboardUtil, ToastUtil } from "@pura
 import { AppConstants } from "../../common/constants/AppConstants"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { AppInfo, AppInfoClass } from "../../common/entities/local/AppInfo"
+import { AppInfo, AppInfoClass } from "../../common/entities/AppInfo"
 import SystemAppUtils from "../../common/utils/system/SystemAppUtils"
 import { getAppInfo } from "../../api/chenlvinApi"
 import { CommonSettingsCard } from "../../components/cards/SettingsCard"
-import { WebPageParam } from "../../common/entities/local/PageParams"
+import { WebPageParam } from "../../common/model/PageParams"
 import { WarrantyDialog } from "../../components/dialog/WarrantyDialog"
 
 @Component

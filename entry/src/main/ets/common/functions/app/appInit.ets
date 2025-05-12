@@ -1,6 +1,6 @@
 import { AppUtil, LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { getAppInfo } from "../../../api/chenlvinApi"
-import { Song, SongItem } from "../../entities/song/Song"
+import { Song, Song_INITIAL } from "../../entities/Song"
 import PlayQueueUtils from "../../utils/play/PlayQueueUtils"
 import PreferencesUtils from "../../utils/data/PreferencesUtils"
 import { StorageConstants } from "../../constants/StorageConstants"
@@ -8,16 +8,15 @@ import { notificationManager } from "@kit.NotificationKit"
 import { resourceManager } from "@kit.LocalizationKit"
 import { initSettings } from "./settings"
 import { getLoginStatus } from "../../../api/loginApi"
-import { PlayingPlayList, PlayList } from "../../entities/playlist/PlayList"
-import { TopListItem } from "../../entities/recommend/TopList"
+import { PlayingPlayList, PlayList } from "../../entities/PlayList"
 import { getLikeList } from "../../../api/songApi"
-import { PersonalListItem } from "../../entities/recommend/Personalized"
 import RelationalStoreUtils from "../../utils/data/RelationalStoreUtils"
 import AudioCacheUtils from "../../utils/play/AudioCacheUtils"
-import { DjRadio } from "../../entities/dj/DjResult"
-import { Album } from "../../entities/song/Album"
+import { Album } from "../../entities/Album"
 import { checkValidUrl } from "../common/get"
 import DownloadUtils from "../../utils/file/DownloadUtils"
+import { DjRadio } from "../../entities/DjRadio"
+import { PersonalListItem, TopListItem } from "../../entities/Recommend"
 
 /**
  * App初始化
@@ -123,7 +122,7 @@ async function loadSavedSong() {
   let playMode: number = 0
 
   if(has) {
-    song = await PreferencesUtils.getPreferenceValue<Song>('Play', 'CurrentSong', SongItem)
+    song = await PreferencesUtils.getPreferenceValue<Song>('Play', 'CurrentSong', Song_INITIAL)
     playMode = await PreferencesUtils.getPreferenceValue<number>('Play', 'PlayMode', 1)
     artists = await PreferencesUtils.getPreferenceValue<string>('Play', 'CurrentArtists', '')
     picUrl = await PreferencesUtils.getPreferenceValue<string>('Play', 'CurrentImage', '')

@@ -4,10 +4,9 @@ import { getDjPrograms } from "../../api/djApi"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { DjRadioProgram } from "../../common/entities/dj/DjProgramResult"
-import { djRadioItem } from "../../common/entities/dj/DjResult"
-import { CommentParam, CommonParam, DjRadioParam } from "../../common/entities/local/PageParams"
-import { PlayQueue } from "../../common/entities/local/PlayQueue"
+import { DjRadio_INITIAL, DjRadioProgram } from "../../common/entities/DjRadio"
+import { CommentParam, CommonParam, DjRadioParam } from "../../common/model/PageParams"
+import { PlayQueue } from "../../common/model/PlayQueue"
 import { djRadioToQueue } from "../../common/functions/play/djRadioOp"
 import { playQueue } from "../../common/functions/play/playControl"
 import { COMMENT_TYPE, PLAYMODE } from "../../common/model/Enum"
@@ -20,7 +19,7 @@ import { BottomBarComponent } from "../../components/play/BottomBarComponent"
 
 @Component
 export struct DjRadioPage {
-  param: DjRadioParam = { djRadio: djRadioItem }
+  param: DjRadioParam = { djRadio: DjRadio_INITIAL }
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
   @StorageProp('topRectHeight') topRectHeight: number = 0
   @StorageProp('bottomRectHeight') bottomRectHeight: number = 0

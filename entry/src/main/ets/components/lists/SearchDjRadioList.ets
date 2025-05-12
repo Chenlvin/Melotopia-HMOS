@@ -1,11 +1,11 @@
 import { LogUtil } from "@pura/harmony-utils"
 import { getDjRadioList } from "../../api/djApi"
 import Constants from "../../common/constants/Constants"
-import { DjRadio } from "../../common/entities/dj/DjResult"
-import { DjRadioCard } from "../../components/cards/DjRadioCard"
+import { DjRadio } from "../../common/entities/DjRadio"
+import { DjRadioCard } from "../cards/DjRadioCard"
 
 /**
- * 歌手搜索结果列表
+ * 艺术家搜索结果列表
  */
 const TAG = "[SearchDjRadioList] "
 

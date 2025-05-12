@@ -1,7 +1,7 @@
 import { ToastUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { Song } from "../../common/entities/song/Song"
+import { Song } from "../../common/entities/Song"
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 import VibratorUtils from "../../common/utils/system/VibratorUtils"
 import { SongCard } from "../../components/cards/SongCard"
@@ -22,7 +22,7 @@ export struct SongClickActionPage {
     name: '歌曲名',
     artists: [{
       id: -1,
-      name: '歌手名'
+      name: '艺术家名'
     }],
     album: {
       id: 0,

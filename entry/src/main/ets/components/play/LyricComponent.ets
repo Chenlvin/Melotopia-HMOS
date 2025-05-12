@@ -1,10 +1,10 @@
 import { EmitterUtil, LogUtil, ToastUtil } from "@pura/harmony-utils"
-import { Lyric } from "../../common/entities/song/Lyric"
+import { Lyric } from "../../common/entities/Lyric"
 import { seekMusic } from "../../common/functions/play/playControl"
 import { LengthUnit } from "@kit.ArkUI"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
-import { LyricStyle, LyricStyleItem } from "../../common/entities/local/Settings"
+import { LyricStyle, LyricStyle_INITIAL } from "../../common/model/Settings"
 import LyricUtils from "../../common/utils/play/LyricUtils"
 import { LazyData } from "@pie/lazy-data"
 import Constants from "../../common/constants/Constants"
@@ -22,7 +22,7 @@ export struct LyricComponent {
   @State isLoading: boolean = false
   @State needUpdate: boolean = false
   @StorageProp(StorageConstants.IS_IN_FOREGROUND) @Watch('onForegroundState') isInForeground: boolean = true
-  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyleItem
+  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyle_INITIAL
 
   private scroller: Scroller = new Scroller()
 
@@ -173,7 +173,7 @@ struct LyricLine {
   @State index: number = 0
   @State item: Lyric = { time: 0, content: ''}
   @Prop currentLyricIndex: number = 0
-  @Prop lyricStyle: LyricStyle = LyricStyleItem
+  @Prop lyricStyle: LyricStyle = LyricStyle_INITIAL
   @Link userScrolling: number
 
   aboutToReuse(params: ESObject): void {

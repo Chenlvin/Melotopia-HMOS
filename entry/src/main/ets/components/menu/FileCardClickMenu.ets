@@ -1,8 +1,7 @@
 import { PasteboardUtil, ToastUtil, LogUtil, DialogUtil, EmitterUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
-import { LocalSong, LocalSongItem } from "../../common/entities/local/LocalData"
-import { Song } from "../../common/entities/song/Song"
+import { LocalSong, LocalSong_INITIAL, Song } from "../../common/entities/Song"
 import { fetchMetadata } from "../../common/functions/common/convert"
 import { getLocalSongArtists } from "../../common/functions/common/get"
 import { playQueue } from "../../common/functions/play/playControl"
@@ -11,7 +10,7 @@ import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
 
 @Component
 export struct FileCardClickMenu {
-  @Prop localSong: LocalSong = LocalSongItem
+  @Prop localSong: LocalSong = LocalSong_INITIAL
   @Prop artistsString: string = ''
   @Link showMatchSheet: boolean
 

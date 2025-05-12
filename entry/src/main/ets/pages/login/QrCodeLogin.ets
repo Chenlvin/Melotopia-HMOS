@@ -1,5 +1,5 @@
 import { ToastUtil } from '@pura/harmony-utils';
-import { checkQrLogin, getQrCode } from '../../api/QrCodeLogin';
+import { checkQrLogin, getQrCode } from '../../api/qrCodeApi';
 import Constants from '../../common/constants/Constants';
 
 

@@ -1,8 +1,8 @@
 import { EmitterUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
-import { CommonParam, PlayListPageParam } from "../../common/entities/local/PageParams"
-import { PersonalListItem } from "../../common/entities/recommend/Personalized"
+import { CommonParam, PlayListPageParam } from "../../common/model/PageParams"
+import { PersonalListItem } from "../../common/entities/Recommend"
 
 @Component
 export struct PersonalizedCard {

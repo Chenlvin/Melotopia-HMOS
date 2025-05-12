@@ -1,5 +1,5 @@
 import { EmitterUtil, FileUtil, LogUtil, RandomUtil, ToastUtil } from "@pura/harmony-utils";
-import { Song } from "../../entities/song/Song";
+import { Song, SongPlayResult } from "../../entities/Song";
 import FileUtils from "../../utils/file/FileUtils";
 import { checkMusic, getPersonalFmSong, getSongPicUrl, getSongUrl } from "../../../api/songApi";
 import { fetchMetadata, getArtists, sanitizeFileName } from "../common/convert";
@@ -7,7 +7,6 @@ import PlayQueueUtils from "../../utils/play/PlayQueueUtils";
 import AVSessionUtils from "../../utils/play/AVSessionUtils";
 import PreferencesUtils from "../../utils/data/PreferencesUtils";
 import { fileIo } from "@kit.CoreFileKit";
-import { SongPlay } from "../../entities/song/SongPlay";
 import LyricUtils from "../../utils/play/LyricUtils";
 import { PlayConstants } from "../../constants/PlayConstants";
 import { EmitterConstants } from "../../constants/EmitterConstants";
@@ -24,59 +23,43 @@ import AudioCacheUtils from "../../utils/play/AudioCacheUtils";
 const TAG = '[playerControl] '
 const pref = StorageConstants.QUEUE_PREF
 
-let flag = 0 // New Song Flag
-
-export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: string | ResourceStr = '', mode: number = 1) {
+export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: ResourceStr | string = '', mode: number = 1) {
   try {
-    flag = 0
-    let accessible: boolean = true
-    if(isLogged) {
-      const isAccessible = await checkMusic(song.id)
-      if(!isAccessible) {
-        accessible = false
-        flag = 1
-        ToastUtil.showToast('当前歌曲无版权或不可用, 尝试播放下一首')
-        setTimeout(() => {
-          if(flag === 1) {
-            playNext()
-            flag = 0
-          }
-          return
-        }, 2000)
-      }
+    const isAccessible = await checkMusic(song.id)
+    if(!isAccessible) {
+      ToastUtil.showToast('当前歌曲仅支持试听或无版权')
     }
 
-    if(accessible) {
-      isThisSongLiked(song.id)
-      let artists = getArtists(song.artists)
-      setPlayData(mode, song, artists)
-      let localPath: string = ''
-      let tempArtists: string = artists
-      if(song.name.length + artists.length >= 103) {
-        try { tempArtists = artists.slice(0, 100 - song.name.length) }
-        catch (e) { artists = '未知' }
-      }
+    let artists = getArtists(song.artists)
+    setPlayData(mode, song, artists)
+    isThisSongLiked(song.id)
+    let localPath: string = ''
+    let tempArtists: string = artists
+    if(song.name.length + artists.length >= 103) {
+      try { tempArtists = artists.slice(0, 100 - song.name.length) }
+      catch (e) { artists = '未知' }
+    }
 
-      localPath = await FileUtils.accessLocalFile(sanitizeFileName(`${tempArtists} - ${song.name}`))
+    if(!picUrl) {
+      picUrl = await getSongPicUrl(song.id)
+    }
+    setPicUrl(picUrl)
+    saveCurrentSongInfo(mode, song, artists, picUrl)
+    await LyricUtils.setLyric(song)
+    await AVSessionUtils.setMetadata(song, artists, picUrl)
+    await AVSessionUtils.activate()
 
-      if(localPath != '') { // 是否存在本地文件
-        AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, true)
-        await AVPlayerUtils.setUrl(localPath)
-      } else {
-        const quality: number | undefined = await AppStorage.get(StorageConstants.PLAY_QUALITY)
-        const songPlay: SongPlay = await getSongUrl(song.id, quality ? PlayConstants.QUALITY[quality] : "standard", isLogged)
-        AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, false)
-        let proxyUrl = await AudioCacheUtils.getProxyUrl(songPlay.data[0].url)
-        await AVPlayerUtils.setUrl(proxyUrl ?? songPlay.data[0].url)
-      }
-      if(!picUrl) {
-        picUrl = await getSongPicUrl(song.id)
-      }
-      setPicUrl(picUrl)
-      await LyricUtils.setLyric(song)
-      await AVSessionUtils.setMetadata(song, artists, picUrl)
-      AVSessionUtils.activate()
-      saveCurrentSongInfo(mode, song, artists, picUrl)
+    localPath = await FileUtils.accessLocalFile(sanitizeFileName(`${tempArtists} - ${song.name}`))
+
+    if(localPath != '') { // 是否存在本地文件
+      AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, true)
+      await AVPlayerUtils.setUrl(localPath)
+    } else {
+      const quality: number | undefined = await AppStorage.get(StorageConstants.PLAY_QUALITY)
+      const songPlay: SongPlayResult = await getSongUrl(song.id, quality ? PlayConstants.QUALITY[quality] : "standard", isLogged)
+      AppStorage.setOrCreate(StorageConstants.PLAY_IS_LOCALFILE, false)
+      let proxyUrl = await AudioCacheUtils.getProxyUrl(songPlay.data[0].url)
+      await AVPlayerUtils.setUrl(proxyUrl ?? songPlay.data[0].url)
     }
 
   } catch (e) {
@@ -101,7 +84,6 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       setPlayData(0, song, artistsString, fileName)
       let picUrl = song.id == 0 ? $r('app.media.ic_files_audio') : `file://${filesDir}/pic/${song.id}.jpg`
       setPicUrl(picUrl)
-      await AVPlayerUtils.setUrl(fdPath)
       // Lyric
       if(song.id != 0) {
         let lyricString = await LyricUtils.readLyric(song.id.toString())
@@ -114,6 +96,7 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       AVSessionUtils.activate()
       saveCurrentSongInfo(0, song, artistsString, picUrl)
       EmitterUtil.post(EmitterConstants.EMITTER_LYRIC_UPDATE, 'Lyric Updated')
+      await AVPlayerUtils.setUrl(fdPath)
     } else {
       ToastUtil.showToast('未找到文件')
       playNext()

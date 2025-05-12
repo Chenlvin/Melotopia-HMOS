@@ -1,5 +1,5 @@
 import { LogUtil } from "@pura/harmony-utils"
-import { User, UserItem } from "../common/entities/user/User"
+import { User, User_INITIAL } from "../common/entities/User"
 import PreferencesUtils from "../common/utils/data/PreferencesUtils"
 import { StorageConstants } from "../common/constants/StorageConstants"
 import commonRequest from "../common/utils/request/RequestUtil"
@@ -24,7 +24,7 @@ export const getLoginStatus = async (cookie: string): Promise<boolean> => {
       return true
     } else {
       Promise.all([
-        PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER, UserItem),
+        PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER, User_INITIAL),
         PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.COOKIE, ''),
         PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_PLAYLISTS, [])
       ])

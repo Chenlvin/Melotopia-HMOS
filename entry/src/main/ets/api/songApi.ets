@@ -1,17 +1,14 @@
 import { LogUtil } from "@pura/harmony-utils"
 import { PlayConstants } from "../common/constants/PlayConstants"
 import { StorageConstants } from "../common/constants/StorageConstants"
-import { HeartMode } from "../common/entities/recommend/HeartMode"
-import { DailyListSongs } from "../common/entities/playlist/PlayListSongs"
-import { PlayQueue } from "../common/entities/local/PlayQueue"
-import { SongDetail } from "../common/entities/song/SongDetail"
-import { QualityType } from "../common/entities/song/SongDownload"
-import { SongPlay } from "../common/entities/song/SongPlay"
-import { Song, SongItem, SongsData } from "../common/entities/song/Song"
-import { User } from "../common/entities/user/User"
+import { HeartMode } from "../common/entities/Recommend"
+import { PlayQueue } from "../common/model/PlayQueue"
+import { QualityType, Song, SongDetail, Song_INITIAL, SongPlayResult, SongSearchResult } from "../common/entities/Song"
+import { User } from "../common/entities/User"
 import PlayQueueUtils from "../common/utils/play/PlayQueueUtils"
 import { DailySongRes } from "./playListApi"
 import commonRequest from "../common/utils/request/RequestUtil"
+import { DailyListSongs } from "../common/entities/PlayList"
 
 interface CheckValiableResponse {
   success: boolean
@@ -48,7 +45,7 @@ export const searchSongs = async (
   offset: number,
   limit: number = 30
 ): Promise<SearchReturn> => {
-  const response = await commonRequest<SongsData>({
+  const response = await commonRequest<SongSearchResult>({
     url: '/search',
     params: { keywords, offset, limit, noCookie: true }
   })
@@ -68,7 +65,7 @@ export const getSongUrl = async (
   id: number,
   quality: QualityType,
   isLogged: boolean
-): Promise<SongPlay> => {
+): Promise<SongPlayResult> => {
   return commonRequest({
     url: '/song/url/v1',
     params: { id, level: quality }
@@ -208,5 +205,5 @@ export const getPersonalFmSong = async (mode: number): Promise<Song> => {
   if(response.code == 200) {
     let dataGot = response.data[0] as Song
     return dataGot
-  } else return SongItem
+  } else return Song_INITIAL
 }

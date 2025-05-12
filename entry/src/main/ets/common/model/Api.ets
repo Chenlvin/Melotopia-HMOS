@@ -7,7 +7,7 @@ export interface Api {
   https: boolean
 }
 
-export const EmptyApi: Api = {
+export const Api_INITIAL: Api = {
   domain: '',
   port: 80,
   user: '',
