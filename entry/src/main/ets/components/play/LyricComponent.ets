@@ -43,12 +43,13 @@ export struct LyricComponent {
   }
 
   refreshLyric = async () => {
+    this.currentLyricIndex = 0
     this.needUpdate = true
     this.isLoading = true
-    this.currentLyricIndex = 0
     this.ToCurrentLyric()
     setTimeout(async () => {
       await this.getLyric()
+      this.currentLyricIndex = 0
       this.isLoading = false
     }, 100)
   }
