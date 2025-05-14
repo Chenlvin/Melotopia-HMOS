@@ -18,7 +18,7 @@ export default class EntryAbility extends UIAbility {
     LogUtil.init(0x1010, 'Melotopia', true)
     AppStorage.setOrCreate(StorageConstants.CONTEXT, this.context)
     CrashUtil.onError()
-    App.setImageFileCacheSize(Constants.CACHE_DISK_MAX_SIZE)
+    App.setImageCacheCount(Constants.CACHE_IMAGE_MAX_COUNT)
     App.setImageRawDataCacheSize(Constants.CACHE_DISK_MAX_SIZE)
     // 初始化用户首选项
     await Promise.all([

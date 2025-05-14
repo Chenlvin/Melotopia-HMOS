@@ -129,7 +129,7 @@ export default class Constants {
   /**
    * 缓存图片数量
    */
-  static readonly CACHE_IMAGE_MAX_COUNT: number = 5000
+  static readonly CACHE_IMAGE_MAX_COUNT: number = 50000
   /**
    * 允许缓存占用总大小
    */
