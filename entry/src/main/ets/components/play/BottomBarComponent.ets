@@ -25,6 +25,7 @@ export struct BottomBarComponent {
   @StorageProp(StorageConstants.PLAY_TIME) playTime: number = 0
   @StorageProp(StorageConstants.DOWNLOAD_QUEUE) downloadQueue: DownloadItem[] = []
   @StorageProp(StorageConstants.CURRENT_LYRIC) @Watch('updateLyrics') currentLyric: string = ''
+  @StorageProp(StorageConstants.MINI_BAR_BLUR) miniBarBlur: boolean = true
   @State isShow: boolean = false
   @State isShowDownload: boolean = false
 
@@ -98,10 +99,11 @@ export struct BottomBarComponent {
       }
       .justifyContent(FlexAlign.SpaceBetween)
       .borderRadius(Constants.RADIUS_IMG)
-      .background(this.Background())
       .height(Constants.HEIGHT_MINI)
       .width('100%')
-      .backdropBlur(100)
+      .backdropBlur(this.miniBarBlur ? 100 : 0)
+      .backgroundColor(this.miniBarBlur ? Color.Transparent : $r('app.color.main'))
+      .background(this.miniBarBlur ? this.Background() : null)
       .constraintSize({
         minWidth: 100,
         maxWidth: 500
@@ -120,7 +122,7 @@ export struct BottomBarComponent {
       .width('100%')
       .layoutWeight(1)
       .backgroundColor($r('app.color.main'))
-      .opacity(0.5)
+      .opacity(this.miniBarBlur ? 0.5 : 1)
   }
 
   @Builder Cover() {

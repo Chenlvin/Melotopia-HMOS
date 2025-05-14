@@ -330,4 +330,19 @@ export class StorageConstants {
    * @description AppStorage & Preference
    */
   static readonly DOWNLOAD_QUEUE: string = 'downloadQueue'
+  /**
+   * MiniPlayerBlur
+   * @description AppStorage & Preference
+   */
+  static readonly MINI_BAR_BLUR: string = 'miniBarBlur'
+  /**
+   * New Lyric Effect
+   * @description AppStorage & Preference
+   */
+  static readonly NEW_LYRIC_EFFECT: string = 'newLyricEffect'
+  /**
+   * ShowAnnouncement
+   * @description AppStorage & Preference
+   */
+  static readonly SHOW_ANNOUNCEMENT: string = 'showAnnouncement'
 }

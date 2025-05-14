@@ -30,16 +30,12 @@ export const getQrCode = async(): Promise<string[]> => {
     params: { noCookie: true, timestamp: new Date().getTime() }
   })
 
-  LogUtil.info('QrCodeLogin KeyResponse: ' + JSON.stringify(keyResponse))
-
   const unikey = keyResponse.data.unikey
 
   const imgResponse = await commonRequest<GetQrCodeImgResponse>({
     url: '/login/qr/create',
     params: { key: unikey, qrimg: true, timestamp: new Date().getTime(), noCookie: true }
   })
-
-  LogUtil.info('QrCodeLogin ImgResponse: ' + JSON.stringify(imgResponse))
 
   return [unikey, imgResponse.data.qrimg]
 }

@@ -22,7 +22,6 @@ export const checkMusic = async (id: number): Promise<boolean> => {
       url: '/check/music',
       params: { id }
     })
-    LogUtil.info('Check Music: ' + JSON.stringify(response))
     return response.success
   } catch (e) {
     return false

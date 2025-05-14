@@ -28,6 +28,7 @@ export struct Explore {
   @StorageLink(StorageConstants.PERSONALIZED_LIST) personalizedList: Array<PersonalListItem> = []
   @StorageLink(StorageConstants.RECOMMENDED_DJ) recommendDjRadioList: Array<RecommendDjRadio> = []
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
+  @StorageProp(StorageConstants.SHOW_ANNOUNCEMENT) showAnnouncement: boolean = true
   @State localSongs: LocalSong[] = []
   @State isLoadingTopList: boolean = false
   @State isLoadingPersonalized: boolean = false
@@ -50,7 +51,7 @@ export struct Explore {
   }
 
   private async refreshLocalSongs() {
-    this.localSongs = (await RelationalStoreUtils.getSongs(10)).reverse()
+    this.localSongs = (await RelationalStoreUtils.getSongs(10))
   }
 
   async getContent() {
@@ -105,7 +106,7 @@ export struct Explore {
     Column() {
       Refresh({ refreshing: this.isRefreshing }) {
         Grid() {
-          if(this.appInfo.data.Announcement.isShow) {
+          if(this.appInfo.data.Announcement.isShow && this.showAnnouncement) {
             GridItem() {
               this.Announcement()
             }

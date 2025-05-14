@@ -13,6 +13,9 @@ import Constants from "../../common/constants/Constants"
 export struct LyricComponent {
   @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.CURRENT_LYRIC_INDEX) @Watch('ToCurrentLyric') currentLyricIndex: number = 0
+  @StorageProp(StorageConstants.IS_IN_FOREGROUND) @Watch('onForegroundState') isInForeground: boolean = true
+  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyle_INITIAL
+  @StorageProp(StorageConstants.NEW_LYRIC_EFFECT) newLyricEffect: boolean = true
   @State firstLoad: boolean = true
   @State userScrolling: number = 0
   @State userScrollingInterval: number = 0
@@ -21,8 +24,6 @@ export struct LyricComponent {
   @State currentListIndex: number = 0
   @State isLoading: boolean = false
   @State needUpdate: boolean = false
-  @StorageProp(StorageConstants.IS_IN_FOREGROUND) @Watch('onForegroundState') isInForeground: boolean = true
-  @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyle_INITIAL
 
   private scroller: Scroller = new Scroller()
 
@@ -42,7 +43,6 @@ export struct LyricComponent {
   }
 
   refreshLyric = async () => {
-    LogUtil.info('Refresh Lyric')
     this.needUpdate = true
     this.isLoading = true
     this.currentLyricIndex = 0
@@ -91,34 +91,47 @@ export struct LyricComponent {
         .height('100%')
         .layoutWeight(1)
       } else {
-        ListItem().height('30%')
-        LazyForEach(this.dataSource, (item: Lyric, index) => {
-          LyricLine({
-            lyricStyle: this.lyricStyle,
-            currentLyricIndex: this.currentLyricIndex,
-            userScrolling: this.userScrolling,
-            index: index,
-            item: item
+        ListItem().height('50%')
+        if(this.newLyricEffect) {
+          LazyForEach(this.dataSource, (item: Lyric, index) => {
+            LyricLine({
+              lyricStyle: this.lyricStyle,
+              currentLyricIndex: this.currentLyricIndex,
+              userScrolling: this.userScrolling,
+              index: index,
+              item: item
+            })
+              .offset({ y: this.Offset(index) })
+              .animation({
+                delay: this.userScrolling ? 0 : this.Delay(index),
+                duration: this.userScrolling ? 0 : 600,
+                curve: Curve.Smooth,
+                expectedFrameRateRange: {
+                  expected: 90,
+                  min: 60,
+                  max: 90
+                }
+              })
+              .padding({
+                bottom: !this.userScrolling
+                  ? (index >= this.currentLyricIndex ? this.lyricStyle.size : this.lyricStyle.size * 2)
+                  : this.lyricStyle.size * 2
+              })
+              .animation({ duration: this.userScrolling ? 0 : 300, curve: Curve.Friction })
           })
-            .offset({ y: this.Offset(index) })
-            .animation({
-              delay: this.userScrolling ? 0 : this.Delay(index),
-              duration: this.userScrolling ? 0 : 600,
-              curve: Curve.Smooth,
-              expectedFrameRateRange: {
-                expected: 90,
-                min: 60,
-                max: 90
-              }
+        } else {
+          LazyForEach(this.dataSource, (item: Lyric, index) => {
+            LyricLine({
+              lyricStyle: this.lyricStyle,
+              currentLyricIndex: this.currentLyricIndex,
+              userScrolling: this.userScrolling,
+              index: index,
+              item: item
             })
-            .padding({
-              bottom: !this.userScrolling
-                ? (index >= this.currentLyricIndex ? this.lyricStyle.size : this.lyricStyle.size * 2)
-                : this.lyricStyle.size * 2
-            })
-            .animation({ duration: this.userScrolling ? 0 : 300, curve: Curve.Friction })
-        })
-        ListItem().height('30%')
+              .padding({ bottom: this.lyricStyle.size * 2 })
+          })
+        }
+        ListItem().height('50%')
       }
     }
     .cachedCount(3)
@@ -204,7 +217,12 @@ struct LyricLine {
       })
       .animation({
         duration: 500,
-        curve: Curve.Smooth
+        curve: Curve.Smooth,
+        expectedFrameRateRange: {
+          expected: 90,
+          min: 60,
+          max: 90
+        }
       })
   }
 }

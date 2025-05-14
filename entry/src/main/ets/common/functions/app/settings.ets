@@ -30,6 +30,12 @@ export async function initSettings() {
     handleSetting<CacheSet>(StorageConstants.CACHE_SETTINGS, CacheSet_INITIAL),
     // mixWithOthers
     handleSetting<boolean>(StorageConstants.MIX_WITH_OTHERS, false),
+    // MiniBarBlur
+    handleSetting<boolean>(StorageConstants.MINI_BAR_BLUR, true),
+    // showAnnouncement
+    handleSetting<boolean>(StorageConstants.SHOW_ANNOUNCEMENT, true),
+    // NewLyricEffect
+    handleSetting<boolean>(StorageConstants.NEW_LYRIC_EFFECT, true),
     // floatLyricStyle
     handleSetting<FloatLyric>(StorageConstants.FLOAT_LYRIC_STYLE, FloatLyric_INITIAL),
     // apiSettings

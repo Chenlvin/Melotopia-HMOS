@@ -85,6 +85,7 @@ class RelationalStoreUtils {
   async getSongs(limit: number): Promise<LocalSong[]> {
     const columns = ['id', 'songId', 'name', 'artists', 'picFile', 'songFile', 'lyricFile']
     const predicates = new relationalStore.RdbPredicates(TABLE_SONGS)
+      .orderByDesc('id')
       .limitAs(limit)
 
     try {
