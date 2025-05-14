@@ -118,7 +118,7 @@ export class StorageConstants {
    */
   static readonly PLAY_SONG: string = 'player-song'
   /**
-   * 歌曲艺术家
+   * 歌曲歌手
    * @description AppStorage
    */
   static readonly PLAY_ARTISTS: string = 'player-artists'
@@ -208,7 +208,11 @@ export class StorageConstants {
    * @description AppStorage
    */
   static readonly IS_IN_FOREGROUND: string = 'isInForeground'
-
+  /**
+   * 正在清理缓存歌曲
+   * @description AppStorage
+   */
+  static readonly IS_CLEAN_CACHED_SONGS: string = 'isCleanCachedSongs'
 
 
   /**
@@ -265,11 +269,6 @@ export class StorageConstants {
    */
   static readonly CYCLE_MODE: string = 'cycleMode'
   /**
-   * 默认页面index
-   * @description AppStorage & Preference
-   */
-  static readonly DEFAULT_PAGE_INDEX: string = 'defaultPageIndex'
-  /**
    * 播放品质
    * @description AppStorage & Preference
    */
@@ -296,12 +295,6 @@ export class StorageConstants {
   static readonly API_URL: string = 'apiUrl'
   static readonly CUSTOM_COOKIE: string = 'customCookie'
   static readonly IS_CUSTOM_COOKIE: string = 'isCustomCookie'
-  /**
-   * 点击歌曲卡片时的操作
-   * 0 - 单击弹出菜单, 1 - 单击播放单曲长按弹出菜单
-   * @description AppStorage & Preference
-   */
-  static readonly SONG_CLICK_ACTION: string = 'songClickAction'
   /**
    * 个性化推荐歌单
    * @description AppStorage & Preference

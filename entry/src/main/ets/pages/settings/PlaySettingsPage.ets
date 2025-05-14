@@ -1,12 +1,12 @@
-import { PermissionUtil, ToastUtil } from "@pura/harmony-utils"
-import { AppConstants } from "../../common/constants/AppConstants"
 import Constants from "../../common/constants/Constants"
+import { PlayConstants } from "../../common/constants/PlayConstants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
+import { QualityType } from "../../common/entities/Song"
 import { PlaySettingsPageMap } from "../../common/model/PageMap"
+import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
+import AVPlayerUtils from "../../common/utils/play/AVPlayerUtils"
 import { CommonSettingsCard } from "../../components/cards/SettingsCard"
 import { LyricTranslate, SetLyricStyle } from "../../components/settings/LyricSettings"
-import { MixWithOthers } from "../../components/settings/MixWithOthers"
-import { SetPlayQuality } from "../../components/settings/SetPlayQuality"
 
 @Component
 export struct PlaySettingsPage {
@@ -14,8 +14,10 @@ export struct PlaySettingsPage {
 
   build() {
     NavDestination() {
-      PlaySettings(() => {
-        this.settingsPageInfos.pushPathByName('FloatLyricPage', null)
+      PlaySettings({
+        floatLyricAction: () => {
+          this.settingsPageInfos.pushPathByName('FloatLyricPage', null)
+        }
       })
     }
     .title($r('app.string.SET_PLAYANDLYRIC'))
@@ -49,8 +51,10 @@ export struct PlaySettingSinglePage {
           .fontWeight(Constants.FONT_WEIGHT_BOLD)
           .padding({ left: Constants.PADDING_EDGE_TEXT })
           .height(56)
-        PlaySettings(() => {
-          this.playSettingsPageInfos.pushPathByName('FloatLyricPage', null)
+        PlaySettings({
+          floatLyricAction: () => {
+            this.playSettingsPageInfos.pushPathByName('FloatLyricPage', null)
+          }
         })
       }
     }
@@ -61,45 +65,99 @@ export struct PlaySettingSinglePage {
   }
 }
 
-@Builder
-function PlaySettings(floatLyricAction: () => void) {
-  List({ space: 10 }) {
-    ListItem() {
-      SetPlayQuality()
-        .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-    }
-    .itemStyle()
+@Component
+struct PlaySettings {
+  @StorageLink(StorageConstants.PLAY_QUALITY) playQuality: QualityType = "standard"
+  @StorageLink(StorageConstants.MIX_WITH_OTHERS) @Watch('toggleMixWithOthers') isActived: boolean = false
+  @State qualitySelected: number | undefined = 0
+  floatLyricAction: () => void = () => {}
 
-    ListItem() {
-      MixWithOthers()
-        .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-    }
-    .itemStyle()
-
-    ListItem() {
-      CommonSettingsCard({
-        title: '浮动歌词设置',
-        action: floatLyricAction
-      })
-    }
-    .itemStyle()
-
-    ListItem() {
-      LyricTranslate()
-        .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-    }
-    .itemStyle()
-
-    ListItem() {
-      SetLyricStyle()
-    }
-    .itemStyle()
+  async aboutToAppear(): Promise<void> {
+    this.qualitySelected = await AppStorage.get(StorageConstants.PLAY_QUALITY)
   }
-  .scrollBar(BarState.Off)
-  .padding({ top: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-  .height('100%')
-  .width('100%')
-  .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
+
+  toggleMixWithOthers() {
+    PreferencesUtils.putPreferenceValue(
+      StorageConstants.SET_PERF,
+      StorageConstants.MIX_WITH_OTHERS,
+      this.isActived
+    )
+  }
+
+  build() {
+    List({ space: 10 }) {
+      ListItem() {
+        Row() {
+          Text('在线播放音质')
+            .fontSize(Constants.FONT_SIZE_COMMON)
+            .fontWeight(FontWeight.Bold)
+          Select([{ value: '标准' }, { value: '高' }, { value: '极高' }, { value: '无损/Hi-Res' }])
+            .selectedOptionFontColor($r('app.color.app_red'))
+            .selected(this.qualitySelected)
+            .value(this.qualitySelected ? PlayConstants.QUALITY_NAME[this.qualitySelected] : '标准')
+            .constraintSize({
+              minHeight: 0,
+              maxHeight: '100%'
+            })
+            .height(Constants.HEIGHT_SELECT)
+            .onSelect((index: number) => {
+              AppStorage.setOrCreate(StorageConstants.PLAY_QUALITY,index)
+              PreferencesUtils.putPreferenceValue('Settings', StorageConstants.PLAY_QUALITY, index)
+            })
+        }
+        .height(Constants.HEIGHT_SETTINGS_ITEM)
+        .width('100%')
+        .justifyContent(FlexAlign.SpaceBetween)
+        .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+      }
+      .itemStyle()
+
+      ListItem() {
+        Row() {
+          Text('允许与其他应用同时播放')
+            .fontSize(Constants.FONT_SIZE_COMMON)
+            .fontWeight(FontWeight.Bold)
+          Toggle({ type: ToggleType.Switch, isOn: this.isActived })
+            .height(24)
+            .width(48)
+            .onChange((isOn) => {
+              this.isActived = isOn
+              AVPlayerUtils.setAudioSession()
+            })
+            .selectedColor($r('app.color.app_red'))
+        }
+        .height(Constants.HEIGHT_SETTINGS_ITEM)
+        .width('100%')
+        .justifyContent(FlexAlign.SpaceBetween)
+        .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+      }
+      .itemStyle()
+
+      ListItem() {
+        CommonSettingsCard({
+          title: '浮动歌词设置',
+          action: this.floatLyricAction
+        })
+      }
+      .itemStyle()
+
+      ListItem() {
+        LyricTranslate()
+          .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+      }
+      .itemStyle()
+
+      ListItem() {
+        SetLyricStyle()
+      }
+      .itemStyle()
+    }
+    .scrollBar(BarState.Off)
+    .padding({ top: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+    .height('100%')
+    .width('100%')
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
+  }
 }
 
 @Extend(ListItem) function itemStyle() {

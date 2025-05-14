@@ -1,12 +1,13 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
-import { window } from '@kit.ArkUI';
+import { App, window } from '@kit.ArkUI';
 import PreferencesUtils from '../common/utils/data/PreferencesUtils';
 import { AppUtil, CrashUtil, LogUtil } from '@pura/harmony-utils';
 import { appInit } from '../common/functions/app/appInit';
 import { StorageConstants } from '../common/constants/StorageConstants';
 import { BusinessError } from '@kit.BasicServicesKit';
 import OrientationUtils from '../common/utils/system/WindowUtils';
+import Constants from '../common/constants/Constants';
 
 
 export default class EntryAbility extends UIAbility {
@@ -17,7 +18,8 @@ export default class EntryAbility extends UIAbility {
     LogUtil.init(0x1010, 'Melotopia', true)
     AppStorage.setOrCreate(StorageConstants.CONTEXT, this.context)
     CrashUtil.onError()
-
+    App.setImageFileCacheSize(Constants.CACHE_DISK_MAX_SIZE)
+    App.setImageRawDataCacheSize(Constants.CACHE_DISK_MAX_SIZE)
     // 初始化用户首选项
     await Promise.all([
       PreferencesUtils.loadPreference(this.context, StorageConstants.USER_PREF),

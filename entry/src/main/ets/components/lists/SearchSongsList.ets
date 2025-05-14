@@ -70,6 +70,7 @@ export struct SearchSongsList {
         } else if (this.hasMoreSongs && this.searchKeyword) {
           ListItem() {
             ClickToLoadButton()
+              .padding({ left: Constants.PADDING_MEDIUM, right: Constants.PADDING_MEDIUM })
               .onClick(() => {
                 this.loadSongs(this.songOffset)
               })

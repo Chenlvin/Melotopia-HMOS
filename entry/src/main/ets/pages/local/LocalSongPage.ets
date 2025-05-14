@@ -58,7 +58,7 @@ export struct LocalSongPage {
           title: '上传文件',
           message: '支持上传本机音频文件至本地曲库\n' +
             '支持格式为.mp3 .flac\n\n' +
-            '* 文件名格式：艺术家 - 歌名.flac* \n\n' +
+            '* 文件名格式：歌手 - 歌名.flac* \n\n' +
             '文件名格式不正确会导致无法识别\n',
           primaryButton: "取消",
           secondaryButton: {
@@ -143,6 +143,7 @@ export struct LocalSongPage {
                       this.handelSearch()
                     })
                 }
+                .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
                 GridItem() {
                   if (this.localSongs.length > 0) {
                     Row() {

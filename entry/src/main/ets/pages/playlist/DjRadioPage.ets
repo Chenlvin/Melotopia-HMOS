@@ -133,6 +133,7 @@ export struct DjRadioPage {
                 LoadingMoreButton()
               } else {
                 ClickToLoadButton()
+                  .padding({ left: Constants.PADDING_MEDIUM, right: Constants.PADDING_MEDIUM })
                   .onClick(async() => {
                     this.isLoadingMore = true
                     await this.loadSongs(this.songsOffset)

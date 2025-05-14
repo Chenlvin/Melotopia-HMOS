@@ -416,7 +416,7 @@ export struct Player {
 
         Row({ space: 10 }) {
           Column({ space: 10 }) {
-            // 歌曲名称&艺术家
+            // 歌曲名称&歌手
             Text(this.song.name)
               .textStyle(24)
               .fontWeight(FontWeight.Bold)
@@ -494,7 +494,7 @@ export struct Player {
       }
       .width('100%')
 
-      // 歌曲名称&艺术家
+      // 歌曲名称&歌手
       Row({ space: 5 }) {
         Text(`${this.song.name} - ${this.artists}`)
           .textStyle(18)

@@ -59,6 +59,7 @@ export struct SearchPlayListsList {
         } else if (this.hasMorePlayLists && this.searchKeyword) {
           ListItem() {
             ClickToLoadButton()
+              .padding({ left: Constants.PADDING_MEDIUM, right: Constants.PADDING_MEDIUM })
               .onClick(() => {
                 this.loadPlayLists(this.playListOffset)
               })

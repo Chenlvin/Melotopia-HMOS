@@ -1,7 +1,7 @@
 import { PlayListSong } from "./PlayList"
 
 /**
- * 艺术家
+ * 歌手
  */
 export interface ArtistItem {
   id: number,
@@ -23,7 +23,7 @@ interface ArtistInfoBody {
 }
 
 /**
- * 艺术家详细信息
+ * 歌手详细信息
  */
 export interface ArtistInfo {
   artist: ArtistInfoBody
@@ -33,7 +33,7 @@ export interface ArtistInfo {
 }
 
 /**
- * 艺术家请求
+ * 歌手请求
  */
 export interface ArtistsResult {
   result: ArtistBody

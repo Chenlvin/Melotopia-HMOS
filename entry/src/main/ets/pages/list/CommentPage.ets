@@ -95,7 +95,9 @@ export struct CommentPage {
             if(this.isLoadingMore) {
               LoadingMoreButton()
             } else if(this.hasMore) {
-              ClickToLoadButton().onClick(async () => {
+              ClickToLoadButton()
+                .padding({ left: Constants.PADDING_MEDIUM, right: Constants.PADDING_MEDIUM })
+                .onClick(async () => {
                 await this.loadComments()
               })
             }

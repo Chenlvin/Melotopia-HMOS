@@ -8,11 +8,17 @@ export interface LyricStyle {
   mode: number // 0 - Normal, 1 - Translate, 2 - Roma
 }
 
+/**
+ * 歌词位置
+ */
 export interface LyricPosition {
   x: number,
   y: number
 }
 
+/**
+ * 浮动歌词
+ */
 export interface FloatLyric {
   on: boolean
   position: LyricPosition

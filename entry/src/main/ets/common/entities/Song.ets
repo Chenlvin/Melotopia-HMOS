@@ -1,7 +1,7 @@
 import { Album } from "./Album"
 
 /**
- * 艺术家
+ * 歌手
  */
 export interface Artist {
   id: number

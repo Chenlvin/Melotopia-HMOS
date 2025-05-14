@@ -1,6 +1,5 @@
 import { VersionCard } from '../../components/settings/TextContent'
 import Constants from '../../common/constants/Constants'
-import { SetDefaultHomePage } from '../../components/settings/SetDefaultHomePage'
 import { WebPageParam } from '../../common/model/PageParams'
 import { CommonSettingsCard } from '../../components/cards/SettingsCard'
 import { SettingsPageMap } from '../../common/model/PageMap'
@@ -41,6 +40,7 @@ export struct SettingsPage {
             .scrollBar(BarState.Auto)
             .width('100%')
             .height('100%')
+            .padding({ top: Constants.PADDING_EDGE_DEFAULT })
             .layoutWeight(1)
             .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
           }
@@ -72,9 +72,9 @@ export struct SettingsPage {
     }
     ListItem() {
       CommonSettingsCard({
-        title: $r('app.string.SET_SONGCARD'),
+        title: $r('app.string.SET_UI'),
         action: () => {
-          this.settingsPageInfos.pushPathByName('SongClickActionPage', null)
+          this.settingsPageInfos.pushPathByName('UISettingsPage', null)
         }
       })
     }

@@ -9,37 +9,29 @@ import { UserLists } from '../common/view/userLists/UserLists';
 import { Me } from '../common/view/Me';
 import { StorageConstants } from '../common/constants/StorageConstants';
 import BreakpointUtils from '../common/utils/system/BreakpointUtils';
-import { EmitterUtil, LogUtil, ToastUtil } from '@pura/harmony-utils';
+import { EmitterUtil } from '@pura/harmony-utils';
 import { EmitterConstants } from '../common/constants/EmitterConstants';
 import { PageMap } from '../common/model/PageMap';
-import WindowUtils from '../common/utils/system/WindowUtils';
 import { FloatLyric, FloatLyric_INITIAL } from '../common/model/Settings';
-import { App } from '@kit.ArkUI';
 import { lyricsPipManager } from './lyrics/PipLyrics';
 
 @Entry
 @Component
 struct Index {
   @Provide('pageInfos') pageInfos: NavPathStack = new NavPathStack()
-  @StorageProp('topRectHeight') topRectHeight: number = 0
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @StorageProp(StorageConstants.VALID_API_URL) validApiUrl: boolean = true
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) widBp: string = 'sm'
-  @StorageProp(StorageConstants.DEFAULT_PAGE_INDEX) index: number = 0
   @StorageProp(StorageConstants.FLOAT_LYRIC_STYLE) floatLyric: FloatLyric = FloatLyric_INITIAL
-  @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpointWD: string = 'sm'
   @State currentHour: number = 0
   @State tabCurrentIndex: number = 0
   @State categoryTabIndex: number = 0
   @State contentTabIndex: number = 0
+  @State index: number = 0
   private tabController: TabsController = new TabsController()
   async aboutToAppear(): Promise<void> {
-    App.setImageCacheCount(Constants.CACHE_DISK_MAX_SIZE)
-    App.setImageRawDataCacheSize(Constants.CACHE_DISK_MAX_SIZE)
     BreakpointUtils.register()
-    setTimeout(() => {
-      this.tabCurrentIndex = this.index
-    }, 1)
     // const isFirstLaunch = await PreferencesUtils.getPreferenceValue<boolean>(StorageConstants.USER_PREF, 'isFirstLaunch', true)
     // if(isFirstLaunch) {
     //   PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, 'isFirstLaunch', false)
@@ -60,7 +52,6 @@ struct Index {
   onPageShow(): void {
     this.currentHour = new Date().getHours()
     AppStorage.setOrCreate(StorageConstants.IS_IN_FOREGROUND, true)
-    // if(this.floatLyric.on) WindowUtils.createLyricsFloatWindow()
     if(this.floatLyric.on) lyricsPipManager.startPip()
   }
 
@@ -84,7 +75,7 @@ struct Index {
         }
       })
     }
-    if(this.pageInfos.size() > 0 && this.breakpointWD === 'lg') {
+    if(this.pageInfos.size() > 0 && this.widBp === 'lg') {
       items.push({
         value: 'Clear',
         icon: $r('app.media.ic_public_cancel'),

@@ -107,7 +107,7 @@ export struct SearchPage {
     Row({ space: 5 }) {
       this.TabBarButton('单曲', 0)
       this.TabBarButton('歌单', 1)
-      this.TabBarButton('艺术家', 2)
+      this.TabBarButton('歌手', 2)
       this.TabBarButton('专辑', 3)
       this.TabBarButton('播客', 4)
     }

@@ -140,7 +140,7 @@ export struct SongInfoSheet {
         }
         if(this.allowToArtist && this.song?.artists[0].id !== 0) {
           ListItem() {
-            this.Item($r('app.media.ic_user_portrait'), '查看艺术家', () => { this.isShowArtistsSheet = true })
+            this.Item($r('app.media.ic_user_portrait'), '查看歌手', () => { this.isShowArtistsSheet = true })
           }
         }
         if(this.song.album?.id !== 0 && this.allowToAlbum) {

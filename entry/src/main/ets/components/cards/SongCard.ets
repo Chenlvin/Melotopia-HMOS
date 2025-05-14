@@ -16,7 +16,6 @@ import { PLAYMODE } from "../../common/model/Enum"
 @Component
 export struct SongCard {
   @StorageProp(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
-  @StorageProp(StorageConstants.SONG_CLICK_ACTION) clickAction: number = 0
   @StorageProp(StorageConstants.PLAY_SONG) playSong: Song = Song_INITIAL
   @State index: number = 0
   @State sid: number = -1
@@ -47,12 +46,8 @@ export struct SongCard {
   private handleClick() {
     if(this.song.id == this.playSong.id) { // 当前正在播放
       return
-    } else if(this.clickAction == 0) {
-      this.isShowSheet = true
-    } else if(this.clickAction == 1) {
-      this.playSingleSong()
-    } else if(this.playmode !== PLAYMODE.LOCAL && this.playmode !== PLAYMODE.SINGLE) {
-      // this.playWithList()
+    }
+    else if(this.playmode !== PLAYMODE.LOCAL && this.playmode !== PLAYMODE.SINGLE) {
       this.listPlayAction()
     } else {
       this.playSingleSong()

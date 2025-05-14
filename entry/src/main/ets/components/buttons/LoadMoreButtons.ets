@@ -8,6 +8,8 @@ export struct ClickToLoadButton {
         .fontSize(Constants.FONT_SIZE_COMMON)
         .fontColor($r('app.color.reverse'))
     }
+    .type(ButtonType.Normal)
+    .borderRadius(Constants.RADIUS_CARD)
     .fontColor($r('app.color.reverse'))
     .width('100%')
     .backgroundColor(Color.Transparent)

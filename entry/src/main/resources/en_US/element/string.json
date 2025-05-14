@@ -119,6 +119,14 @@
     {
       "name": "Float_lyric",
       "value": "Floating Lyric"
+    },
+    {
+      "name": "SET_UI",
+      "value": "UI & Animation"
+    },
+    {
+      "name": "clean_song_cache",
+      "value": "Clear Cached Songs"
     }
   ]
 }

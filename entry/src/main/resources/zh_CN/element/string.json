@@ -74,7 +74,7 @@
     },
     {
       "name": "Clean_temp_cache",
-      "value": "清理临时缓存"
+      "value": "清理临时文件缓存"
     },
     {
       "name": "Clean_persistent_data",
@@ -119,6 +119,14 @@
     {
       "name": "Float_lyric",
       "value": "浮动歌词"
+    },
+    {
+      "name": "SET_UI",
+      "value": "界面与动效"
+    },
+    {
+      "name": "clean_song_cache",
+      "value": "清理已缓存歌曲"
     }
   ]
 }

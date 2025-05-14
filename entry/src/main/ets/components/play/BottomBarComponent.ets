@@ -155,7 +155,7 @@ export struct BottomBarComponent {
 
         Image(this.isPaused ? $r('app.media.ic_play_fill') : $r('app.media.ic_public_pause'))
           .buttonImgStyle()
-          .width(20)
+          .width(16)
           .padding({ left: this.isPaused ? 3 : 0})
           .fillColor($r('app.color.app_red'))
           .onClick(() => {

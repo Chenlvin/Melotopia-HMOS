@@ -177,7 +177,7 @@ export struct ArtistPage {
       this.dataSource.setData(this.artist.hotSongs)
       this.dataSource.notifyDataReload()
     } catch (e) {
-      ToastUtil.showToast('获取艺术家信息失败')
+      ToastUtil.showToast('获取歌手信息失败')
     } finally {
       this.isLoading = false
     }

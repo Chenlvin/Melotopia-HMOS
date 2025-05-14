@@ -143,7 +143,7 @@ export struct ApiSetPage {
           Text('(高级) 手动设置Cookie').LeftText()
           ExplainButton({ title: '手动设置Cookie',
             msg: '注意: 若您使用应用内登录，请勿开启此选项\n\n' +
-              '设置后每次API请求都将使用该Cookie, 包括登录、用户信息等获取, 重启或刷新登录后生效\n\n'
+              '设置后每次API请求都将使用该Cookie, 包括登录、用户信息等获取, 重启或刷新登录后生效'
           })
         }
         Toggle({ type: ToggleType.Switch, isOn: this.isCustomCookie })

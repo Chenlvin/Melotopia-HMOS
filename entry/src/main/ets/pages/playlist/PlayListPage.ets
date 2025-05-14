@@ -62,18 +62,6 @@ export struct PlayListPage {
 
   menus: NavigationMenuItem[] = [
     {
-      value: 'Comment',
-      icon: $r('app.media.ic_public_message'),
-      action: () => {
-        let param: CommonParam<CommentParam> = { pageName: 'CommentPage', param: {
-          id: this.param.playList.id,
-          name: this.param.playList.name,
-          type: COMMENT_TYPE.PLAYLIST
-        }, remove: true }
-        EmitterUtil.post(EmitterConstants.PUSH_PAGE, param)
-      }
-    },
-    {
       value: 'Select',
       icon: $r('app.media.ic_public_select_all'),
       action: () => { this.handleSelect() }
@@ -86,6 +74,15 @@ export struct PlayListPage {
     this.isSelecting = !this.isSelecting
     this.selectedIndex = []
     this.selectedSongs = []
+  }
+
+  private commentAction = () => {
+    let param: CommonParam<CommentParam> = { pageName: 'CommentPage', param: {
+      id: this.param.playList.id,
+      name: this.param.playList.name,
+      type: COMMENT_TYPE.PLAYLIST
+    }, remove: true }
+    EmitterUtil.post(EmitterConstants.PUSH_PAGE, param)
   }
 
   async aboutToAppear(): Promise<void> {
@@ -235,12 +232,14 @@ export struct PlayListPage {
 
   private deleteButtonAction() {
     DialogUtil.showPrimaryDialog({
-      title: '确认删除歌单',
-      message:`《${this.param.playList.name}》`,
+      title: '确认删除',
+      message:`是否删除歌单 《${this.param.playList.name}》\n\n此操作会同时删除云端内容, 无法恢复`,
       primaryButton: "取消",
       secondaryButton: {
+        style: DialogButtonStyle.HIGHLIGHT,
         value: '删除',
-        fontColor: Color.Red,
+        fontColor: Color.White,
+        backgroundColor: $r('app.color.app_red'),
         action: async () => {
           await this.handleDelete()
         }
@@ -425,13 +424,8 @@ export struct PlayListPage {
           icon: '/resources/base/media/ic_public_search_filled.svg',
           value: this.searchKeyword
         })
-          .backgroundBlurStyle(BlurStyle.Thin)
           .height(Constants.HEIGHT_SEARCH)
           .layoutWeight(1)
-          .searchButton('搜索', {
-            fontSize: 13,
-            fontColor: $r('app.color.app_red')
-          })
           .onChange((value) => {
             if(value == '') {
               this.filteredList = []
@@ -525,19 +519,21 @@ export struct PlayListPage {
 
       Row({ space: 15 }) {
         // 分享歌单
-        this.ToolButton($r('app.media.ic_public_share_filled'), '分享歌单', () => {
+        this.ToolButton($r('app.media.ic_public_share_filled'), '分享', () => {
           PasteboardUtil.setDataText(`[${this.param.playList.name}] https://music.163.com/playlist?id=${this.param.playList.id}`)
           ToastUtil.showToast('已复制链接至剪贴板')
         })
+        // 查看评论
+        this.ToolButton($r('app.media.ic_public_message'), '评论', this.commentAction)
         // 喜欢歌单
         if(this.param.isShowHeart) {
           if(this.isSubscribed) {
-            this.ToolButton($r('app.media.ic_public_favor_filled'), '取消喜欢',
+            this.ToolButton($r('app.media.ic_public_favor_filled'), '取消',
               () => {
                 this.UnSubScribe()
               })
           } else {
-            this.ToolButton($r('app.media.ic_public_favor'), '喜欢歌单',
+            this.ToolButton($r('app.media.ic_public_favor'), '收藏',
               async () => {
                 let res:boolean = await subscribePlayList(this.param.playList.id, 1)
                 if(res) {
@@ -550,7 +546,7 @@ export struct PlayListPage {
         // 删除歌单
         if(this.isLogged && this.user.data.account?.id == this.param.playList.userId &&
           this.param.playList.id != this.userPlayLists[0]?.id) {
-          this.ToolButton($r('app.media.ic_public_delete_filled'), '删除歌单', () => {
+          this.ToolButton($r('app.media.ic_public_delete'), '删除', () => {
             this.deleteButtonAction()
           })
         }

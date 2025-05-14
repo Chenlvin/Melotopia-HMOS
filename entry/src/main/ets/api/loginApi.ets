@@ -26,9 +26,10 @@ export const getLoginStatus = async (cookie: string): Promise<boolean> => {
       Promise.all([
         PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER, User_INITIAL),
         PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.COOKIE, ''),
-        PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_PLAYLISTS, [])
+        PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_PLAYLISTS, []),
+        PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_SUB_ALBUM, []),
+        PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_DJRADIO_LIST, [])
       ])
-
       AppStorage.setOrCreate(StorageConstants.VALID_COOKIE, false)
       AppStorage.setOrCreate(StorageConstants.COOKIE, '')
       AppStorage.setOrCreate(StorageConstants.IS_LOGGED, false)
@@ -44,6 +45,7 @@ export const getLoginStatus = async (cookie: string): Promise<boolean> => {
 interface LogOutResponse {
   code: number
 }
+
 /**
  * 退出登录
  */
@@ -54,9 +56,11 @@ export const logOut = async (): Promise<boolean> => {
   })
   if(response.code === 200) {
     Promise.all([
-      PreferencesUtils.delPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER),
-      PreferencesUtils.delPreferenceValue(StorageConstants.USER_PREF, StorageConstants.COOKIE),
-      PreferencesUtils.delPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_PLAYLISTS)
+      PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER, User_INITIAL),
+      PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.COOKIE, ''),
+      PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_PLAYLISTS, []),
+      PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_SUB_ALBUM, []),
+      PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_DJRADIO_LIST, [])
     ])
     AppStorage.setOrCreate(StorageConstants.VALID_COOKIE, false)
     AppStorage.setOrCreate(StorageConstants.COOKIE, '')

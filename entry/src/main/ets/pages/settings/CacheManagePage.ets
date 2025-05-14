@@ -7,21 +7,23 @@ import { changeSettings } from "../../common/functions/app/settings"
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 import FileUtils from "../../common/utils/file/FileUtils"
 import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
+import AudioCacheUtils from "../../common/utils/play/AudioCacheUtils"
 
 /**
  * 应用数据与缓存
  */
 @Component
 export struct CacheManagePage {
+  @StorageProp(StorageConstants.CACHE_SETTINGS) cacheSet: CacheSet = CacheSet_INITIAL
+  @StorageProp(StorageConstants.IS_CLEAN_CACHED_SONGS) isCleaning: boolean = false
   @State cacheDirSize: number = -1
   @State songCacheSize: number = -1
-  @StorageProp(StorageConstants.CACHE_SETTINGS) cacheSet: CacheSet = CacheSet_INITIAL
   @State set: CacheSet = CacheSet_INITIAL
 
   async aboutToAppear(): Promise<void> {
     this.set = this.cacheSet
     this.cacheDirSize = FileUtils.getCacheSize()
-    this.songCacheSize = await FileUtils.getSongCacheSize()
+    this.songCacheSize = await AudioCacheUtils.getTotalCachedSize()
   }
 
   private updateCacheSet() {
@@ -39,7 +41,23 @@ export struct CacheManagePage {
 
         ListItem() {
           Row(){
-            Text('图片与下载临时文件')
+            Text('已缓存歌曲')
+              .fontSize(Constants.FONT_SIZE_COMMON)
+              .fontWeight(FontWeight.Bold)
+            Text(`${(this.songCacheSize / (1024 * 1024 * 1024)).toFixed(2)} GB`)
+              .fontSize(Constants.FONT_SIZE_COMMON)
+              .fontWeight(FontWeight.Bold)
+          }
+          .height(Constants.HEIGHT_SETTINGS_ITEM)
+          .width('100%')
+          .justifyContent(FlexAlign.SpaceBetween)
+          .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+        }
+        .itemStyle()
+
+        ListItem() {
+          Row(){
+            Text('图片与临时文件')
               .fontSize(Constants.FONT_SIZE_COMMON)
               .fontWeight(FontWeight.Bold)
             Text(`${(this.cacheDirSize / (1024 * 1024)).toFixed(2)} MB`)
@@ -54,28 +72,21 @@ export struct CacheManagePage {
         .itemStyle()
 
         ListItem() {
-          Button($r('app.string.Clean_temp_cache'))
-            .fontSize(Constants.FONT_SIZE_COMMON)
-            .fontColor(Color.Red)
-            .backgroundColor(Color.Transparent)
-            .width('100%')
-            .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-            .onClick(() => {
-              this.showCacheDialog()
-            })
+          this.ClearButton($r('app.string.Clean_temp_cache'), this.cleanTempDialog)
         }
         .itemStyle()
 
         ListItem() {
-          Button($r('app.string.Clean_persistent_data'))
-            .fontSize(Constants.FONT_SIZE_COMMON)
-            .fontColor(Color.Red)
-            .backgroundColor(Color.Transparent)
-            .width('100%')
-            .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-            .onClick(() => {
-              this.showCleanDialog()
-            })
+          if(this.isCleaning) {
+            this.ClearButton('正在清理...', () => {})
+          } else {
+            this.ClearButton($r('app.string.clean_song_cache'), this.cleanSongDialog)
+          }
+        }
+        .itemStyle()
+
+        ListItem() {
+          this.ClearButton($r('app.string.Clean_persistent_data'), this.cleanPersistDialog)
         }
         .itemStyle()
       }
@@ -87,13 +98,14 @@ export struct CacheManagePage {
     .backgroundColor($r('app.color.background'))
   }
 
-  private showCacheDialog() {
+  private cleanTempDialog = () => {
     DialogUtil.showPrimaryDialog({
-      title: '清理缓存',
-      message: '这将清理应用临时缓存，不会影响本地曲库的歌曲\n\n请勿在下载过程中清理，否则可能导致下载中的歌曲异常',
+      title: $r('app.string.Clean_temp_cache'),
+      message: '这将清理应用临时缓存, 包含缓存的图片等资源, 不会影响曲库的歌曲\n\n⚠ 请勿在下载过程中清理，否则可能导致下载中的歌曲异常',
       primaryButton: "取消",
       secondaryButton: {
-        fontColor: Color.Red,
+        fontColor: Color.White,
+        backgroundColor: $r('app.color.app_red'),
         value: '清理',
         action: async () => {
           try {
@@ -113,17 +125,44 @@ export struct CacheManagePage {
     })
   }
 
-  private showCleanDialog() {
+  private cleanSongDialog = () => {
     DialogUtil.showPrimaryDialog({
-      title: '清理持久化数据',
-      message: '如果应用遇到异常状况导致部分功能无法使用，你可以尝试清理持久化数据。\n这将会清空：\n\n1.播放列表数据\n2.上一次播放歌曲数据\n3.本地用户歌单、专辑、播客数据 (不会影响云端)',
+      title: $r('app.string.clean_song_cache'),
+      message: '这将清理已缓存的歌曲, 不会影响本地曲库的歌曲',
       primaryButton: "取消",
       secondaryButton: {
-        fontColor: Color.Red,
+        fontColor: Color.White,
+        backgroundColor: $r('app.color.app_red'),
         value: '清理',
         action: async () => {
           try {
-            await this.handleClean()
+            ToastUtil.showToast('正在清理...')
+            AppStorage.setOrCreate(StorageConstants.IS_CLEAN_CACHED_SONGS, true)
+            await AudioCacheUtils.clearAll()
+            ToastUtil.showToast('成功清理已缓存歌曲')
+          } catch (e) {
+            ToastUtil.showToast('清理已缓存歌曲出错: ' + e)
+          } finally {
+            this.songCacheSize = await AudioCacheUtils.getTotalCachedSize()
+            AppStorage.setOrCreate(StorageConstants.IS_CLEAN_CACHED_SONGS, false)
+          }
+        }
+      }
+    })
+  }
+
+  private cleanPersistDialog = () => {
+    DialogUtil.showPrimaryDialog({
+      title: $r('app.string.Clean_persistent_data'),
+      message: '如果应用遇到异常状况导致部分功能无法使用，你可以尝试清理持久化数据。\n这将会清空：\n\n1.播放列表数据\n2.上一次播放歌曲数据\n3.缓存在本地的歌单、专辑、播客数据\n(不会影响云端)',
+      primaryButton: "取消",
+      secondaryButton: {
+        fontColor: Color.White,
+        backgroundColor: $r('app.color.app_red'),
+        value: '清理',
+        action: async () => {
+          try {
+            await this.handlePersistClean()
             ToastUtil.showToast('清理成功')
           } catch (e) {
             ToastUtil.showToast('清理持久化数据出错: ' + e)
@@ -133,7 +172,7 @@ export struct CacheManagePage {
     })
   }
 
-  private async handleClean() {
+  private async handlePersistClean() {
     await PlayQueueUtils.cleanQueue()
     PreferencesUtils.putPreferenceValue('Play','hasCurrentSong', false)
     PreferencesUtils.putPreferenceValue(StorageConstants.USER_PREF, StorageConstants.USER_PLAYLISTS, [])
@@ -205,6 +244,16 @@ export struct CacheManagePage {
         })
     }
     .width('100%')
+  }
+
+  @Builder ClearButton(text: string | ResourceStr, action: () => void) {
+    Button(text)
+      .fontSize(Constants.FONT_SIZE_COMMON)
+      .fontColor($r('app.color.app_red'))
+      .backgroundColor(Color.Transparent)
+      .width('100%')
+      .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+      .onClick(action)
   }
 }
 

@@ -113,7 +113,7 @@ export struct PlayerActionSheet {
             }
 
             if(this.playmode !== 3) {
-              this.Item($r('app.media.ic_user_portrait'), `查看艺术家: ${this.artists}`, () => {
+              this.Item($r('app.media.ic_user_portrait'), `查看歌手: ${this.artists}`, () => {
                 this.isShow = false
                 setTimeout(() => {
                   this.isShowArtists = true

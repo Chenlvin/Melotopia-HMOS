@@ -5,7 +5,7 @@ import { DjRadio } from "../../common/entities/DjRadio"
 import { DjRadioCard } from "../cards/DjRadioCard"
 
 /**
- * 艺术家搜索结果列表
+ * 歌手搜索结果列表
  */
 const TAG = "[SearchDjRadioList] "
 

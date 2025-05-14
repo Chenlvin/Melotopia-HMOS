@@ -22,12 +22,8 @@ export async function initSettings() {
   await Promise.all([
     // API
     handleSetting<string>(StorageConstants.API_URL, 'http://:80'),
-    // Default Index
-    handleSetting<number>(StorageConstants.DEFAULT_PAGE_INDEX, 0),
     // Play Quality
     handleSetting<number>(StorageConstants.PLAY_QUALITY, 0),
-    // SongCard Click Action
-    handleSetting<number>(StorageConstants.SONG_CLICK_ACTION, 2),
     // Lyric
     handleSetting<LyricStyle>(StorageConstants.LYRIC_STYLE, LyricStyle_INITIAL),
     // CacheSettings

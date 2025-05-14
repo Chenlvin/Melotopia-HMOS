@@ -19,7 +19,7 @@ import { DonatePage } from "../../pages/settings/DonatePage"
 import { FloatLyricPage } from "../../pages/settings/FloatLyricPage"
 import { PlaySettingsPage } from "../../pages/settings/PlaySettingsPage"
 import { SettingsPage } from "../../pages/settings/SettingsPage"
-import { SongClickActionPage } from "../../pages/settings/SongClickActionPage"
+import { UISettingsPage } from "../../pages/settings/UISettingsPage"
 import { WebPage } from "../../pages/web/WebPage"
 import {
   AlbumParam,
@@ -83,11 +83,11 @@ export function PageMap(name: string, param: Object) {
 
 @Builder
 export function SettingsPageMap(name: string, param: Object) {
-  if(name === 'SongClickActionPage') {
-    SongClickActionPage()
-  }
-  else if(name === 'PlaySettingsPage') {
+  if(name === 'PlaySettingsPage') {
     PlaySettingsPage()
+  }
+  else if(name === 'UISettingsPage') {
+    UISettingsPage()
   }
   else if(name === 'FloatLyricPage') {
     FloatLyricPage()

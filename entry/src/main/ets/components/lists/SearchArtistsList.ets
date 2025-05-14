@@ -5,7 +5,7 @@ import { ArtistItem } from "../../common/entities/Artists"
 import { ArtistCard } from "../cards/ArtistCard"
 
 /**
- * 艺术家搜索结果列表
+ * 歌手搜索结果列表
  */
 const TAG = "[SearchArtistsList] "
 

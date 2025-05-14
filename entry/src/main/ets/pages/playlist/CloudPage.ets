@@ -147,6 +147,7 @@ export struct CloudPage {
               } else if (this.hasMore) {
                 ListItem() {
                   ClickToLoadButton()
+                    .padding({ left: Constants.PADDING_MEDIUM, right: Constants.PADDING_MEDIUM })
                     .onClick(() => {
                       this.loadSongs(100, this.currentOffset)
                     })

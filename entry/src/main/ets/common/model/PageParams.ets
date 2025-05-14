@@ -22,7 +22,7 @@ export interface WebPageParam {
 }
 
 /**
- * 艺术家信息参数
+ * 歌手信息参数
  */
 export interface ArtistParam {
   artist: Artist

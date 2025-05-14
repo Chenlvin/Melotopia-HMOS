@@ -13,7 +13,7 @@ export struct ArtistsSheet {
   build() {
     List({ space: 10 }) {
       ListItem() {
-        Text('艺术家')
+        Text('歌手')
           .fontSize(Constants.FONT_SIZE_TITLE)
           .fontWeight(FontWeight.Bold)
           .width('100%')

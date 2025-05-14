@@ -127,9 +127,13 @@ export default class Constants {
    */
   static readonly PADDING_INNER_DEFAULT: number = 5
   /**
+   * 缓存图片数量
+   */
+  static readonly CACHE_IMAGE_MAX_COUNT: number = 5000
+  /**
    * 允许缓存占用总大小
    */
-  static readonly CACHE_DISK_MAX_SIZE: number = 2048 * 1024 * 1024
+  static readonly CACHE_DISK_MAX_SIZE: number = 4096 * 1024 * 1024
   /**
    * 悬浮窗歌词名字
    */

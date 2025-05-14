@@ -4,6 +4,7 @@ import { getCacheSet, getCookie } from "../../functions/common/get";
 export default class AudioCacheUtils {
   static async init() {
     const cacheSet = await getCacheSet()
+    MCMediaCache.setLogEnabled(false)
     MCMediaCache.setRequestHandler(async (request) => {
       request.setHeader('cookie', await getCookie())
     })
@@ -21,5 +22,14 @@ export default class AudioCacheUtils {
 
   static async getProxyUrl(url: string) {
     return await MCMediaCache.proxy(url)
+  }
+
+  static async clearAll() {
+    await MCMediaCache.removeCaches()
+  }
+
+  static async getTotalCachedSize() {
+    const size = await MCMediaCache.totalCacheSize()
+    return size
   }
 }
