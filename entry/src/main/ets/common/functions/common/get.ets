@@ -30,8 +30,13 @@ export async function getCookie(): Promise<string> {
   return cookie
 }
 
+interface InnerData {
+  version: string
+}
+
 interface InnerVersion {
-  code: number
+  code: number,
+  data: InnerData
 }
 /**
  * 检查API URL连通性
@@ -41,7 +46,7 @@ export async function checkValidUrl(): Promise<boolean> {
   try {
     const response = await commonRequest<InnerVersion>({
       url: '/inner/version',
-      params: {}
+      params: { timeout: 2000, noCookie: true }
     })
     if (response.code === 200) {
       AppStorage.setOrCreate(StorageConstants.VALID_API_URL, true)

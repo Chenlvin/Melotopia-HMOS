@@ -11,7 +11,7 @@ export async function getAppInfo() {
   try {
     const response = await commonRequest<AppInfo>({
       url: '/api/melotopia/app',
-      params: { baseUrl: Constants.API_URL, timeout: 3000, noCookie: true }
+      params: { baseUrl: Constants.API_URL, noCookie: true, timeout: 3000 },
     })
     AppStorage.setOrCreate(StorageConstants.APP_INFO, response ?? AppInfoClass)
   } catch (e) {

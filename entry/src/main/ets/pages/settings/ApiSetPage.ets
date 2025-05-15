@@ -186,17 +186,17 @@ export struct ApiSetPage {
     PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.IS_CUSTOM_COOKIE, this.isCustomCookie)
   }
 
-  saveApiSettings() {
+  async saveApiSettings() {
     const https = this.apiSettings.https ? 'https://' : 'http://'
     const API_URL = https + this.apiSettings.domain + ':' + this.apiSettings.port + this.apiSettings.path
     AppStorage.setOrCreate(StorageConstants.API_SETTINGS,this.apiSettings)
-    PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.API_SETTINGS, this.apiSettings)
     AppStorage.setOrCreate(StorageConstants.API_URL, API_URL)
-    PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.API_URL, API_URL)
+    await Promise.all([
+      PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.API_SETTINGS, this.apiSettings),
+      PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.API_URL, API_URL)
+    ])
     ToastUtil.showToast('配置已保存, 正在检查服务是否可用...')
-    setTimeout(() => {
-      checkValidUrl()
-    }, 500)
+    checkValidUrl()
   }
 
   setCustomCookie() {
