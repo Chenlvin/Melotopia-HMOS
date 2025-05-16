@@ -86,6 +86,7 @@ export struct UserDjRadioList {
         ListItem().height(px2vp(this.bottomRectHeight) + 56 + Constants.HEIGHT_MINI + Constants.PADDING_EDGE_DEFAULT)
       }
       .lanes(this.breakpoint == 'lg' || this.breakpoint === 'md' ? 2 : 1)
+      .scrollBar(BarState.Off)
       .width('100%')
       .height('100%')
     }

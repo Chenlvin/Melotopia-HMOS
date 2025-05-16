@@ -6,6 +6,7 @@ import { checkValidUrl } from "../../common/functions/common/get"
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 import { ExplainButton } from "../../components/buttons/ExplainButton"
 import { CommonSettingsCard } from "../../components/cards/SettingsCard"
+import { RealIP, RealIP_INITIAL } from "../../common/model/Settings"
 
 /**
  * 自定义API服务器地址
@@ -21,14 +22,24 @@ export struct ApiSetPage {
   @StorageProp(StorageConstants.API_SETTINGS) apiSettings: Api = Api_INITIAL
   @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @StorageProp(StorageConstants.IS_CHECKING_VALID_API) isCheckingApi: boolean = false
+  @StorageProp(StorageConstants.REAL_IP) realIp: RealIP = RealIP_INITIAL
+  @State isUseRealIP: boolean = true
   @State bottomPadding: number = 0
   @State selected: number = 0
 
-  private dialogController: CustomDialogController = new CustomDialogController({
-    builder: SetCookieDialog({
-      customCookie: this.customCookie
-    })
+  private cookieDialogController: CustomDialogController = new CustomDialogController({
+    builder: SetCookieDialog(),
+    cornerRadius: Constants.RADIUS_CARD
   })
+
+  private realIpDialogController: CustomDialogController = new CustomDialogController({
+    builder: SetRealIpDialog(),
+    cornerRadius: Constants.RADIUS_CARD
+  })
+
+  aboutToAppear(): void {
+    this.isUseRealIP = this.realIp.toggle
+  }
 
   build() {
     NavDestination() {
@@ -53,6 +64,7 @@ export struct ApiSetPage {
           this.SetApiUrl()
           if(this.validApiUrl) {
             this.SetCookie()
+            this.SetRealIP()
           }
         }
         .padding({ top: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT, bottom: px2vp(this.bottomRectHeight) + Constants.PADDING_EDGE_TEXT })
@@ -64,6 +76,7 @@ export struct ApiSetPage {
       }
       .width('100%')
       .scrollBar(BarState.Off)
+      .edgeEffect(EdgeEffect.Spring)
     }
     .backgroundColor($r('app.color.background'))
     .title($r('app.string.SET_CLOUDSERVICE'))
@@ -182,7 +195,40 @@ export struct ApiSetPage {
 
       if(this.isCustomCookie) {
         CommonSettingsCard({ title: '设置 Cookie', action: () => {
-          this.dialogController.open()
+          this.cookieDialogController.open()
+        }})
+      }
+    }
+    .itemStyle()
+  }
+
+  @Builder SetRealIP() {
+    Column({ space: 10 }) {
+      Row() {
+        Row({ space: 5 }) {
+          Text('(高级) 使用真实 IP 地址').LeftText()
+          ExplainButton({ title: 'Real IP 设置',
+            msg: 'API在一些地区可能会受到限制, 开启此功能, 填入国内IP尝试解决'
+          })
+        }
+        Toggle({ type: ToggleType.Switch, isOn: this.realIp.toggle })
+          .height(24)
+          .width(48)
+          .selectedColor($r('app.color.app_red'))
+          .onChange((isOn) => {
+            animateTo({ duration: 100, curve: Curve.EaseInOut }, () => {
+              this.toggleRealIp(isOn)
+            })
+          })
+      }
+      .height(Constants.HEIGHT_SETTINGS_ITEM)
+      .width('100%')
+      .justifyContent(FlexAlign.SpaceBetween)
+      .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+
+      if(this.realIp.toggle) {
+        CommonSettingsCard({ title: '设置 Real IP', action: () => {
+          this.realIpDialogController.open()
         }})
       }
     }
@@ -193,6 +239,12 @@ export struct ApiSetPage {
     this.isCustomCookie = isOn
     AppStorage.setOrCreate(StorageConstants.IS_CUSTOM_COOKIE, this.isCustomCookie)
     PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.IS_CUSTOM_COOKIE, this.isCustomCookie)
+  }
+
+  toggleRealIp(isOn: boolean) {
+    this.realIp.toggle = isOn
+    AppStorage.setOrCreate(StorageConstants.REAL_IP, this.realIp)
+    PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.REAL_IP, this.realIp)
   }
 
   async saveApiSettings() {
@@ -233,8 +285,51 @@ export struct ApiSetPage {
 }
 
 @CustomDialog
+struct SetRealIpDialog {
+  @StorageProp(StorageConstants.REAL_IP) realIp: RealIP = RealIP_INITIAL
+
+  controller: CustomDialogController
+
+  saveRealIp = () => {
+    AppStorage.setOrCreate(StorageConstants.REAL_IP, this.realIp)
+    PreferencesUtils.putPreferenceValue(StorageConstants.SET_PERF, StorageConstants.REAL_IP, this.realIp)
+    this.controller.close()
+    ToastUtil.showToast('已保存 Real IP 设置')
+  }
+
+  build() {
+    Column({ space: 15 }) {
+      Text('Real IP 设置')
+        .LeftText()
+        .width('100%')
+        .fontSize(Constants.FONT_SIZE_TITLE)
+      Row({ space: 10 }) {
+        TextInput({ text: this.realIp.realIp })
+          .layoutWeight(1)
+          .onChange((text) => this.realIp.realIp = text)
+          .borderRadius(Constants.RADIUS_IMG)
+        Button('保存')
+          .fontSize(Constants.FONT_SIZE_COMMON)
+          .fontColor($r('app.color.app_red'))
+          .borderColor($r('app.color.app_red'))
+          .backgroundColor(Color.Transparent)
+          .borderWidth(1)
+          .padding({ left: Constants.PADDING_MEDIUM, right: Constants.PADDING_MEDIUM })
+          .onClick(this.saveRealIp)
+      }
+      .width('100%')
+    }
+    .padding(Constants.PADDING_MEDIUM)
+    .constraintSize({
+      minWidth: 0,
+      maxWidth: 400
+    })
+  }
+}
+
+@CustomDialog
 struct SetCookieDialog {
-  @Link customCookie: string
+  @StorageProp(StorageConstants.CUSTOM_COOKIE) customCookie: string = ''
   controller: CustomDialogController
 
   setCustomCookie = () => {

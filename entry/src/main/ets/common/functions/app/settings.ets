@@ -2,7 +2,9 @@ import { LogUtil, ToastUtil } from "@pura/harmony-utils"
 import { StorageConstants } from "../../constants/StorageConstants"
 import { CacheSet, CacheSet_INITIAL,
   FloatLyric,
-  FloatLyric_INITIAL, LyricStyle, LyricStyle_INITIAL } from "../../model/Settings"
+  FloatLyric_INITIAL, LyricStyle, LyricStyle_INITIAL,
+  RealIP,
+  RealIP_INITIAL } from "../../model/Settings"
 import PreferencesUtils from "../../utils/data/PreferencesUtils"
 import { preferences } from "@kit.ArkData"
 import { Api, Api_INITIAL } from "../../model/Api"
@@ -17,7 +19,6 @@ const TAG = '[settings] '
  */
 export async function initSettings() {
   const SetPerf = StorageConstants.SET_PERF
-
   // 并行处理无依赖的配置项
   await Promise.all([
     // API
@@ -28,6 +29,8 @@ export async function initSettings() {
     handleSetting<LyricStyle>(StorageConstants.LYRIC_STYLE, LyricStyle_INITIAL),
     // CacheSettings
     handleSetting<CacheSet>(StorageConstants.CACHE_SETTINGS, CacheSet_INITIAL),
+    // Real Ip
+    handleSetting<RealIP>(StorageConstants.REAL_IP, RealIP_INITIAL),
     // mixWithOthers
     handleSetting<boolean>(StorageConstants.MIX_WITH_OTHERS, false),
     // MiniBarBlur

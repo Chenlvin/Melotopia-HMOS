@@ -32,7 +32,7 @@ export struct DownloadDialog {
             minHeight: 0,
             maxHeight: '100%'
           })
-          .height(Constants.HEIGHT_SELECT)
+          .height(45)
           .onSelect((index) => {
             if(index != this.quality) {
               this.quality = index

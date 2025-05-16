@@ -41,6 +41,19 @@ export interface CacheSet {
   staticCacheMaxSize: number
 }
 
+/**
+ * Real IP 设置
+ */
+export interface RealIP {
+  toggle: boolean
+  realIp: string
+}
+
+export const RealIP_INITIAL: RealIP = {
+  toggle: false,
+  realIp: '116.25.146.177'
+}
+
 export const CacheSet_INITIAL: CacheSet = {
   songCacheMaxSize: 1024 * 1024 * 1024,
   staticCacheMaxSize: 1024 * 1024 * 1024

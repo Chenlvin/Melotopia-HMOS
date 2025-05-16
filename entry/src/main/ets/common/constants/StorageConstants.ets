@@ -350,4 +350,9 @@ export class StorageConstants {
    * @description AppStorage & Preference
    */
   static readonly SHOW_ANNOUNCEMENT: string = 'showAnnouncement'
+  /**
+   * RealIP
+   * @description AppStorage & Preference
+   */
+  static readonly REAL_IP: string = 'realIp'
 }

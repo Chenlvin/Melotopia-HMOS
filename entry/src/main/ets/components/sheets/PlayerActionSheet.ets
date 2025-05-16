@@ -31,6 +31,7 @@ export struct PlayerActionSheet {
       artists: this.artists,
       duration: changeDuration(this.song.duration)
     }),
+    cornerRadius: Constants.RADIUS_CARD
   })
 
   private setOrientation() {

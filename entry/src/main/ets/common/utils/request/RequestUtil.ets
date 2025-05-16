@@ -4,6 +4,7 @@ import Constants from '../../constants/Constants'
 import { StorageConstants } from '../../constants/StorageConstants'
 import { Api } from '../../model/Api'
 import { getApiUrl, getCookie } from '../../functions/common/get'
+import { RealIP } from '../../model/Settings'
 
 const TAG = 'RequestUtil'
 
@@ -29,7 +30,10 @@ instance.interceptors.request.use(async (request: InternalAxiosRequestConfig ) =
   }
   // realIP
   if(!request.url?.includes('/login')) {
-    request.params.realIP = "116.25.146.177"
+    const realIP = await AppStorage.get(StorageConstants.REAL_IP) as RealIP
+    if(realIP.toggle) {
+      request.params.realIP = realIP.realIp
+    }
   }
   return request
 }, (err: AxiosError) => {

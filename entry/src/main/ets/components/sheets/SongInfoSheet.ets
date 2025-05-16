@@ -38,6 +38,7 @@ export struct SongInfoSheet {
       artists: this.artists,
       duration: changeDuration(this.song.duration)
     }),
+    cornerRadius: Constants.RADIUS_CARD
   })
 
   private addToQueue() {
