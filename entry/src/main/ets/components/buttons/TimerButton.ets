@@ -1,5 +1,5 @@
-import Constants from "../../../common/constants/Constants"
-import { TimerSheet } from "../../sheets/TimerSheet"
+import Constants from "../../common/constants/Constants"
+import { TimerSheet } from "../sheets/TimerSheet"
 
 @Builder export function Timer() {
   TimerSheet()

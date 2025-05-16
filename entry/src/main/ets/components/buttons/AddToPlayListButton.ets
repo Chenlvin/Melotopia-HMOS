@@ -1,7 +1,7 @@
-import Constants from "../../../common/constants/Constants"
-import { StorageConstants } from "../../../common/constants/StorageConstants"
-import { Song, Song_INITIAL } from "../../../common/entities/Song"
-import { PlayListAddSheet } from "../../sheets/PlayListAddSheet"
+import Constants from "../../common/constants/Constants"
+import { StorageConstants } from "../../common/constants/StorageConstants"
+import { Song, Song_INITIAL } from "../../common/entities/Song"
+import { PlayListAddSheet } from "../sheets/PlayListAddSheet"
 
 @Component
 export struct AddToPlayListButton {

@@ -1,4 +1,4 @@
-import { changeCycleMode } from "../../../common/functions/play/playControl"
+import { changeCycleMode } from "../../common/functions/play/playControl"
 
 @Component
 export struct LoopModeButton {

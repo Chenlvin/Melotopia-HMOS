@@ -213,6 +213,11 @@ export class StorageConstants {
    * @description AppStorage
    */
   static readonly IS_CLEAN_CACHED_SONGS: string = 'isCleanCachedSongs'
+  /**
+   * 正在检查云配置连通性
+   * @description AppStorage
+   */
+  static readonly IS_CHECKING_VALID_API: string = 'isCheckingValidApi'
 
 
   /**

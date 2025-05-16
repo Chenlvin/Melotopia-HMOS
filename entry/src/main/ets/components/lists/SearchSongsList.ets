@@ -4,7 +4,7 @@ import Constants from "../../common/constants/Constants"
 import { EmitterConstants } from "../../common/constants/EmitterConstants"
 import { Song } from "../../common/entities/Song"
 import { ClickToLoadButton, LoadingMoreButton, NoMoreButton } from "../buttons/LoadMoreButtons"
-import { AddToPlayListButton } from "../buttons/play/AddToPlayListButton"
+import { AddToPlayListButton } from "../buttons/AddToPlayListButton"
 import { SongCard } from "../cards/SongCard"
 
 /**

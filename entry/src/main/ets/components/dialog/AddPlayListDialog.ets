@@ -1,5 +1,4 @@
 import Constants from "../../common/constants/Constants"
-import { promptAction } from "@kit.ArkUI"
 import { createPlayList } from "../../api/playListApi"
 import { ToastUtil } from "@pura/harmony-utils"
 

@@ -5,7 +5,7 @@ import { Artist } from "../../entities/Song";
 import commonRequest from "../../utils/request/RequestUtil";
 import { getArtists } from "./convert";
 
-const TAG = '[get function] '
+const TAG = '[GET ]'
 /**
  * 获取API Url
  * （根据用户设置）
@@ -44,6 +44,7 @@ interface InnerVersion {
  */
 export async function checkValidUrl(): Promise<boolean> {
   try {
+    AppStorage.setOrCreate(StorageConstants.IS_CHECKING_VALID_API, true)
     const response = await commonRequest<InnerVersion>({
       url: '/inner/version',
       params: { timeout: 2000, noCookie: true }
@@ -58,6 +59,8 @@ export async function checkValidUrl(): Promise<boolean> {
   } catch (e) {
     AppStorage.setOrCreate(StorageConstants.VALID_API_URL, false)
     return false
+  } finally {
+    AppStorage.setOrCreate(StorageConstants.IS_CHECKING_VALID_API, false)
   }
 }
 

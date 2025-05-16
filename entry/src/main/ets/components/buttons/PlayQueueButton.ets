@@ -1,6 +1,6 @@
-import { StorageConstants } from "../../../common/constants/StorageConstants"
-import { PlayQueue } from "../../../common/model/PlayQueue"
-import { PlayQueueSheet } from "../../sheets/PlayQueueSheet"
+import { StorageConstants } from "../../common/constants/StorageConstants"
+import { PlayQueue } from "../../common/model/PlayQueue"
+import { PlayQueueSheet } from "../sheets/PlayQueueSheet"
 
 @Component
 export struct PlayQueueButton {

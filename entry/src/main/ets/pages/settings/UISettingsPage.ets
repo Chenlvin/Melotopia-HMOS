@@ -1,3 +1,4 @@
+import { ToastUtil } from "@pura/harmony-utils"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
 import { changeSettings } from "../../common/functions/app/settings"
@@ -25,7 +26,10 @@ export struct UISettingsPage {
         ListItem() {
           ToggleSettingItem({
             name: '底部播放器模糊',
-            onaction: () => { changeSettings(StorageConstants.MINI_BAR_BLUR, true) },
+            onaction: () => {
+              changeSettings(StorageConstants.MINI_BAR_BLUR, true)
+              ToastUtil.showToast('开启此选项可能会增加设备功耗' )
+            },
             offaction: () => { changeSettings(StorageConstants.MINI_BAR_BLUR, false) },
             value: this.miniBarBlur
           })
@@ -35,7 +39,10 @@ export struct UISettingsPage {
         ListItem() {
           ToggleSettingItem({
             name: '增强歌词效果（实验）',
-            onaction: () => { changeSettings(StorageConstants.NEW_LYRIC_EFFECT, true) },
+            onaction: () => {
+              changeSettings(StorageConstants.NEW_LYRIC_EFFECT, true)
+              ToastUtil.showToast('开启此选项可能会增加设备功耗' )
+            },
             offaction: () => { changeSettings(StorageConstants.NEW_LYRIC_EFFECT, false) },
             value: this.newLyricEffect
           })
@@ -54,8 +61,9 @@ export struct UISettingsPage {
 }
 
 @Extend(ListItem) function itemStyle() {
+  .height(60)
   .backgroundColor($r('app.color.main'))
-  .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT, top: 5, bottom: 5 })
+  .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
   .margin({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
   .borderRadius(Constants.RADIUS_CARD)
 }

@@ -1,7 +1,7 @@
 import { Song, Song_INITIAL } from "../../common/entities/Song"
 import { pauseMusic, playNext, playPre, playQueue, resumeMusic } from "../../common/functions/play/playControl"
 import playQueueUtils from "../../common/utils/play/PlayQueueUtils"
-import { PlayQueueButton } from "../buttons/play/PlayQueueButton"
+import { PlayQueueButton } from "../buttons/PlayQueueButton"
 import { Player } from "../../common/view/Player"
 import { StorageConstants } from "../../common/constants/StorageConstants"
 import Constants from "../../common/constants/Constants"
