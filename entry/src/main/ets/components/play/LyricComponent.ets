@@ -1,4 +1,4 @@
-import { EmitterUtil, LogUtil, ToastUtil } from "@pura/harmony-utils"
+import { EmitterUtil } from "@pura/harmony-utils"
 import { Lyric } from "../../common/entities/Lyric"
 import { seekMusic } from "../../common/functions/play/playControl"
 import { LengthUnit } from "@kit.ArkUI"
@@ -21,7 +21,6 @@ export struct LyricComponent {
   @State userScrollingInterval: number = 0
   @State lyric: Lyric[] = []
   @State dataSource: LazyData<Lyric> = new LazyData()
-  @State currentListIndex: number = 0
   @State isLoading: boolean = false
   @State needUpdate: boolean = false
 
@@ -37,7 +36,7 @@ export struct LyricComponent {
   async aboutToAppear(): Promise<void> {
     await this.getLyric()
     setTimeout(() => {
-      this.scroller.scrollToIndex(this.currentLyricIndex + 1, false, ScrollAlign.CENTER)
+      this.scroller.scrollToIndex(this.currentLyricIndex, false, ScrollAlign.CENTER)
     }, 10)
     this.StartAutoScrollTimer()
   }
@@ -46,12 +45,13 @@ export struct LyricComponent {
     this.currentLyricIndex = 0
     this.needUpdate = true
     this.isLoading = true
-    this.ToCurrentLyric()
-    setTimeout(async () => {
-      await this.getLyric()
-      this.currentLyricIndex = 0
+    await this.getLyric()
+    setTimeout(() => {
       this.isLoading = false
     }, 100)
+    setTimeout(() => {
+      this.ToCurrentLyric()
+    }, 300)
   }
 
   aboutToDisappear(): void {
@@ -75,23 +75,14 @@ export struct LyricComponent {
   }
 
   ToCurrentLyric() {
-    if(!this.userScrolling) {
+    if(!this.userScrolling && !this.isLoading) {
       this.scroller.scrollToIndex(this.currentLyricIndex + 1, true, ScrollAlign.CENTER)
-      this.currentListIndex = this.currentLyricIndex
     }
   }
 
   build() {
     List({ scroller: this.scroller }) {
-      if(this.isLoading) {
-        ListItem() {
-          LoadingProgress().width(Constants.SIZE_LOADING_PROGRESS_DEFAULT)
-        }
-        .align(Alignment.Center)
-        .width('100%')
-        .height('100%')
-        .layoutWeight(1)
-      } else {
+      if(!this.isLoading) {
         ListItem().height('50%')
         if(this.newLyricEffect) {
           LazyForEach(this.dataSource, (item: Lyric, index) => {
@@ -148,9 +139,6 @@ export struct LyricComponent {
         unit: LengthUnit.PERCENT,
         value: 40
       }
-    })
-    .onScrollIndex((start, end, center) => {
-      this.currentListIndex = center
     })
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Move) {

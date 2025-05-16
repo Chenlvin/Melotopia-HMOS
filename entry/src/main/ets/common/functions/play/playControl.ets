@@ -31,6 +31,7 @@ export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: Reso
     }
 
     let artists = getArtists(song.artists)
+    await AVPlayerUtils.reset()
     setPlayData(mode, song, artists)
     isThisSongLiked(song.id)
     let localPath: string = ''
@@ -48,6 +49,7 @@ export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: Reso
     await LyricUtils.setLyric(song)
     await AVSessionUtils.setMetadata(song, artists, picUrl)
     await AVSessionUtils.activate()
+    AVSessionUtils.bufferingState(0)
 
     localPath = await FileUtils.accessLocalFile(sanitizeFileName(`${tempArtists} - ${song.name}`))
 
@@ -61,7 +63,6 @@ export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: Reso
       let proxyUrl = await AudioCacheUtils.getProxyUrl(songPlay.data[0].url)
       await AVPlayerUtils.setUrl(proxyUrl ?? songPlay.data[0].url)
     }
-
   } catch (e) {
     LogUtil.error(TAG, '播放出错: ' + e)
     playNext()
@@ -81,6 +82,7 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       song.duration = (metadata.duration) ? parseInt(metadata.duration) : 0
     }
     if(FileUtil.accessSync(fileUrl)) {
+      await AVPlayerUtils.reset()
       setPlayData(0, song, artistsString, fileName)
       let picUrl = song.id == 0 ? $r('app.media.ic_files_audio') : `file://${filesDir}/pic/${song.id}.jpg`
       setPicUrl(picUrl)
@@ -91,11 +93,12 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       } else {
         LyricUtils.setLyricString('')
       }
-      // AVSession
-      AVSessionUtils.setMetadata(song, artistsString, picUrl)
-      AVSessionUtils.activate()
-      saveCurrentSongInfo(0, song, artistsString, picUrl)
       EmitterUtil.post(EmitterConstants.EMITTER_LYRIC_UPDATE, 'Lyric Updated')
+      // AVSession
+      await AVSessionUtils.setMetadata(song, artistsString, picUrl)
+      await AVSessionUtils.activate()
+      AVSessionUtils.bufferingState(0)
+      saveCurrentSongInfo(0, song, artistsString, picUrl)
       await AVPlayerUtils.setUrl(fdPath)
     } else {
       ToastUtil.showToast('未找到文件')
@@ -276,6 +279,7 @@ async function setPlayData(mode: number, song: Song, artists: string, fileName: 
   AppStorage.setOrCreate(StorageConstants.PLAY_FILE_NAME, fileName)
   AppStorage.setOrCreate(StorageConstants.PLAY_SONG, song)
   AppStorage.setOrCreate(StorageConstants.PLAY_ARTISTS, artists)
+  AppStorage.setOrCreate(StorageConstants.PLAY_TIME, 0)
 }
 
 /**
