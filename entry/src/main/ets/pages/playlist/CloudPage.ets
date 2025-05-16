@@ -160,9 +160,9 @@ export struct CloudPage {
               ListItem().height(px2vp(this.bottomRectHeight) + Constants.HEIGHT_MINI)
             }
             .height('100%')
-            .layoutWeight(1)
             .width('100%')
-            .scrollBar(BarState.Auto)
+            .layoutWeight(1)
+            .scrollBar(this.list.length < 20 ? BarState.Off : BarState.On)
             .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
             .backToTop(true)
           }

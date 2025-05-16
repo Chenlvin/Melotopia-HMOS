@@ -150,6 +150,7 @@ export struct DjRadioPage {
           .width('100%')
           .height('100%')
           .backToTop(true)
+          .scrollBar(this.programs.length < 20 ? BarState.Off : BarState.On)
           .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
         }
 

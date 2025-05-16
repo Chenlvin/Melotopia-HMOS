@@ -6,6 +6,7 @@ import { FloatLyric } from '../../common/model/Settings';
 import { changeSettings } from '../../common/functions/app/settings';
 import { pauseMusic, playNext, playPre, playQueue, resumeMusic } from '../../common/functions/play/playControl';
 import playQueueUtils from '../../common/utils/play/PlayQueueUtils';
+import { resourceManager } from '@kit.LocalizationKit';
 
 class Params {
   text: string = '';
@@ -76,7 +77,12 @@ class LyricsPipManager {
   private pipController: PiPWindow.PiPController | undefined = undefined;
   private isPipStarted: boolean = false;
 
-  public handleClickPip() {
+  public async handleClickPip() {
+    const deviceType = await AppStorage.get(StorageConstants.DEVICE_TYPE) as resourceManager.DeviceType
+    if(!canIUse('SystemCapability.Window.SessionManager'))
+      return
+    if(deviceType !== resourceManager.DeviceType.DEVICE_TYPE_PHONE && deviceType !== resourceManager.DeviceType.DEVICE_TYPE_TABLET)
+      return
     if (this.pipController) {
       if (this.isPipStarted) {
         this.pipController.stopPiP()

@@ -78,7 +78,7 @@ export struct SetLyricStyle {
       .padding({ top: Constants.PADDING_EDGE_DEFAULT })
 
       SliderSettingItem({ name: '歌词字体大小', showValue: true, targetValue: this.fontSize,
-        min: 10, max: 30, changeAction: () => {
+        min: 10, max: 40, changeAction: () => {
           this.lyricStyle.size = this.fontSize
           this.updateLyricStyle()
         }

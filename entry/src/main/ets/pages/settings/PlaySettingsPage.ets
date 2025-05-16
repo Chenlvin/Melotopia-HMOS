@@ -7,6 +7,7 @@ import PreferencesUtils from "../../common/utils/data/PreferencesUtils"
 import AVPlayerUtils from "../../common/utils/play/AVPlayerUtils"
 import { CommonSettingsCard } from "../../components/cards/SettingsCard"
 import { LyricTranslate, SetLyricStyle } from "../../components/settings/LyricSettings"
+import { resourceManager } from "@kit.LocalizationKit"
 
 @Component
 export struct PlaySettingsPage {
@@ -69,6 +70,7 @@ export struct PlaySettingSinglePage {
 struct PlaySettings {
   @StorageLink(StorageConstants.PLAY_QUALITY) playQuality: QualityType = "standard"
   @StorageLink(StorageConstants.MIX_WITH_OTHERS) @Watch('toggleMixWithOthers') isActived: boolean = false
+  @StorageProp(StorageConstants.DEVICE_TYPE) deviceType: resourceManager.DeviceType | null = null
   @State qualitySelected: number | undefined = 0
   floatLyricAction: () => void = () => {}
 
@@ -133,13 +135,16 @@ struct PlaySettings {
       }
       .itemStyle()
 
-      ListItem() {
-        CommonSettingsCard({
-          title: '浮动歌词设置',
-          action: this.floatLyricAction
-        })
+      if(this.deviceType === resourceManager.DeviceType.DEVICE_TYPE_PHONE ||
+      this.deviceType === resourceManager.DeviceType.DEVICE_TYPE_TABLET) {
+        ListItem() {
+          CommonSettingsCard({
+            title: '浮动歌词设置',
+            action: this.floatLyricAction
+          })
+        }
+        .itemStyle()
       }
-      .itemStyle()
 
       ListItem() {
         LyricTranslate()

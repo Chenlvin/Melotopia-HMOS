@@ -92,6 +92,7 @@ export struct BottomBarComponent {
             .layoutWeight(1)
             .fontColor(Color.Gray)
         }
+        .onClick(this.handlePlayClick)
         .padding({ top: 10, bottom: 10 })
         .layoutWeight(1)
 
@@ -109,7 +110,6 @@ export struct BottomBarComponent {
         maxWidth: 500
       })
       .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.9 })
-      .onClick(this.handlePlayClick)
       .bindContentCover($$this.isShow, this.Cover(), {
         modalTransition: ModalTransition.DEFAULT
       })

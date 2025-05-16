@@ -147,7 +147,11 @@ export struct Player {
      /**
       * 主内容
       */
-     if(this.widBp !== 'sm' && this.heightBp === 'md') {
+     if(
+       (this.widBp === 'lg' && this.heightBp !== 'sm') ||
+         (this.heightBp === 'lg' && this.widBp !== 'sm') ||
+         (this.widBp !== 'sm' && this.heightBp === 'md')
+     ) {
        this.LargeUI()
      } else if(this.heightBp === 'sm' && this.widBp !== 'sm') {
        this.PhoneLandscapeUI()

@@ -327,7 +327,7 @@ export struct PlayListPage {
           .height('100%')
           .layoutWeight(1)
           .width('100%')
-          .scrollBar(BarState.Off)
+          .scrollBar(this.list.length < 20 ? BarState.Off : BarState.On)
           .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
           .sticky(StickyStyle.Header | StickyStyle.Footer)
           .backToTop(true)
@@ -424,6 +424,9 @@ export struct PlayListPage {
           icon: '/resources/base/media/ic_public_search_filled.svg',
           value: this.searchKeyword
         })
+          .searchButton('搜索', {
+            fontColor: $r('app.color.app_red')
+          })
           .height(Constants.HEIGHT_SEARCH)
           .layoutWeight(1)
           .onChange((value) => {

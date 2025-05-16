@@ -38,7 +38,7 @@ export async function initSettings() {
     // showAnnouncement
     handleSetting<boolean>(StorageConstants.SHOW_ANNOUNCEMENT, true),
     // NewLyricEffect
-    handleSetting<boolean>(StorageConstants.NEW_LYRIC_EFFECT, true),
+    handleSetting<boolean>(StorageConstants.NEW_LYRIC_EFFECT, false),
     // floatLyricStyle
     handleSetting<FloatLyric>(StorageConstants.FLOAT_LYRIC_STYLE, FloatLyric_INITIAL),
     // apiSettings
