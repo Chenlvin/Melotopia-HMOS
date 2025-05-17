@@ -228,7 +228,7 @@ export struct CacheManagePage {
       Slider({
         value: this.set.songCacheMaxSize / (1024 * 1024 * 1024),
         min: 1,
-        max: 20
+        max: 30
       })
         .selectedColor($r('app.color.app_red'))
         .width('100%')
