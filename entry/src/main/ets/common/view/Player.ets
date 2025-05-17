@@ -39,7 +39,7 @@ export struct Player {
   @StorageProp(StorageConstants.IS_PERSONAL_FM) isPersonalFm: boolean = false
   @StorageProp(StorageConstants.PERSONAL_FM_MODE) personalFmMode: number = 0
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) widBp: string = 'sm'
-  @StorageProp(StorageConstants.BREAKPOINT_HEIGHT) heightBp: string = 'md'
+  @StorageProp(StorageConstants.BREAKPOINT_HEIGHT) heightBp: string = 'sm'
   @StorageProp(StorageConstants.DEVICE_TYPE) deviceType: resourceManager.DeviceType = resourceManager.DeviceType.DEVICE_TYPE_PHONE
   @StorageLink(StorageConstants.IS_PLAYER_SHOW) isPlayerShow: boolean = false
   @Link isShow: boolean
@@ -147,15 +147,22 @@ export struct Player {
      /**
       * 主内容
       */
-     if(
-       (this.widBp === 'lg' && this.heightBp !== 'sm') ||
+     // Tablet & 2in1
+     if((this.widBp === 'lg' && this.heightBp !== 'sm') ||
          (this.heightBp === 'lg' && this.widBp !== 'sm') ||
-         (this.widBp !== 'sm' && this.heightBp === 'md')
-     ) {
+         (this.widBp !== 'sm' && this.heightBp === 'md')) {
        this.LargeUI()
-     } else if(this.heightBp === 'sm' && this.widBp !== 'sm') {
+     }
+     // Phone Landscape
+     else if(this.heightBp === 'sm' && this.widBp !== 'sm') {
        this.PhoneLandscapeUI()
-     } else {
+     }
+     // Pura X Small
+     else if(this.heightBp === 'sm' && this.widBp === 'sm') {
+       this.SmallUI()
+     }
+     // Default - Phone
+     else {
        this.PhoneUI()
      }
 
@@ -636,6 +643,77 @@ export struct Player {
       .padding({ left: Constants.PADDING_EDGE_TEXT, right: Constants.PADDING_EDGE_TEXT })
       .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
     }
+  }
+
+  @Builder SmallUI() {
+    Swiper() {
+      Column() {
+        Row({ space: 10 }) {
+          Column() {
+            Column() {
+              Image(this.playmode === 0 ? this.picUrl : this.picUrl + '?param=512y512')
+                .aspectRatio(1)
+                .height(this.song.id === 0 ? '70%' : '100%')
+                .borderRadius(5)
+                .scale({ x: this.isPaused ? 0.9 : 1.0, y: this.isPaused ? 0.9 : 1.0})
+                .animation({ duration: 300, curve: Curve.Smooth })
+                .gesture(
+                  TapGesture({
+                    count: 2,
+                  }).onAction(this.handleLike)
+                )
+            }
+            .layoutWeight(1)
+            .height('100%')
+            .aspectRatio(1)
+            .justifyContent(FlexAlign.Center)
+            .aspectRatio(1)
+
+            Row() {
+              Column({ space: 10 }) {
+                Text(this.song.name)
+                  .textStyle(16)
+                  .fontWeight(FontWeight.Bold)
+                Text(this.artists)
+                  .textStyle(12)
+                  .fontWeight(FontWeight.Bold)
+              }
+              .layoutWeight(1)
+              Image(this.isLiked || this.playmode === PLAYMODE.LOCAL ? $r('app.media.ic_public_favor_filled') : $r('app.media.ic_public_favor'))
+                .fillColor(Color.White)
+                .height(20)
+                .aspectRatio(1)
+                .draggable(false)
+                .backgroundColor(Color.Transparent)
+                .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.7 })
+                .onClick(this.handleLike)
+            }
+            .padding(Constants.PADDING_EDGE_DEFAULT)
+
+            Row({ space: 10 }) {
+              Column() {
+                this.PhoneLandscapeSlider('100%')
+              }
+              .layoutWeight(1)
+              this.PlayButton(25)
+            }
+            .opacity(0.3)
+          }
+          .layoutWeight(1)
+        }
+        .padding({ left: 5, right: Constants.PADDING_EDGE_DEFAULT })
+      }
+      .padding({
+        top: Constants.PADDING_MEDIUM,
+        bottom: Constants.PADDING_EDGE_DEFAULT,
+        left: Constants.PADDING_EDGE_DEFAULT,
+        right: Constants.PADDING_EDGE_DEFAULT
+      })
+
+      LyricComponent()
+    }
+    .autoPlay(false)
+    .indicator(false)
   }
 
   @Builder PersonalFmButton() {

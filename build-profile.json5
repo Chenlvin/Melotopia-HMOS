@@ -58,7 +58,7 @@
       {
         "name": "default",
         "signingConfig": "Melotopia",
-        "compatibleSdkVersion": "5.0.4(16)",
+        "compatibleSdkVersion": "5.0.5(17)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
           "strictMode": {

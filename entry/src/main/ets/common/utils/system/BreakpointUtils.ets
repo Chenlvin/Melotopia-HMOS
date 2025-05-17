@@ -1,4 +1,5 @@
 import mediaQuery from '@ohos.mediaquery'
+import { LogUtil } from '@pura/harmony-utils'
 import { StorageConstants } from '../../constants/StorageConstants'
 
 class BreakpointUtils {
@@ -57,6 +58,8 @@ class BreakpointUtils {
   }
 
   public register() {
+    AppStorage.setOrCreate(StorageConstants.BREAKPOINT_WIDTH, this.currentWdBreakpoint)
+    AppStorage.setOrCreate(StorageConstants.BREAKPOINT_HEIGHT, this.currentHtBreakpoint)
     this.smListenerWD = mediaQuery.matchMediaSync('(320vp<=width<600vp)')
     this.smListenerWD.on('change', this.isWdBreakpointSM)
     this.smListenerHT = mediaQuery.matchMediaSync('(320vp<=height<600vp)')
