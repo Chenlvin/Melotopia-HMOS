@@ -36,7 +36,7 @@ export struct LyricComponent {
   async aboutToAppear(): Promise<void> {
     await this.getLyric()
     setTimeout(() => {
-      this.scroller.scrollToIndex(this.currentLyricIndex, false, ScrollAlign.CENTER)
+      this.scroller.scrollToIndex(this.currentLyricIndex + 1, false, ScrollAlign.CENTER)
     }, 10)
     this.StartAutoScrollTimer()
   }

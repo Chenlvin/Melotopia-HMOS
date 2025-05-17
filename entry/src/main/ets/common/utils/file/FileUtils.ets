@@ -92,33 +92,64 @@ class FileUtils {
     }
   }
 
-  async saveFile(localSongs: LocalSong[], type: 'song' | 'lyric' | 'img' = 'song') {
+  async saveFile(localSongs: LocalSong[], type: 'song' | 'lyric' | 'img' | 'all' = 'song') {
     try {
       let filePicker = new picker.DocumentViewPicker()
       let saveOption = new picker.DocumentSaveOptions()
-      if(type === 'song')
-        saveOption.newFileNames = localSongs.map(song => song.songFile)
-      else if(type === 'lyric')
-        saveOption.newFileNames = localSongs.map(song => `${song.songFile.replace(/\.[^.]+$/, '')}.lrc`)
-      else saveOption.newFileNames = localSongs.map(song => `${song.songFile.replace(/\.[^.]+$/, '')}.jpg`)
+      let empty: string[] = []
+      saveOption.newFileNames = empty
+
+      if (type === 'song' || type === 'all') {
+        saveOption.newFileNames.push(...localSongs.map(song => song.songFile.replace(/[#￥%$]/g, '')))
+      }
+      if (type === 'lyric' || type === 'all') {
+        saveOption.newFileNames.push(...localSongs.map(song => `${song.songFile.replace(/[#￥%$]/g, '').replace(/\.[^.]+$/, '')}.lrc`))
+      }
+      if (type === 'img' || type === 'all') {
+        saveOption.newFileNames.push(...localSongs.map(song => `${song.songFile.replace(/[#￥%$]/g, '').replace(/\.[^.]+$/, '')}.jpg`))
+      }
       filePicker.save(saveOption).then((uris) => {
+        const songCount = localSongs.length
         uris.forEach(async (uri, index) => {
           try {
-            let fileName: string = type === 'song'
-            ? `/${localSongs[index].songFile}` :
-              type === 'lyric'
-            ? `/lyric/${localSongs[index].songId}.lrc`
-                : `/pic/${localSongs[index].songId}.jpg`
+            let srcPath: string
+            // 计算实际歌曲索引和文件类型
+            if (type === 'all') {
+              const fileTypeIndex = Math.floor(index / songCount)
+              const songIndex = index % songCount
 
-            let srcPath = getContext_().filesDir + fileName
+              switch(fileTypeIndex) {
+                case 0: // 歌曲文件
+                  srcPath = getContext_().filesDir + `/${localSongs[songIndex].songFile}`
+                  break
+                case 1: // 歌词文件
+                  srcPath = getContext_().filesDir + `/lyric/${localSongs[songIndex].songId}.lrc`
+                  break
+                case 2: // 图片文件
+                  srcPath = getContext_().filesDir + `/pic/${localSongs[songIndex].songId}.jpg`
+                  break
+                default:
+                  return
+              }
+            } else {
+              // 原有类型处理
+              const songIndex = Math.min(index, songCount - 1)
+              srcPath = getContext_().filesDir + (
+                type === 'song' ? `/${localSongs[songIndex].songFile}` :
+                  type === 'lyric' ? `/lyric/${localSongs[songIndex].songId}.lrc` :
+                    `/pic/${localSongs[songIndex].songId}.jpg`
+              )
+            }
+
             let descFile = fs.openSync(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE)
             await fs.copyFile(srcPath, descFile.fd)
             fs.closeSync(descFile.fd)
           } catch (err) {
-            LogUtil.error(TAG, `文件 ${localSongs[index].songFile} 保存失败: ${err.message}`)
+            const errorIndex = type === 'all' ? index % songCount : index
+            LogUtil.error(TAG, `文件 ${localSongs[errorIndex]?.songFile} 保存失败: ${err.message}`)
           }
         })
-        ToastUtil.showToast(`已保存 ${uris.length} 个文件`)
+        ToastUtil.showToast(`保存了 ${uris.length} 个文件`)
       }).catch((err: Error) => {
         LogUtil.error(TAG, 'File Picker 出错: ' + err.message)
       })

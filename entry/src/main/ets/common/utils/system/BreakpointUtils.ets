@@ -1,5 +1,4 @@
 import mediaQuery from '@ohos.mediaquery'
-import { LogUtil } from '@pura/harmony-utils'
 import { StorageConstants } from '../../constants/StorageConstants'
 
 class BreakpointUtils {

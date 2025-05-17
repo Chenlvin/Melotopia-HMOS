@@ -157,8 +157,8 @@ class DownloadUtils {
     let fileName = sanitizeFileName(`${artists} - ${item.song.name}.${item.downloadItem.type}`)
     let descPath = FileUtils.getFilesDir() + `/${fileName}`
 
-    //文件已存在
-    if (await FileUtil.access(descPath)) {
+    // 文件已存在或歌曲已存在
+    if (await FileUtil.access(descPath) || await RelationalStoreUtils.checkSong(item.song.id) === true) {
       this.deleteByIndex(0)
       setTimeout(() => {
         this.startTask(0)

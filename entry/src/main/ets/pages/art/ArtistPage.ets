@@ -67,8 +67,8 @@ export struct ArtistPage {
               .width('100%')
               .aspectRatio(1.3)
               .constraintSize({
-                minHeight: 100,
-                maxHeight: 300
+                minHeight: 0,
+                maxHeight: 350
               })
 
               Row() {

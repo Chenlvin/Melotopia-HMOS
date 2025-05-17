@@ -22,6 +22,7 @@ import { PlayListSkeleton } from '../../components/skeleton/Skeleton'
 import { Song } from '../../common/entities/Song'
 import { Album_INITIAL } from '../../common/entities/Album'
 import DownloadUtils from '../../common/utils/file/DownloadUtils'
+import { BatchDownloadDialog } from '../../components/dialog/DownloadDialog'
 
 /**
  * 歌单二级页面
@@ -59,6 +60,20 @@ export struct PlayListPage {
   @State isSelecting: boolean = false
   @State selectedIndex: number[] = []
   @State selectedSongs: PlayListSong[] = []
+
+  downloadController: CustomDialogController = new CustomDialogController({
+    builder: BatchDownloadDialog({
+      songs: this.selectedSongs.map((item): Song => ({
+        id: item.id,
+        artists: item.ar,
+        name: item.name,
+        alias: [],
+        album: Album_INITIAL,
+        duration: 0,
+        fee: 0
+      }))
+    })
+  })
 
   menus: NavigationMenuItem[] = [
     {
@@ -139,31 +154,7 @@ export struct PlayListPage {
       ToastUtil.showToast('请先选择需要操作的内容')
       return
     }
-    DialogUtil.showPrimaryDialog({
-      title: '下载',
-      message: `是否下载所选的 ${this.selectedSongs.length} 项内容`,
-      primaryButton: "取消",
-      secondaryButton: {
-        value: '确认',
-        action: () => {
-          this.isSelecting = false
-          let temp: Song[] = this.selectedSongs.map((item): Song => ({
-            id: item.id,
-            artists: item.ar,
-            name: item.name,
-            alias: [],
-            album: Album_INITIAL,
-            duration: 0,
-            fee: 0
-          }))
-
-          DownloadUtils.addItem(temp, 3)
-
-          this.selectedIndex = []
-          this.selectedSongs = []
-        }
-      }
-    })
+    this.downloadController.open()
   }
 
   async loadSongs(limit: number, offset: number): Promise<void> {

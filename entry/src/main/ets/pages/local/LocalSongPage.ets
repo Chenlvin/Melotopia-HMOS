@@ -107,6 +107,45 @@ export struct LocalSongPage {
     playQueue(0)
   }
 
+  private handleSave = () => {
+    DialogUtil.showDialog({
+      buttons: [
+        {
+          value: '音频文件',
+          action: () => {
+            FileUtils.saveFile(this.selectedSongs, 'song')
+          }
+        },
+        {
+          value: '封面',
+          action: () => {
+            FileUtils.saveFile(this.selectedSongs, 'img')
+          }
+        },
+        {
+          value: '歌词',
+          action: () => {
+            FileUtils.saveFile(this.selectedSongs, 'lyric')
+          }
+        },
+        {
+          value: '所有',
+          fontColor: $r('app.color.app_red'),
+          action: () => {
+            FileUtils.saveFile(this.selectedSongs, 'all')
+          }
+        },
+        {
+          value: '取消',
+          fontColor: Color.Red,
+          action: () => {}
+        },
+      ],
+      title: '批量导出',
+      message: `已选择 ${this.selectedSongs.length} 首歌曲`
+    })
+  }
+
   build() {
     NavDestination() {
       Stack({ alignContent: Alignment.Bottom }) {
@@ -179,9 +218,7 @@ export struct LocalSongPage {
                               .width(Constants.SIZE_ICON_BUTTON_BAR)
                               .aspectRatio(1)
                               .fillColor(Color.Gray)
-                              .onClick(() => {
-                                FileUtils.saveFile(this.selectedSongs)
-                              })
+                              .onClick(this.handleSave)
                           }
                           CheckboxGroup({ group: 'fileCard' })
                             .width(Constants.SIZE_ICON_BUTTON_BAR - 5)

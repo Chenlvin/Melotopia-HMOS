@@ -173,6 +173,24 @@ class RelationalStoreUtils {
     }
   }
 
+  /**
+   * 检查歌曲是否存在
+   * @param songId
+   * @returns 存在返回true 否则false
+   */
+  async checkSong(songId: number): Promise<boolean> {
+    const predicates = new relationalStore.RdbPredicates(TABLE_SONGS)
+      .equalTo('songId', songId)
+      .limitAs(1)
+    try {
+      const resultSet = await this.store.query(predicates, ['songId'])
+      return resultSet.rowCount > 0
+    } catch (e) {
+      LogUtil.error(TAG, 'Check song error: ' + e.message)
+      return false
+    }
+  }
+
 }
 
 const relationalStoreUtils = new RelationalStoreUtils()

@@ -7,6 +7,7 @@ import { getLocalSongArtists } from "../../common/functions/common/get"
 import { playQueue } from "../../common/functions/play/playControl"
 import FileUtils from "../../common/utils/file/FileUtils"
 import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
+import { ButtonOptions } from "@pura/harmony-utils/src/main/ets/entity/DialogOptions"
 
 @Component
 export struct FileCardClickMenu {
@@ -66,6 +67,51 @@ export struct FileCardClickMenu {
     })
   }
 
+  private handleExport = () => {
+    let buttons: ButtonOptions[] = [{
+      value: '音频文件',
+      action: () => {
+        FileUtils.saveFile([this.localSong])
+      }
+    }]
+
+    if(this.localSong.songId > 0) {
+      buttons.push(
+        {
+          value: '封面',
+          action: () => {
+            FileUtils.saveFile([this.localSong], 'img')
+          }
+        },
+        {
+          value: '歌词',
+          action: () => {
+            FileUtils.saveFile([this.localSong], 'lyric')
+          }
+        },
+        {
+          value: '所有',
+          fontColor: $r('app.color.app_red'),
+          action: () => {
+            FileUtils.saveFile([this.localSong], 'all')
+          }
+        }
+      );
+    }
+
+    buttons.push({
+      value: '取消',
+      fontColor: Color.Red,
+      action: () => {}
+    })
+
+    DialogUtil.showDialog({
+      buttons: buttons,
+      title: '导出歌曲',
+      message: "请选择导出内容"
+    })
+  }
+
   build() {
     Menu() {
       MenuItem({ content: this.localSong.songFile }).width('80%')
@@ -85,22 +131,8 @@ export struct FileCardClickMenu {
           this.showMatchSheet = true
         })
 
-      MenuItem(this.MenuItem($r('app.media.ic_public_albums_filled'), '导出封面图片'))
-        .visibility(this.localSong.songId > 0 ? Visibility.Visible : Visibility.None)
-        .onClick(() => {
-          FileUtils.saveFile([this.localSong], 'img')
-        })
-
-      MenuItem(this.MenuItem($r('app.media.ic_music_fill'), '导出歌词文件'))
-        .visibility(this.localSong.songId > 0 ? Visibility.Visible : Visibility.None)
-        .onClick(() => {
-          FileUtils.saveFile([this.localSong], 'lyric')
-        })
-
-      MenuItem(this.MenuItem($r('app.media.ic_public_folder_filled'), '导出音频文件'))
-        .onClick(() => {
-          FileUtils.saveFile([this.localSong])
-        })
+      MenuItem(this.MenuItem($r('app.media.ic_public_folder_filled'), '导出到本机'))
+        .onClick(this.handleExport)
 
       MenuItem(this.MenuItem($r('app.media.ic_public_delete_filled'), '删除歌曲', $r('app.color.app_red')))
         .onClick(this.handleDelete)
