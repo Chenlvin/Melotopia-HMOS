@@ -108,7 +108,7 @@ export struct FileCardClickMenu {
     DialogUtil.showDialog({
       buttons: buttons,
       title: '导出歌曲',
-      message: "请选择导出内容"
+      message: `${this.localSong.songFile}`
     })
   }
 
