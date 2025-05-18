@@ -17,6 +17,7 @@ import { checkValidUrl } from "../common/get"
 import DownloadUtils from "../../utils/file/DownloadUtils"
 import { DjRadio } from "../../entities/DjRadio"
 import { PersonalListItem, TopListItem } from "../../entities/Recommend"
+import promptAction from "@ohos.promptAction"
 
 /**
  * App初始化
@@ -41,6 +42,16 @@ export async function appInit() {
 
 function initApp() {
   AudioCacheUtils.init()
+  ToastUtil.setDefaultConfig((config) => {
+    config.duration = 2000
+    config.duration_short = 1000
+    config.duration_long = 5000
+    config.showMode = promptAction.ToastShowMode.DEFAULT
+    config.textColor = $r('app.color.reverse')
+    config.backgroundColor = $r('app.color.main')
+    config.backgroundBlurStyle = BlurStyle.Thin
+    config.shadow = ShadowStyle.OUTER_DEFAULT_XS
+  })
 }
 
 async function initPermission() {
