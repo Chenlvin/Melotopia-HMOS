@@ -17,7 +17,7 @@ export default class EntryAbility extends UIAbility {
     // 初始化 Log
     LogUtil.init(0x1010, 'Melotopia', true)
     AppStorage.setOrCreate(StorageConstants.CONTEXT, this.context)
-    CrashUtil.onError()
+    CrashUtil.onHandled(() => {})
     App.setImageCacheCount(Constants.CACHE_IMAGE_MAX_COUNT)
     App.setImageRawDataCacheSize(Constants.CACHE_DISK_MAX_SIZE)
     // 初始化用户首选项
@@ -32,6 +32,7 @@ export default class EntryAbility extends UIAbility {
 
   onDestroy(): void {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onDestroy');
+    CrashUtil.onDestroy()
     // window.findWindow(Constants.FLOAT_LYRICS_WIN_NAME)?.destroyWindow();
   }
 

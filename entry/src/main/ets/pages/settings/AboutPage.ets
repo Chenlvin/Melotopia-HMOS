@@ -1,4 +1,4 @@
-import { CrashUtil, DialogUtil, LogUtil, PasteboardUtil, ToastUtil } from "@pura/harmony-utils"
+import { CrashUtil, DialogUtil, FileUtil, LogUtil, PasteboardUtil, ToastUtil } from "@pura/harmony-utils"
 import { AppConstants } from "../../common/constants/AppConstants"
 import Constants from "../../common/constants/Constants"
 import { StorageConstants } from "../../common/constants/StorageConstants"
@@ -8,6 +8,7 @@ import { getAppInfo } from "../../api/chenlvinApi"
 import { CommonSettingsCard } from "../../components/cards/SettingsCard"
 import { WebPageParam } from "../../common/model/PageParams"
 import { WarrantyDialog } from "../../components/dialog/WarrantyDialog"
+import { PickerUtil } from "@pura/picker_utils"
 
 @Component
 export struct AboutPage {
@@ -18,6 +19,58 @@ export struct AboutPage {
     builder: WarrantyDialog(),
     autoCancel: false
   })
+
+  private showLogDialog = () => {
+    DialogUtil.showDialog({
+      buttons: [
+        {
+          value: '查看错误日志',
+          action: async () => {
+            let content = await CrashUtil.getExceptionJson()
+            DialogUtil.showConfirmDialog({
+              title: 'Log',
+              message: content
+            })
+          }
+        },
+        {
+          value: '导出日志文件',
+          fontColor: Color.Orange,
+          action: () => {
+            if(!CrashUtil.access()) {
+              ToastUtil.showToast('未找到日志文件')
+            } else {
+              let path = CrashUtil.getFilePath()
+              if (FileUtil.accessSync(path)) { //判断文件是否存在，存在然后导出
+                PickerUtil.saveDocument({ newFileNames: ["Log.txt"] }).then((uris) => {
+                  let file = FileUtil.openSync(uris[0])
+                  FileUtil.copyFile(path, file.fd).then(() => {
+                    FileUtil.close(file.fd)
+                  })
+                })
+              } else {
+                ToastUtil.showToast('未找到日志文件');
+              }
+            }
+          }
+        },
+        {
+          value: '清空日志信息',
+          fontColor: Color.Red,
+          action: () => {
+            ToastUtil.showToast("已清理错误日志信息");
+            CrashUtil.delete()
+          }
+        },
+        {
+          value: '取消',
+          action: () => {}
+        }
+      ],
+      title: '应用日志',
+      message: '请选择操作'
+    })
+  }
 
   build() {
     NavDestination() {
@@ -109,13 +162,8 @@ export struct AboutPage {
           }
           ListItem() {
             CommonSettingsCard({
-              title: '导出日志',
-              action: () => {
-                ToastUtil.showToast("导出日志: 我的手机/Download/Melotopia");
-                setTimeout(() => {
-                  CrashUtil.onExportErrorLog()
-                }, 100)
-              }
+              title: '应用日志',
+              action: this.showLogDialog
             })
           }
           ListItem() {
