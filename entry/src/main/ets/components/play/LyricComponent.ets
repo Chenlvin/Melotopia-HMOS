@@ -7,7 +7,6 @@ import { StorageConstants } from "../../common/constants/StorageConstants"
 import { LyricStyle, LyricStyle_INITIAL } from "../../common/model/Settings"
 import LyricUtils from "../../common/utils/play/LyricUtils"
 import { LazyData } from "@pie/lazy-data"
-import Constants from "../../common/constants/Constants"
 
 @Component
 export struct LyricComponent {
@@ -26,10 +25,11 @@ export struct LyricComponent {
 
   private scroller: Scroller = new Scroller()
 
-  onForegroundState() {
+  async onForegroundState() {
     if(this.isInForeground === true && this.needUpdate) {
-      this.refreshLyric()
+      await this.refreshLyric()
       this.needUpdate = false
+      this.ToCurrentLyric()
     }
   }
 
@@ -42,16 +42,14 @@ export struct LyricComponent {
   }
 
   refreshLyric = async () => {
-    this.currentLyricIndex = 0
+    this.userScrolling = 0
     this.needUpdate = true
     this.isLoading = true
     await this.getLyric()
     setTimeout(() => {
       this.isLoading = false
-    }, 100)
-    setTimeout(() => {
       this.ToCurrentLyric()
-    }, 300)
+    }, 100)
   }
 
   aboutToDisappear(): void {

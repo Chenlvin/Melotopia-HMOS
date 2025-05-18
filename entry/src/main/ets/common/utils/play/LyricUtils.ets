@@ -53,6 +53,7 @@ class LyricUtils {
       }
       this.lyricObjects = [{ time: 0, content: '暂无歌词' }]
     } finally {
+      AppStorage.setOrCreate(StorageConstants.CURRENT_LYRIC_INDEX, 0)
       EmitterUtil.post(EmitterConstants.EMITTER_LYRIC_UPDATE, 'Lyric Updated')
     }
   }

@@ -25,14 +25,13 @@ const pref = StorageConstants.QUEUE_PREF
 
 export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: ResourceStr | string = '', mode: number = 1) {
   try {
+    let artists = getArtists(song.artists)
+    setPlayData(mode, song, artists)
+    await AVPlayerUtils.reset()
     const isAccessible = await checkMusic(song.id)
     if(!isAccessible) {
       ToastUtil.showToast('当前歌曲仅支持试听或无版权')
     }
-
-    let artists = getArtists(song.artists)
-    await AVPlayerUtils.reset()
-    setPlayData(mode, song, artists)
     isThisSongLiked(song.id)
     let localPath: string = ''
     let tempArtists: string = artists
@@ -82,8 +81,8 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       song.duration = (metadata.duration) ? parseInt(metadata.duration) : 0
     }
     if(FileUtil.accessSync(fileUrl)) {
-      await AVPlayerUtils.reset()
       setPlayData(0, song, artistsString, fileName)
+      await AVPlayerUtils.reset()
       let picUrl = song.id == 0 ? $r('app.media.ic_files_audio') : `file://${filesDir}/pic/${song.id}.jpg`
       setPicUrl(picUrl)
       // Lyric
@@ -93,6 +92,7 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       } else {
         LyricUtils.setLyricString('')
       }
+      AppStorage.setOrCreate(StorageConstants.CURRENT_LYRIC_INDEX, 0)
       EmitterUtil.post(EmitterConstants.EMITTER_LYRIC_UPDATE, 'Lyric Updated')
       // AVSession
       await AVSessionUtils.setMetadata(song, artistsString, picUrl)
