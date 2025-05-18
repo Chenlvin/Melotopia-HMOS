@@ -71,6 +71,7 @@ struct PlaySettings {
   @StorageLink(StorageConstants.PLAY_QUALITY) playQuality: QualityType = "standard"
   @StorageLink(StorageConstants.MIX_WITH_OTHERS) @Watch('toggleMixWithOthers') isActived: boolean = false
   @StorageProp(StorageConstants.DEVICE_TYPE) deviceType: resourceManager.DeviceType | null = null
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
   @State qualitySelected: number | undefined = 0
   floatLyricAction: () => void = () => {}
 
@@ -156,6 +157,9 @@ struct PlaySettings {
         SetLyricStyle()
       }
       .itemStyle()
+
+      ListItem()
+        .height(px2vp(this.bottomRectHeight))
     }
     .scrollBar(BarState.Off)
     .padding({ top: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })

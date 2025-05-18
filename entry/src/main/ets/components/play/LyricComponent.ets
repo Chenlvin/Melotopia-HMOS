@@ -173,7 +173,7 @@ export struct LyricComponent {
 @Component
 struct LyricLine {
   @State index: number = 0
-  @State item: Lyric = { time: 0, content: ''}
+  @State item: Lyric = { time: 0, content: '' }
   @Prop currentLyricIndex: number = 0
   @Prop lyricStyle: LyricStyle = LyricStyle_INITIAL
   @Link userScrolling: number
@@ -186,12 +186,11 @@ struct LyricLine {
   build() {
     Text(this.item.content)
       .width('100%')
-      .textAlign(TextAlign.Center)
       .fontSize(this.lyricStyle.size)
+      .fontWeight(this.lyricStyle.weight)
       .lineHeight(this.lyricStyle.size * 1.3)
       .fontColor(Color.White)
       .opacity(this.index == this.currentLyricIndex ? 1 : 0.35)
-      .fontWeight(Constants.FONT_WEIGHT_BOLD)
       .textAlign(this.lyricStyle.align === 'center' ? TextAlign.Center : TextAlign.Start)
       .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.9 })
       .padding({ left: 20, right: 20 })

@@ -110,7 +110,7 @@ export struct BottomBarComponent {
         maxWidth: 500
       })
       .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.9 })
-      .bindContentCover($$this.isShow, this.Cover(), {
+      .bindContentCover($$this.isShow, this.Player(), {
         modalTransition: ModalTransition.DEFAULT
       })
     }
@@ -125,7 +125,7 @@ export struct BottomBarComponent {
       .opacity(this.miniBarBlur ? 0.5 : 1)
   }
 
-  @Builder Cover() {
+  @Builder Player() {
     Player({ isShow: this.isShow })
       .height('100%')
   }

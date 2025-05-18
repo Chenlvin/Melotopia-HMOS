@@ -31,13 +31,13 @@
         "name": "hicar",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.cer",
+          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001AA5B77700F13B890BBFC8C9236E114BA9A5C205EFF288223C55A8348FEE6F70815DE79C2D1F50",
-          "profile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p7b",
+          "keyPassword": "0000001B05547F3B63FCA64F990C73A17484144A1655411E7723778F2FFB2ECC3093E6BD5D948348B386B8",
+          "profile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p12",
-          "storePassword": "0000001AD1C304C020A5900A235E076D2CE4DD0DD7777FC93F21AF54F0F244A7135C7DEB56E0D68BA055"
+          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p12",
+          "storePassword": "0000001BB76438F25D3B380169C4D519324D8546F38BEC482D577188173A5D11ADD5ED2FE0FE6BAD5CD4BA"
         }
       },
       {

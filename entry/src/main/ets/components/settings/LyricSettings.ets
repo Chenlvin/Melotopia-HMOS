@@ -59,17 +59,18 @@ export struct SetLyricStyle {
   @StorageProp(StorageConstants.LYRIC_STYLE) lyricStyle: LyricStyle = LyricStyle_INITIAL
   @State style: LyricStyle = LyricStyle_INITIAL
   @State isCenter: boolean = false
-  @State fontSize: number = 0
+  @State fontSize: number = 20
+  @State fontWeight: number = 500
 
   aboutToAppear(): void {
     this.style = this.lyricStyle
     this.fontSize = this.lyricStyle.size
+    this.fontWeight = this.lyricStyle.weight
     this.isCenter = this.lyricStyle.align === 'center' ? true : false
   }
 
   build() {
     Column({ space: 20 }) {
-
       ToggleSettingItem({ name: '歌词居中显示', value: this.isCenter ,
         onaction: () => { this.lyricStyle.align = 'center' },
         offaction: () => { this.lyricStyle.align = 'start' },
@@ -84,20 +85,25 @@ export struct SetLyricStyle {
         }
       })
 
+      SliderSettingItem({ name: '歌词字体粗细', targetValue: this.fontWeight, step: 100,
+        min: 300, max: 700, changeAction: () => {
+          this.lyricStyle.weight = this.fontWeight
+          this.updateLyricStyle()
+        }
+      })
+
       Text('效果预览')
         .fontSize(Constants.FONT_SIZE_COMMON)
         .fontWeight(FontWeight.Bold)
         .width('100%')
         .textAlign(TextAlign.Start)
-        .padding(Constants.PADDING_EDGE_DEFAULT)
+        .padding({ top: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
 
       Column({ space: 15 }) {
-        Text('When your dreams come alive you\'re unstoppable')
-          .lyricStyle(this.lyricStyle.size, this.lyricStyle.align).scale({ x: 0.9, y: 0.9, centerX: this.lyricStyle.align === 'center' ? '50%' : 0 })
-        Text('我一路向北 离开有你的季节')
-          .lyricStyle(this.lyricStyle.size, this.lyricStyle.align).opacity(1)
-        Text('君と集まって星座になれたら')
-          .lyricStyle(this.lyricStyle.size, this.lyricStyle.align).scale({ x: 0.9, y: 0.9, centerX: this.lyricStyle.align === 'center' ? '50%' : 0})
+        Text('这是一句歌词')
+          .lyricStyle(this.lyricStyle.size, this.lyricStyle.align, this.lyricStyle.weight).scale({ x: 0.9, y: 0.9, centerX: this.lyricStyle.align === 'center' ? '50%' : 0 })
+        Text('这是当前歌词高亮效果')
+          .lyricStyle(this.lyricStyle.size, this.lyricStyle.align, this.lyricStyle.weight).opacity(1)
       }
       .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
     }
@@ -193,12 +199,12 @@ export struct SetFloatLyric {
   }
 }
 
-@Extend(Text) function lyricStyle(size: number, align: string) {
+@Extend(Text) function lyricStyle(size: number, align: string, weight: number) {
   .width('100%')
   .textAlign(TextAlign.Center)
   .fontSize(size)
   .fontColor($r('app.color.reverse'))
   .opacity(0.35)
-  .fontWeight(FontWeight.Bold)
+  .fontWeight(weight)
   .textAlign(align === 'center' ? TextAlign.Center : TextAlign.Start)
 }
