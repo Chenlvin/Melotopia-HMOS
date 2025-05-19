@@ -47,7 +47,7 @@ export async function checkValidUrl(): Promise<boolean> {
     AppStorage.setOrCreate(StorageConstants.IS_CHECKING_VALID_API, true)
     const response = await commonRequest<InnerVersion>({
       url: '/inner/version',
-      params: { timeout: 2000, noCookie: true }
+      params: { timeout: 5000, noCookie: true }
     })
     if (response.code === 200) {
       AppStorage.setOrCreate(StorageConstants.VALID_API_URL, true)

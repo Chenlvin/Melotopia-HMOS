@@ -1,5 +1,5 @@
 import { LogUtil } from '@pura/harmony-utils'
-import ContinuousTask from './ContinuousTask'
+import ContinuousTask from './BackgroundTaskUtils'
 import AVSessionUtils from './AVSessionUtils'
 import { completeDo, playQueue } from '../../functions/play/playControl'
 import LyricUtils from './LyricUtils'
@@ -8,6 +8,7 @@ import { StorageConstants } from '../../constants/StorageConstants'
 import { media } from '@kit.MediaKit'
 import { BusinessError } from '@kit.BasicServicesKit'
 import PlayQueueUtils from './PlayQueueUtils'
+import BackgroundTaskUtils from './BackgroundTaskUtils'
 
 const TAG = '[AVPlayerUtils] '
 
@@ -97,7 +98,7 @@ class AVPlayerUtils {
     this.clearInterval()
     avPlayer.stop()
     AVSessionUtils.deactivate()
-    ContinuousTask.stopTask()
+    ContinuousTask.stopBackgroundTask()
   }
 
   async pause() {
@@ -199,7 +200,7 @@ class AVPlayerUtils {
           this.play()
           break
         case 'playing':
-          ContinuousTask.startTask()
+          BackgroundTaskUtils.startTask()
           AppStorage.setOrCreate(StorageConstants.IS_PLAYING, true)
           AppStorage.setOrCreate(StorageConstants.IS_PAUSED, false)
           LyricUtils.startInterval()
@@ -219,7 +220,7 @@ class AVPlayerUtils {
           break
         case 'stopped':
           this.clearInterval()
-          ContinuousTask.stopTask()
+          ContinuousTask.stopBackgroundTask()
       }
     })
   }

@@ -14,6 +14,7 @@ import FileDownloadUtils from "./FileDownloadUtils"
 import { getLyricString } from "../../../api/LyricApi"
 import LyricUtils from "../play/LyricUtils"
 import { getSongPicUrl } from "../../../api/songApi"
+import BackgroundTaskUtils from "../play/BackgroundTaskUtils"
 
 const TAG = '[DownloadUtils] '
 
@@ -167,6 +168,7 @@ class DownloadUtils {
     }
 
     let picUrl = await getSongPicUrl(item.song.id)
+    await BackgroundTaskUtils.startTask()
     FileDownloadUtils.download(picUrl + '?param=512y512', `${item.song.id}.jpg`, 'pic')
     let lyricString = await getLyricString(item.song.id)
     LyricUtils.saveLyricToFile(lyricString, `${item.song.id}.lrc`)

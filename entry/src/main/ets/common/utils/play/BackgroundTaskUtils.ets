@@ -7,9 +7,9 @@ import { getContext_ } from '../system/AppUtils';
 /**
  * 长时任务
  */
-const TAG = 'ContinuousTask'
+const TAG = 'BackgroundTaskUtils '
 
-class ContinuousTask {
+class BackgroundTaskUtils {
   async startTask() {
     let wantAgentInfo: wantAgent.WantAgentInfo = {
       wants: [
@@ -24,15 +24,21 @@ class ContinuousTask {
     };
 
     wantAgent.getWantAgent(wantAgentInfo).then((wantAgentObj: WantAgent) => {
-      backgroundTaskManager.startBackgroundRunning(getContext_(),
-        backgroundTaskManager.BackgroundMode.AUDIO_PLAYBACK, wantAgentObj).then(async () => {
-      }).catch((err: BusinessError) => {
+      let bgModes: string[] = ["audioPlayback", "dataTransfer"]
+      backgroundTaskManager.startBackgroundRunning(
+        getContext_(),
+        bgModes,
+        wantAgentObj
+      )
+        .then(() => {
+      })
+        .catch((err: BusinessError) => {
         // LogUtil.error(TAG, `启动长时任务 Start Background Running 失败：Code - ${err.code}, Message - ${err.message}`)
       })
     })
   }
 
-  async stopTask() {
+  async stopBackgroundTask() {
     backgroundTaskManager.stopBackgroundRunning(getContext_()).then(() => {
     }).catch((err: BusinessError) => {
       LogUtil.error(TAG, `结束长时任务 Stop Background Running 失败：Code - ${err.code}, Message - ${err.message}`);
@@ -40,5 +46,5 @@ class ContinuousTask {
   }
 }
 
-const conTask = new ContinuousTask()
-export default conTask as ContinuousTask
+const conTask = new BackgroundTaskUtils()
+export default conTask as BackgroundTaskUtils

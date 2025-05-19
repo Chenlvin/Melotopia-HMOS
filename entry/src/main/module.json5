@@ -24,7 +24,8 @@
         "startWindowBackground": "$color:start_window_background",
         "exported": true,
         "backgroundModes": [
-          "audioPlayback"
+          "audioPlayback",
+          "dataTransfer"
         ],
         "orientation": "auto_rotation_unspecified",
         "skills": [

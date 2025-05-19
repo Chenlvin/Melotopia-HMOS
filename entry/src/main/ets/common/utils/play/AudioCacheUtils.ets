@@ -6,7 +6,8 @@ export default class AudioCacheUtils {
     const cacheSet = await getCacheSet()
     MCMediaCache.setLogEnabled(false)
     MCMediaCache.setRequestHandler(async (request) => {
-      request.setHeader('cookie', await getCookie())
+      let cookie = await getCookie()
+      request.setHeader('cookie', cookie)
     })
     MCMediaCache.setAssetIdentifierPreprocessor(async (url) => {
       url = url.split('?')[0]
