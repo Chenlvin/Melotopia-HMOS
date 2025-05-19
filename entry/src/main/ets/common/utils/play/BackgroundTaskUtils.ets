@@ -1,7 +1,6 @@
 import { BusinessError } from '@kit.BasicServicesKit';
 import { backgroundTaskManager } from '@kit.BackgroundTasksKit';
 import { WantAgent, wantAgent } from '@kit.AbilityKit';
-import { LogUtil } from '@pura/harmony-utils';
 import { getContext_ } from '../system/AppUtils';
 
 /**
@@ -10,7 +9,7 @@ import { getContext_ } from '../system/AppUtils';
 const TAG = 'BackgroundTaskUtils '
 
 class BackgroundTaskUtils {
-  async startTask() {
+  async startTask(modeType: number = 0) {
     let wantAgentInfo: wantAgent.WantAgentInfo = {
       wants: [
         {
@@ -24,7 +23,7 @@ class BackgroundTaskUtils {
     };
 
     wantAgent.getWantAgent(wantAgentInfo).then((wantAgentObj: WantAgent) => {
-      let bgModes: string[] = ["audioPlayback", "dataTransfer"]
+      let bgModes: string[] = modeType === 0 ? ["audioPlayback"] : ["audioPlayback", "dataTransfer"]
       backgroundTaskManager.startBackgroundRunning(
         getContext_(),
         bgModes,
@@ -41,7 +40,7 @@ class BackgroundTaskUtils {
   async stopBackgroundTask() {
     backgroundTaskManager.stopBackgroundRunning(getContext_()).then(() => {
     }).catch((err: BusinessError) => {
-      LogUtil.error(TAG, `结束长时任务 Stop Background Running 失败：Code - ${err.code}, Message - ${err.message}`);
+      // LogUtil.error(TAG, `结束长时任务 Stop Background Running 失败：Code - ${err.code}, Message - ${err.message}`);
     })
   }
 }

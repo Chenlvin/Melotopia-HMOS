@@ -144,6 +144,8 @@ class DownloadUtils {
       ToastUtil.showToast('已完成所有下载任务')
       AppStorage.setOrCreate(StorageConstants.IS_DOWNLOADING, false)
       AppStorage.setOrCreate(StorageConstants.IS_DOWNLOAD_PAUSED, false)
+      await BackgroundTaskUtils.stopBackgroundTask()
+      BackgroundTaskUtils.startTask(0)
       return
     }
     let artists = getArtists(item.song.artists)
@@ -168,7 +170,7 @@ class DownloadUtils {
     }
 
     let picUrl = await getSongPicUrl(item.song.id)
-    await BackgroundTaskUtils.startTask()
+    await BackgroundTaskUtils.startTask(1)
     FileDownloadUtils.download(picUrl + '?param=512y512', `${item.song.id}.jpg`, 'pic')
     let lyricString = await getLyricString(item.song.id)
     LyricUtils.saveLyricToFile(lyricString, `${item.song.id}.lrc`)
