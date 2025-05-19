@@ -264,6 +264,7 @@ export struct LocalSongPage {
                 GridItem()
                   .height(px2vp(this.bottomRectHeight) + Constants.HEIGHT_MINI)
               }
+              .cachedCount(3)
               .edgeEffect(EdgeEffect.Spring)
               .scrollBar(BarState.Off)
               .rowsGap(10)
