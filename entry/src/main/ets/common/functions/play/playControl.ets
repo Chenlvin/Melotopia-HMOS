@@ -23,15 +23,16 @@ import AudioCacheUtils from "../../utils/play/AudioCacheUtils";
 const TAG = '[playerControl] '
 const pref = StorageConstants.QUEUE_PREF
 
-export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: ResourceStr | string = '', mode: number = 1) {
+export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: string = '', mode: number = 1) {
   try {
     let artists = getArtists(song.artists)
     setPlayData(mode, song, artists)
     await AVPlayerUtils.reset()
-    const isAccessible = await checkMusic(song.id)
-    if(!isAccessible) {
-      ToastUtil.showToast('当前歌曲仅支持试听或无版权')
-    }
+    const isAccessible = checkMusic(song.id).then(() => {
+      if(!isAccessible) {
+        ToastUtil.showToast('当前歌曲仅支持试听或无版权')
+      }
+    })
     isThisSongLiked(song.id)
     let localPath: string = ''
     let tempArtists: string = artists
@@ -39,6 +40,9 @@ export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: Reso
       try { tempArtists = artists.slice(0, 100 - song.name.length) }
       catch (e) { artists = '未知' }
     }
+    await AVSessionUtils.setDefaultMetadata(song, artists)
+    await AVSessionUtils.activate()
+    AVSessionUtils.bufferingState(0)
 
     if(!picUrl) {
       picUrl = await getSongPicUrl(song.id)
@@ -47,8 +51,6 @@ export async function playMusicByUrl(song: Song, isLogged: boolean, picUrl: Reso
     saveCurrentSongInfo(mode, song, artists, picUrl)
     await LyricUtils.setLyric(song)
     await AVSessionUtils.setMetadata(song, artists, picUrl)
-    await AVSessionUtils.activate()
-    AVSessionUtils.bufferingState(0)
 
     localPath = await FileUtils.accessLocalFile(sanitizeFileName(`${tempArtists} - ${song.name}`))
 
@@ -83,8 +85,8 @@ export async function playMusicWithFile(song: Song, fileName: string) {
     if(FileUtil.accessSync(fileUrl)) {
       setPlayData(0, song, artistsString, fileName)
       await AVPlayerUtils.reset()
-      let picUrl = song.id == 0 ? $r('app.media.ic_files_audio') : `file://${filesDir}/pic/${song.id}.jpg`
-      setPicUrl(picUrl)
+      let picUrl = song.id === 0 ? '' : `file://${filesDir}/pic/${song.id}.jpg`
+      await setPicUrl(picUrl)
       // Lyric
       if(song.id != 0) {
         let lyricString = await LyricUtils.readLyric(song.id.toString())

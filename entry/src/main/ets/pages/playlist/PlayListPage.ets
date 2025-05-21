@@ -370,7 +370,7 @@ export struct PlayListPage {
           },
           sid: this.list.indexOf(item),
           playlist: this.param.playList,
-          picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
+          picUrl: item.al?.picUrl ?? '',
           index: this.list.indexOf(item),
           listPlayAction: async () => { await this.playSong(this.list.indexOf(item)) }
         })

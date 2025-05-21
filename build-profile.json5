@@ -44,13 +44,13 @@
         "name": "Melotopia",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.cer",
+          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BC96D5BE5E2EFC36201B263EDC141A0459C2ADF856497E26F6240FFD3C6D6142D839D2EA9BB34AE",
-          "profile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p7b",
+          "keyPassword": "0000001B09A4091E22AB12FE872451682D34DFD1DD27EE283889218EC8D808D6F1FD891C485AF4EADC2909",
+          "profile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p12",
-          "storePassword": "0000001B9F1C93D87A21700C3BDBECE32029E8E6A0C7D597B19113D9327A68A48C9AD860CE036DA68F363C"
+          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p12",
+          "storePassword": "0000001B1AD750E84E778A2A503A5354175CA587B16D79D8D9B12CB481B5F0720F2A59370D6E9D32BB8F4B"
         }
       }
     ],

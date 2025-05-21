@@ -26,7 +26,7 @@ export struct SongCard {
   playlist: PlayList = PlayList_INITIAL
   song: Song = Song_INITIAL
   artists: string = ''
-  picUrl: string | ResourceStr = ''
+  picUrl: string = ''
   reason: string = ''
   allowToArtist: boolean = true
   allowToAlbum: boolean = true
@@ -82,7 +82,7 @@ export struct SongCard {
             .visibility(this.sid === -1 ? Visibility.None : Visibility.Visible)
             .padding({ right: 5 })
           if(this.picUrl) {
-            Image(typeof this.picUrl === 'string' ? this.picUrl + '?param=100y100' : this.picUrl)
+            Image(this.picUrl + '?param=128y128')
               .width(Constants.SIZE_IMG_CARD)
               .padding(3)
               .aspectRatio(1)

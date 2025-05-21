@@ -62,7 +62,7 @@ export const putDjRadioInQueue = async (
       playmode: 3,
       song: item.mainSong as Song,
       fileName: '',
-      picUrl: item.coverUrl || $r('app.media.ic_public_music')
+      picUrl: item.coverUrl ?? ''
     })))
     offset += limit
   }

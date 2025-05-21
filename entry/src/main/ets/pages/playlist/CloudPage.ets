@@ -84,7 +84,7 @@ export struct CloudPage {
           fee: item.fee
         },
         fileName: '',
-        picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music')
+        picUrl: item.al?.picUrl ?? ''
       }))
       await PlayQueueUtils.cleanQueue()
       await PlayQueueUtils.queueAdd_array(queue)
@@ -134,7 +134,7 @@ export struct CloudPage {
                     },
                     sid: this.list.indexOf(item),
                     index: index,
-                    picUrl: item.al?.picUrl ?? $r('app.media.ic_public_music'),
+                    picUrl: item.al?.picUrl ?? '',
                     listPlayAction: () => { this.playSong(index) }
                   })
                 }

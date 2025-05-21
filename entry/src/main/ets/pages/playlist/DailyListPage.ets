@@ -94,7 +94,7 @@ export struct DailyListPage {
                   sid: index,
                   index: index,
                   reason: item.reason,
-                  picUrl: item.picUrl ?? $r('app.media.ic_public_music'),
+                  picUrl: item.picUrl ?? '',
                   listPlayAction: () => { this.playSong(index) }
                 })
               }

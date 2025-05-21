@@ -5,5 +5,5 @@ export interface PlayQueue {
   playmode: PLAYMODE
   song: Song
   fileName: string
-  picUrl: string | ResourceStr
+  picUrl: string
 }

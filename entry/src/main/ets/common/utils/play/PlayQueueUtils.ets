@@ -51,7 +51,7 @@ class PlayQueueUtils {
   /**
    * 添加歌曲至播放列表
    */
-  async queueAdd(playmode: number, song: Song, artists: string = '', fileName: string = '', picUrl: string | ResourceStr = '') {
+  async queueAdd(playmode: number, song: Song, artists: string = '', fileName: string = '', picUrl: string = '') {
     try {
       this.queue.splice(this.currentQueueIndex + 1 , 0 ,{
         playmode: playmode,

@@ -18,7 +18,7 @@ import { DownloadDialog } from "../dialog/DownloadDialog"
 export struct SongInfoSheet {
   song: Song = Song_INITIAL
   artists: string = ''
-  picUrl: string | ResourceStr = ''
+  picUrl: string = ''
   playlist: PlayList = PlayList_INITIAL
   index: number = 0
   allowToArtist: boolean = true
@@ -43,7 +43,7 @@ export struct SongInfoSheet {
 
   private addToQueue() {
     cleanLastPlayInfo()
-    PlayQueueUtils.queueAdd(this.playmode, this.song, this.artists, '', this.picUrl ?? $r('app.media.ic_public_music'))
+    PlayQueueUtils.queueAdd(this.playmode, this.song, this.artists, '', this.picUrl ?? '')
     ToastUtil.showToast('成功添加到下一首播放')
   }
 

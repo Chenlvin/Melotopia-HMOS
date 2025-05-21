@@ -182,7 +182,7 @@ export const setHeartMode = async (id: number, pid: number): Promise<void> => {
       playmode: 1,
       song: tempSong,
       fileName: '',
-      picUrl: item.songInfo.al.picUrl ?? $r('app.media.ic_public_music')
+      picUrl: item.songInfo.al.picUrl ?? ''
     })
   }
   await PlayQueueUtils.cleanQueue()

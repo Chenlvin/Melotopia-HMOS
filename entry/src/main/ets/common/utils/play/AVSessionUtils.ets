@@ -86,13 +86,25 @@ class AVSessionUtils {
     controller.sendControlCommand(command, () => {})
   }
 
+  async setDefaultMetadata(song: Song, artists: string) {
+    this.currentSong = song
+    this.currentArtists = artists
+    let instance = await this.getInstance()
+    instance.setAVMetadata({
+      assetId: `${song.id}`,
+      title: song.name,
+      artist: artists,
+      duration: song.duration
+    })
+  }
+
   /**
    * 设置媒体信息
    * @param song
    * @param artists
    * @param picUrl
    */
-  async setMetadata(song: Song, artists: string, picUrl: string | ResourceStr) {
+  async setMetadata(song: Song, artists: string, picUrl: string) {
     this.currentSong = song
     this.currentArtists = artists
     this.currentPic = picUrl
@@ -101,7 +113,7 @@ class AVSessionUtils {
     let metadata: avSession.AVMetadata = {
       assetId: `${song.id}`,
       title: song.name,
-      mediaImage: typeof picUrl === 'string' ? `${picUrl}?param=256y256` : '/resources/base/media/app.media.ic_public_music.svg',
+      mediaImage: picUrl !== '' ? `${picUrl}?param=256y256` : '/resources/base/media/app.media.ic_public_music.svg',
       artist: artists != 'null' ? artists : '未知',
       duration: song.duration,
       lyric: this.lyric
