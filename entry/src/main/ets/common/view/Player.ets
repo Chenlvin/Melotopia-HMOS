@@ -149,8 +149,7 @@ export struct Player {
       */
      // Tablet & 2in1
      if((this.widBp === 'lg' && this.heightBp !== 'sm') ||
-         (this.heightBp === 'lg' && this.widBp !== 'sm') ||
-         (this.widBp !== 'sm' && this.heightBp === 'md')) {
+         (this.widBp === 'md' && this.heightBp === 'md')) {
        this.LargeUI()
      }
      // Phone Landscape
