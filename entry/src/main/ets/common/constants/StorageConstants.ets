@@ -218,6 +218,11 @@ export class StorageConstants {
    * @description AppStorage
    */
   static readonly IS_CHECKING_VALID_API: string = 'isCheckingValidApi'
+  /**
+   * BundleName
+   * @description AppStorage
+   */
+  static readonly BUNDLE_NAME: string = 'bundleName'
 
 
   /**

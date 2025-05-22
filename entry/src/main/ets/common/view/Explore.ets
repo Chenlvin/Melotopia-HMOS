@@ -16,11 +16,12 @@ import FileUtils from "../utils/file/FileUtils";
 import { RecommendDjRadio } from "../entities/DjRadio";
 import { PersonalListItem, TopListItem } from "../entities/Recommend";
 import { LocalSong } from "../entities/Song";
+import { AppConstants } from "../constants/AppConstants";
 
 @Component
 export struct Explore {
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
-  @StorageProp('topRectHeight') topRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.IS_LOGGED) @Watch('getContent') isLogged: boolean = false
   @StorageProp(StorageConstants.VALID_API_URL) validApiUrl: boolean = true
   @StorageProp(StorageConstants.APP_INFO) appInfo: AppInfo = AppInfoClass
@@ -29,6 +30,7 @@ export struct Explore {
   @StorageLink(StorageConstants.RECOMMENDED_DJ) recommendDjRadioList: Array<RecommendDjRadio> = []
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
   @StorageProp(StorageConstants.SHOW_ANNOUNCEMENT) showAnnouncement: boolean = true
+  @StorageProp(StorageConstants.BUNDLE_NAME) bundleName: string = ''
   @State localSongs: LocalSong[] = []
   @State isLoadingTopList: boolean = false
   @State isLoadingPersonalized: boolean = false
@@ -106,9 +108,15 @@ export struct Explore {
     Column() {
       Refresh({ refreshing: this.isRefreshing }) {
         Grid() {
-          if(this.appInfo.data.Announcement.isShow && this.showAnnouncement) {
-            GridItem() {
-              this.Announcement()
+          if(this.showAnnouncement) {
+            if(this.appInfo.data.AnnouncementAG.isShow && this.bundleName === AppConstants.BUNDLE_NAME_AG) {
+              GridItem() {
+                this.Announcement(0)
+              }
+            } else if(this.appInfo.data.Announcement.isShow) {
+              GridItem() {
+                this.Announcement(1)
+              }
             }
           }
           GridItem() {
@@ -297,9 +305,9 @@ export struct Explore {
   }
 
   @Builder
-  Announcement() {
+  Announcement(mode: number) {
     Row() {
-      Text(this.appInfo.data.Announcement.message)
+      Text(mode === 0 ? this.appInfo.data.AnnouncementAG.message : this.appInfo.data.Announcement.message)
         .width('100%')
         .textAlign(TextAlign.Center)
         .fontColor($r('app.color.main'))
@@ -309,8 +317,8 @@ export struct Explore {
         .textOverflow({ overflow: TextOverflow.MARQUEE })
         .onClick(() => {
           DialogUtil.showConfirmDialog({
-            title: this.appInfo.data.Announcement.title,
-            message: this.appInfo.data.Announcement.message
+            title: mode === 0 ? this.appInfo.data.AnnouncementAG.title : this.appInfo.data.Announcement.title,
+            message: mode === 0 ? this.appInfo.data.AnnouncementAG.message : this.appInfo.data.Announcement.message
           })
         })
     }

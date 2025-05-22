@@ -13,6 +13,7 @@ import { PickerUtil } from "@pura/picker_utils"
 @Component
 export struct AboutPage {
   @StorageProp(StorageConstants.APP_INFO) appInfo: AppInfo = AppInfoClass
+  @StorageProp(StorageConstants.BUNDLE_NAME) bundleName: string = ''
   @State isCheckingUpdate: boolean = false
   @Consume('settingsPageInfos') settingsPageInfos: NavPathStack
   warrantyDialogController: CustomDialogController = new CustomDialogController({
@@ -149,6 +150,16 @@ export struct AboutPage {
         .itemStyle()
 
         ListItemGroup() {
+          if(this.bundleName !== AppConstants.BUNDLE_NAME_AG) {
+            ListItem() {
+              CommonSettingsCard({
+                title: 'GitHub仓库',
+                action: () => {
+                  SystemAppUtils.openInBrowser('https://github.com/Chenlvin/Melotopia-HMOS')
+                }
+              })
+            }
+          }
           ListItem() {
             CommonSettingsCard({
               title: '隐私政策',

@@ -34,6 +34,7 @@ export struct LocalSongPage {
   @State isSorted: boolean = false
   @State isSelecting: boolean = false
   @State selectedSongs: LocalSong[] = []
+  @State selectedIndex: number[] = []
   @State localSongs: LocalSong[] = []
   @State isShowMigration: boolean = false
   @State dataSource: LazyData<LocalSong> = new LazyData()
@@ -43,13 +44,6 @@ export struct LocalSongPage {
   private originalOrderList: LocalSong[] = []
 
   menus: NavigationMenuItem[] = [
-    {
-      value: 'Search',
-      icon: $r('app.media.ic_public_search_filled'),
-      action: () => {
-        this.getUIContext().getFocusController().requestFocus('search')
-      }
-    },
     {
       value: 'Upload',
       icon: $r('app.media.ic_public_upload_filled'),
@@ -88,7 +82,7 @@ export struct LocalSongPage {
   private handlePlayAll = async (index: number = 0) => {
     let playSongs: PlayQueue[] = []
     this.isPlayerLoading = true
-    for(let localSong of this.localSongs) {
+    for(let localSong of this.searchKeyword ? this.filteredSongs : this.localSongs) {
       try {
         let artists = await getLocalSongArtists(localSong.artists)
         let song: Song = { id: localSong.songId, name: localSong.name, artists: artists, album: Album_INITIAL,
@@ -158,106 +152,82 @@ export struct LocalSongPage {
           .width('100%')
           .justifyContent(FlexAlign.Center)
         } else {
-          Column() {
-            Search({
-              placeholder: $r('app.string.Search_content'),
-              icon: '/resources/base/media/ic_public_search_filled.svg'
-            })
-              .id('search')
-              .height(Constants.HEIGHT_SEARCH)
-              .width('100%')
-              .searchButton('搜索')
-              .onChange((value) => {
-                if(value == '') {
-                  this.filteredSongs = []
-                  this.selectedSongs = []
-                  this.searchKeyword = ''
+          Column({ space: Constants.PADDING_EDGE_DEFAULT }) {
+            if (this.localSongs.length > 0) {
+              Row() {
+                if(this.isSelecting) {
+                  Text(`已选 ${this.selectedSongs.length} 项`)
+                    .fontSize(Constants.FONT_SIZE_COMMON)
+                    .padding({ left: Constants.PADDING_MEDIUM })
+                } else if(this.isPlayerLoading) {
+                  BarLoading()
+                } else {
+                  PlayAllButton({ count: this.searchKeyword ? this.filteredSongs.length : this.localSongs.length, clickAction: () => {
+                    this.handlePlayAll(0)
+                  }})
                 }
-              })
-              .onSubmit((value) => {
-                this.searchKeyword = value
-                this.handelSearch()
-              })
-
-            List() {
-              ListItem() {
-                if (this.localSongs.length > 0) {
-                  Row() {
-                    if(this.isSelecting) {
-                      Text(`已选 ${this.selectedSongs.length} 项`)
-                        .fontSize(Constants.FONT_SIZE_COMMON)
-                        .padding({ left: Constants.PADDING_MEDIUM })
-                    } else if(this.isPlayerLoading) {
-                      BarLoading()
-                    } else {
-                      PlayAllButton({ count: this.localSongs.length, clickAction: () => {
-                        this.handlePlayAll(0)
-                      }})
-                    }
-                    Row({ space: 20 }) {
-                      if(!this.isSelecting) {
-                        // Image($r('app.media.ic_files_name_drive'))
-                        //   .width(Constants.SIZE_ICON_BUTTON_BAR)
-                        //   .aspectRatio(1)
-                        //   .fillColor(this.isSorted ? $r('app.color.blue') : Color.Gray)
-                        //   .onClick(() => {
-                        //     this.isSorted = !this.isSorted
-                        //     if (this.searchKeyword) {
-                        //       this.filteredSongs = this.getSortedList(this.filteredSongs)
-                        //     }
-                        //   })
-                      } else {
-                        if(this.selectedSongs.length > 0) {
-                          Image($r('app.media.ic_public_delete'))
-                            .width(Constants.SIZE_ICON_BUTTON_BAR)
-                            .aspectRatio(1)
-                            .fillColor(Color.Gray)
-                            .onClick(() => {
-                              this.handleDelete()
-                            })
-                          Image($r('app.media.ic_public_folder'))
-                            .width(Constants.SIZE_ICON_BUTTON_BAR)
-                            .aspectRatio(1)
-                            .fillColor(Color.Gray)
-                            .onClick(this.handleSave)
-                        }
-                        CheckboxGroup({ group: 'fileCard' })
-                          .width(Constants.SIZE_ICON_BUTTON_BAR - 5)
-                          .height(Constants.SIZE_ICON_BUTTON_BAR - 5)
-                      }
-
-                      Image($r('app.media.ic_gallery_material_select_checkbox'))
+                Row({ space: 20 }) {
+                  if(!this.isSelecting) {
+                    // Image($r('app.media.ic_files_name_drive'))
+                    //   .width(Constants.SIZE_ICON_BUTTON_BAR)
+                    //   .aspectRatio(1)
+                    //   .fillColor(this.isSorted ? $r('app.color.blue') : Color.Gray)
+                    //   .onClick(() => {
+                    //     this.isSorted = !this.isSorted
+                    //     if (this.searchKeyword) {
+                    //       this.filteredSongs = this.getSortedList(this.filteredSongs)
+                    //     }
+                    //   })
+                  } else {
+                    if(this.selectedSongs.length > 0) {
+                      Image($r('app.media.ic_public_delete'))
                         .width(Constants.SIZE_ICON_BUTTON_BAR)
                         .aspectRatio(1)
-                        .fillColor(this.isSelecting ? $r('app.color.blue') : Color.Gray)
+                        .fillColor(Color.Gray)
                         .onClick(() => {
-                          animateTo({ duration: 100, curve: Curve.EaseInOut }, () => {
-                            this.isSelecting = !this.isSelecting
-                            this.selectedSongs = []
-                          })
+                          this.handleDelete()
                         })
+                      Image($r('app.media.ic_public_folder'))
+                        .width(Constants.SIZE_ICON_BUTTON_BAR)
+                        .aspectRatio(1)
+                        .fillColor(Color.Gray)
+                        .onClick(this.handleSave)
                     }
-                    .height(30)
+                    // CheckboxGroup({ group: 'fileCard' })
+                    //   .width(Constants.SIZE_ICON_BUTTON_BAR - 5)
+                    //   .height(Constants.SIZE_ICON_BUTTON_BAR - 5)
                   }
-                  .height(30)
-                  .justifyContent(FlexAlign.SpaceBetween)
-                  .width('100%')
-                  .padding({ right: Constants.PADDING_EDGE_DEFAULT })
+                  Image($r('app.media.ic_gallery_material_select_checkbox'))
+                    .width(Constants.SIZE_ICON_BUTTON_BAR)
+                    .aspectRatio(1)
+                    .fillColor(this.isSelecting ? $r('app.color.blue') : Color.Gray)
+                    .onClick(() => {
+                      animateTo({ duration: 100, curve: Curve.EaseInOut }, () => {
+                        this.isSelecting = !this.isSelecting
+                        this.selectedSongs = []
+                        this.selectedIndex = []
+                      })
+                    })
                 }
-                else {
-                  Column({ space: 20 }) {
-                    Text('本地文件列表为空').width('100%').textAlign(TextAlign.Center).padding({ left: 30, right: 30, top: 10 })
-                  }
-                }
+                .height(30)
               }
-              .padding({ bottom: Constants.PADDING_EDGE_DEFAULT })
+              .height(30)
+              .justifyContent(FlexAlign.SpaceBetween)
+              .width('100%')
+              .padding({ right: Constants.PADDING_EDGE_DEFAULT })
+            }
+            else {
+              Column({ space: 20 }) {
+                Text('本地文件列表为空').width('100%').textAlign(TextAlign.Center).padding({ left: 30, right: 30, top: 10 })
+              }
+            }
 
+            List() {
               if(!this.searchKeyword) {
                 this.ListContent(this.dataSource)
               } else {
                 this.ListContent(this.dataSourceFiltered)
               }
-
               ListItem()
                 .height(px2vp(this.bottomRectHeight) + Constants.HEIGHT_MINI)
             }
@@ -271,10 +241,9 @@ export struct LocalSongPage {
             .layoutWeight(1)
             .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
             .backToTop(true)
-            }
+          }
           .height('100%')
           .width('100%')
-          .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
         }
 
         BottomBarComponent()
@@ -287,19 +256,21 @@ export struct LocalSongPage {
     }
     .title($r('app.string.LocalSongs'))
     .menus(this.menus)
+    .title(this.ToolBar)
     .backgroundColor($r('app.color.background'))
   }
 
   private handelSearch() {
     try {
-      this.selectedSongs = []
       if (!this.searchKeyword) {
         this.dataSourceFiltered.setData([])
+        return
       }
       const keyword = this.searchKeyword.trim().toLowerCase()
-      this.dataSourceFiltered.setData(this.localSongs.filter((item: LocalSong) => {
+      this.filteredSongs = this.localSongs.filter((item: LocalSong) => {
         return item.songFile.toString().toLowerCase().includes(keyword)
-      }))
+      })
+      this.dataSourceFiltered.setData(this.filteredSongs)
     } catch (e) {
       ToastUtil.showToast('搜索时出错')
       LogUtil.error(TAG, 'Error while handelSearch: ' + e.message)
@@ -353,38 +324,62 @@ export struct LocalSongPage {
     })
   }
 
+  @Builder ToolBar() {
+    Column() {
+      Search({
+        placeholder: $r('app.string.Search_content'),
+        icon: '/resources/base/media/ic_public_search_filled.svg'
+      })
+        .id('search')
+        .height(Constants.HEIGHT_SEARCH)
+        .layoutWeight(1)
+        .searchButton('搜索')
+        .onChange((value) => {
+          if(value === '') {
+            this.filteredSongs = []
+            this.searchKeyword = ''
+          }
+        })
+        .onSubmit((value) => {
+          this.searchKeyword = value
+          this.handelSearch()
+        })
+    }
+    .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
+  }
+
   @Builder ListContent(dataSource: LazyData<LocalSong>) {
     LazyForEach(dataSource,
       (item: LocalSong, index: number) => {
-          Row({ space: 5 }) {
+          Row() {
             FileCard({
               localSong: item,
               listPlayAction: async() => { await this.handlePlayAll(index) }
             })
-              .padding({ left: 5, right: 5 })
+              .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
               .layoutWeight(1)
-            this.CardCheckBox(item)
+            this.CardCheckBox(item, index)
           }
           .width('100%')
         .padding({ bottom: Constants.PADDING_EDGE_DEFAULT })
       },(item: LocalSong) => item.songFile.toString() + this.searchKeyword)
   }
 
-  @Builder CardCheckBox(localSong: LocalSong) {
+  @Builder CardCheckBox(localSong: LocalSong, index: number) {
     Checkbox({ group: 'fileCard' })
+      .select(this.selectedIndex.includes(this.localSongs.indexOf(localSong)))
       .shape(CheckBoxShape.ROUNDED_SQUARE)
-      .width(Constants.SIZE_ICON_BUTTON_BAR)
+      .width(Constants.SIZE_ICON_BUTTON_HEAD)
       .aspectRatio(1)
       .visibility(this.isSelecting ? Visibility.Visible : Visibility.None)
+      .padding({ right: Constants.PADDING_EDGE_DEFAULT })
       .onChange((value) => {
         if(value) {
-          animateTo({ duration: 100, curve: Curve.Ease }, () => {
-            this.selectedSongs.push(localSong)
-          })
+          this.selectedSongs.push(localSong)
+          this.selectedIndex.push(this.localSongs.indexOf(localSong))
         } else {
-          animateTo({ duration: 100, curve: Curve.Ease }, () => {
-            this.selectedSongs = this.selectedSongs.filter(item => item.name !== localSong.name)
-          })
+          this.selectedSongs = this.selectedSongs.filter(songItem => songItem.name !== localSong.name)
+          this.selectedIndex = this.selectedIndex.filter(songIndex => songIndex !== this.localSongs.indexOf(localSong))
         }
       })
   }

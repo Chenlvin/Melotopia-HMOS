@@ -15,6 +15,7 @@ interface Announcement {
 interface Data {
   Version: Version
   Announcement: Announcement
+  AnnouncementAG: Announcement
   Sponsor: string[]
   SponsorCode: string
 }
@@ -31,6 +32,11 @@ export const AppInfoClass: AppInfo = {
       downloadUrl: ''
     },
     Announcement: {
+      isShow: false,
+      title: '',
+      message: ''
+    },
+    AnnouncementAG: {
       isShow: false,
       title: '',
       message: ''

@@ -1,4 +1,4 @@
-import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { AbilityConstant, bundle, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { App, window } from '@kit.ArkUI';
 import PreferencesUtils from '../common/utils/data/PreferencesUtils';
@@ -16,7 +16,9 @@ export default class EntryAbility extends UIAbility {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
     // 初始化 Log
     LogUtil.init(0x1010, 'Melotopia', true)
+    const bundleName = this.context.applicationInfo.name
     AppStorage.setOrCreate(StorageConstants.CONTEXT, this.context)
+    AppStorage.setOrCreate(StorageConstants.BUNDLE_NAME, bundleName)
     CrashUtil.onHandled(() => {})
     App.setImageCacheCount(Constants.CACHE_IMAGE_MAX_COUNT)
     App.setImageRawDataCacheSize(Constants.CACHE_DISK_MAX_SIZE)
