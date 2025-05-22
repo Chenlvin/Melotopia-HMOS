@@ -85,8 +85,8 @@ export async function playMusicWithFile(song: Song, fileName: string) {
     if(FileUtil.accessSync(fileUrl)) {
       setPlayData(0, song, artistsString, fileName)
       await AVPlayerUtils.reset()
-      let picUrl = song.id === 0 ? '' : `file://${filesDir}/pic/${song.id}.jpg`
-      await setPicUrl(picUrl)
+      let picUrl = song.id !== 0 ? `file://${filesDir}/pic/${song.id}.jpg` : ''
+      setPicUrl(picUrl)
       // Lyric
       if(song.id != 0) {
         let lyricString = await LyricUtils.readLyric(song.id.toString())
@@ -98,10 +98,10 @@ export async function playMusicWithFile(song: Song, fileName: string) {
       EmitterUtil.post(EmitterConstants.EMITTER_LYRIC_UPDATE, 'Lyric Updated')
       // AVSession
       await AVSessionUtils.setMetadata(song, artistsString, picUrl)
-      await AVSessionUtils.activate()
+      AVSessionUtils.activate()
       AVSessionUtils.bufferingState(0)
       saveCurrentSongInfo(0, song, artistsString, picUrl)
-      await AVPlayerUtils.setUrl(fdPath)
+      AVPlayerUtils.setUrl(fdPath)
     } else {
       ToastUtil.showToast('未找到文件')
       playNext()
@@ -138,12 +138,6 @@ export async function playQueue(index: number) {
   const playqueue = queue[index]
   PlayQueueUtils.setIndex(index)
   if(playqueue.playmode == 0) { // Play with file
-    if(playqueue.song.duration === -1) {
-      const rootUrl = FileUtils.getFilesDir()
-      const fileUrl = rootUrl + `/${playqueue.fileName}`
-      const metadata = await fetchMetadata(fileUrl)
-      playqueue.song.duration = metadata ? ((metadata.duration) ? parseInt(metadata.duration) : 0) : 0
-    }
     playMusicWithFile(playqueue.song as Song, playqueue.fileName)
   } else { // Play with url
     const isLogged: boolean | undefined = AppStorage.get(StorageConstants.IS_LOGGED)
@@ -294,7 +288,7 @@ async function setPlayData(mode: number, song: Song, artists: string, fileName: 
  * 设定歌曲封面
  * @param picUrl
  */
-async function setPicUrl(picUrl: string | ResourceStr) {
+async function setPicUrl(picUrl: string) {
   AppStorage.setOrCreate(StorageConstants.PIC_URL, picUrl)
 }
 

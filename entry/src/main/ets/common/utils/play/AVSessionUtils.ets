@@ -113,7 +113,7 @@ class AVSessionUtils {
     let metadata: avSession.AVMetadata = {
       assetId: `${song.id}`,
       title: song.name,
-      mediaImage: picUrl !== '' ? `${picUrl}?param=256y256` : '/resources/base/media/app.media.ic_public_music.svg',
+      mediaImage: picUrl.startsWith('http') ? `${picUrl}?param=256y256` : picUrl,
       artist: artists != 'null' ? artists : '未知',
       duration: song.duration,
       lyric: this.lyric

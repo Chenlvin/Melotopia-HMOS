@@ -15,6 +15,7 @@ import { getLocalSongArtists } from '../../common/functions/common/get';
 import { Album_INITIAL } from '../../common/entities/Album';
 import { playQueue } from '../../common/functions/play/playControl';
 import { PlayQueue } from '../../common/model/PlayQueue';
+import { BarLoading } from '../../components/cards/Loading';
 
 /**
  * 缓存管理页
@@ -24,9 +25,10 @@ const TAG = 'LocalSongPage '
 
 @Component
 export struct LocalSongPage {
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
-  @StorageProp('topRectHeight') topRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
+  @StorageLink(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
   @State searchKeyword: string = ''
   @State filteredSongs: LocalSong[] = new Array()
   @State isSorted: boolean = false
@@ -85,6 +87,7 @@ export struct LocalSongPage {
 
   private handlePlayAll = async (index: number = 0) => {
     let playSongs: PlayQueue[] = []
+    this.isPlayerLoading = true
     for(let localSong of this.localSongs) {
       try {
         let artists = await getLocalSongArtists(localSong.artists)
@@ -99,6 +102,9 @@ export struct LocalSongPage {
     await PlayQueueUtils.cleanQueue()
     await PlayQueueUtils.queueAdd_array(playSongs)
     playQueue(index)
+    setTimeout(() => {
+      this.isPlayerLoading = false
+    }, 200)
   }
 
   private handleSave = () => {
@@ -153,131 +159,122 @@ export struct LocalSongPage {
           .justifyContent(FlexAlign.Center)
         } else {
           Column() {
-            Column() {
-              Grid() {
-                GridItem() {
-                  Search({
-                    placeholder: $r('app.string.Search_content'),
-                    icon: '/resources/base/media/ic_public_search_filled.svg'
-                  })
-                    .id('search')
-                    .height(Constants.HEIGHT_SEARCH)
-                    .width('100%')
-                    .searchButton('搜索')
-                    .onChange((value) => {
-                      if(value == '') {
-                        this.filteredSongs = []
-                        this.selectedSongs = []
-                        this.searchKeyword = ''
-                      }
-                    })
-                    .onSubmit((value) => {
-                      this.searchKeyword = value
-                      this.handelSearch()
-                    })
+            Search({
+              placeholder: $r('app.string.Search_content'),
+              icon: '/resources/base/media/ic_public_search_filled.svg'
+            })
+              .id('search')
+              .height(Constants.HEIGHT_SEARCH)
+              .width('100%')
+              .searchButton('搜索')
+              .onChange((value) => {
+                if(value == '') {
+                  this.filteredSongs = []
+                  this.selectedSongs = []
+                  this.searchKeyword = ''
                 }
-                .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-                GridItem() {
-                  if (this.localSongs.length > 0) {
-                    Row() {
-                      if(this.isSelecting) {
-                        Text(`已选 ${this.selectedSongs.length} 项`)
-                          .fontSize(Constants.FONT_SIZE_COMMON)
-                          .padding({ left: Constants.PADDING_MEDIUM })
-                      } else {
-                        PlayAllButton({ count: this.localSongs.length, clickAction: this.handlePlayAll})
-                      }
-                      Row({ space: 20 }) {
-                        if(!this.isSelecting) {
-                          // Image($r('app.media.ic_files_name_drive'))
-                          //   .width(Constants.SIZE_ICON_BUTTON_BAR)
-                          //   .aspectRatio(1)
-                          //   .fillColor(this.isSorted ? $r('app.color.blue') : Color.Gray)
-                          //   .onClick(() => {
-                          //     this.isSorted = !this.isSorted
-                          //     if (this.searchKeyword) {
-                          //       this.filteredSongs = this.getSortedList(this.filteredSongs)
-                          //     }
-                          //   })
-                        } else {
-                          if(this.selectedSongs.length > 0) {
-                            Image($r('app.media.ic_public_delete'))
-                              .width(Constants.SIZE_ICON_BUTTON_BAR)
-                              .aspectRatio(1)
-                              .fillColor(Color.Gray)
-                              .onClick(() => {
-                                this.handleDelete()
-                              })
-                            Image($r('app.media.ic_public_folder'))
-                              .width(Constants.SIZE_ICON_BUTTON_BAR)
-                              .aspectRatio(1)
-                              .fillColor(Color.Gray)
-                              .onClick(this.handleSave)
-                          }
-                          CheckboxGroup({ group: 'fileCard' })
-                            .width(Constants.SIZE_ICON_BUTTON_BAR - 5)
-                            .height(Constants.SIZE_ICON_BUTTON_BAR - 5)
-                        }
+              })
+              .onSubmit((value) => {
+                this.searchKeyword = value
+                this.handelSearch()
+              })
 
-                        Image($r('app.media.ic_gallery_material_select_checkbox'))
-                          .width(Constants.SIZE_ICON_BUTTON_BAR)
-                          .aspectRatio(1)
-                          .fillColor(this.isSelecting ? $r('app.color.blue') : Color.Gray)
-                          .onClick(() => {
-                            animateTo({ duration: 100, curve: Curve.EaseInOut }, () => {
-                              this.isSelecting = !this.isSelecting
-                              this.selectedSongs = []
+            List() {
+              ListItem() {
+                if (this.localSongs.length > 0) {
+                  Row() {
+                    if(this.isSelecting) {
+                      Text(`已选 ${this.selectedSongs.length} 项`)
+                        .fontSize(Constants.FONT_SIZE_COMMON)
+                        .padding({ left: Constants.PADDING_MEDIUM })
+                    } else if(this.isPlayerLoading) {
+                      BarLoading()
+                    } else {
+                      PlayAllButton({ count: this.localSongs.length, clickAction: () => {
+                        this.handlePlayAll(0)
+                      }})
+                    }
+                    Row({ space: 20 }) {
+                      if(!this.isSelecting) {
+                        // Image($r('app.media.ic_files_name_drive'))
+                        //   .width(Constants.SIZE_ICON_BUTTON_BAR)
+                        //   .aspectRatio(1)
+                        //   .fillColor(this.isSorted ? $r('app.color.blue') : Color.Gray)
+                        //   .onClick(() => {
+                        //     this.isSorted = !this.isSorted
+                        //     if (this.searchKeyword) {
+                        //       this.filteredSongs = this.getSortedList(this.filteredSongs)
+                        //     }
+                        //   })
+                      } else {
+                        if(this.selectedSongs.length > 0) {
+                          Image($r('app.media.ic_public_delete'))
+                            .width(Constants.SIZE_ICON_BUTTON_BAR)
+                            .aspectRatio(1)
+                            .fillColor(Color.Gray)
+                            .onClick(() => {
+                              this.handleDelete()
                             })
-                          })
+                          Image($r('app.media.ic_public_folder'))
+                            .width(Constants.SIZE_ICON_BUTTON_BAR)
+                            .aspectRatio(1)
+                            .fillColor(Color.Gray)
+                            .onClick(this.handleSave)
+                        }
+                        CheckboxGroup({ group: 'fileCard' })
+                          .width(Constants.SIZE_ICON_BUTTON_BAR - 5)
+                          .height(Constants.SIZE_ICON_BUTTON_BAR - 5)
                       }
-                      .height(30)
+
+                      Image($r('app.media.ic_gallery_material_select_checkbox'))
+                        .width(Constants.SIZE_ICON_BUTTON_BAR)
+                        .aspectRatio(1)
+                        .fillColor(this.isSelecting ? $r('app.color.blue') : Color.Gray)
+                        .onClick(() => {
+                          animateTo({ duration: 100, curve: Curve.EaseInOut }, () => {
+                            this.isSelecting = !this.isSelecting
+                            this.selectedSongs = []
+                          })
+                        })
                     }
                     .height(30)
-                    .justifyContent(FlexAlign.SpaceBetween)
-                    .width('100%')
-                    .padding({ right: Constants.PADDING_EDGE_DEFAULT })
                   }
-                  else {
-                    Column({ space: 20 }) {
-                      Text('本地文件列表为空').width('100%').textAlign(TextAlign.Center).padding({ left: 30, right: 30, top: 10 })
-                    }
+                  .height(30)
+                  .justifyContent(FlexAlign.SpaceBetween)
+                  .width('100%')
+                  .padding({ right: Constants.PADDING_EDGE_DEFAULT })
+                }
+                else {
+                  Column({ space: 20 }) {
+                    Text('本地文件列表为空').width('100%').textAlign(TextAlign.Center).padding({ left: 30, right: 30, top: 10 })
                   }
                 }
-
-                GridItem() {
-                  GridRow({ columns: { xs: 1, sm: 1, md: 1, lg: 2, xl: 2 } }) {
-                    if(!this.searchKeyword) {
-                      this.ListContent(this.dataSource)
-                    } else {
-                      this.ListContent(this.dataSourceFiltered)
-                    }
-                  }
-                }
-                .width('100%')
-
-                GridItem()
-                  .height(px2vp(this.bottomRectHeight) + Constants.HEIGHT_MINI)
               }
-              .cachedCount(3)
-              .edgeEffect(EdgeEffect.Spring)
-              .scrollBar(BarState.Off)
-              .rowsGap(10)
-              .columnsGap(10)
-              .columnsTemplate('1fr')
-              .layoutDirection(GridDirection.Column)
-              .backgroundColor($r('app.color.background'))
-              .height('100%')
-              .width('100%')
-              .layoutWeight(1)
-              .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
-              .backToTop(true)
+              .padding({ bottom: Constants.PADDING_EDGE_DEFAULT })
+
+              if(!this.searchKeyword) {
+                this.ListContent(this.dataSource)
+              } else {
+                this.ListContent(this.dataSourceFiltered)
+              }
+
+              ListItem()
+                .height(px2vp(this.bottomRectHeight) + Constants.HEIGHT_MINI)
             }
-            .justifyContent(FlexAlign.Center)
-            .layoutWeight(1)
+            .cachedCount(3)
+            .lanes(this.breakpoint === 'sm' ? 1 : 2)
+            .edgeEffect(EdgeEffect.Spring)
+            .scrollBar(BarState.Off)
+            .backgroundColor($r('app.color.background'))
+            .height('100%')
             .width('100%')
-          }
-          .width('100%')
+            .layoutWeight(1)
+            .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+            .backToTop(true)
+            }
           .height('100%')
+          .width('100%')
+          .padding({ left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
         }
 
         BottomBarComponent()
@@ -359,7 +356,6 @@ export struct LocalSongPage {
   @Builder ListContent(dataSource: LazyData<LocalSong>) {
     LazyForEach(dataSource,
       (item: LocalSong, index: number) => {
-        GridCol() {
           Row({ space: 5 }) {
             FileCard({
               localSong: item,
@@ -367,14 +363,10 @@ export struct LocalSongPage {
             })
               .padding({ left: 5, right: 5 })
               .layoutWeight(1)
-            if(this.isSelecting) {
-              this.CardCheckBox(item)
-            }
+            this.CardCheckBox(item)
           }
           .width('100%')
-          .padding({ bottom: Constants.PADDING_EDGE_DEFAULT, left: Constants.PADDING_EDGE_DEFAULT, right: Constants.PADDING_EDGE_DEFAULT })
-        }
-        .key(item.id + this.searchKeyword)
+        .padding({ bottom: Constants.PADDING_EDGE_DEFAULT })
       },(item: LocalSong) => item.songFile.toString() + this.searchKeyword)
   }
 
@@ -383,6 +375,7 @@ export struct LocalSongPage {
       .shape(CheckBoxShape.ROUNDED_SQUARE)
       .width(Constants.SIZE_ICON_BUTTON_BAR)
       .aspectRatio(1)
+      .visibility(this.isSelecting ? Visibility.Visible : Visibility.None)
       .onChange((value) => {
         if(value) {
           animateTo({ duration: 100, curve: Curve.Ease }, () => {
