@@ -12,8 +12,8 @@ import { LocalSong, LocalSong_INITIAL } from "../../common/entities/Song"
 export struct FileCard {
   @State localSong: LocalSong = LocalSong_INITIAL
   @State showMatchSheet: boolean = false
-  @State filesDir: string = ''
   @State artistsString: string = ''
+  listPlayAction: () => void = () => {}
 
   private matchSheetOptions: SheetOptions = {
     preferType: SheetType.CENTER,
@@ -25,14 +25,13 @@ export struct FileCard {
   }
 
   async aboutToAppear() {
-    this.filesDir = FileUtils.getFilesDir()
-    this.artistsString = await getLocalSongArtistsString(this.localSong.artists)
+    this.artistsString = getLocalSongArtistsString(this.localSong.artists)
   }
 
   build() {
     Button() {
       Row({ space: 5 }) {
-        Image(this.localSong.songId == 0 ? $r('app.media.ic_files_audio') : `file://${this.filesDir}/pic/${this.localSong.songId}.jpg`)
+        Image(this.localSong.songId == 0 ? $r('app.media.ic_files_audio') : `file://${FileUtils.getFilesDir()}/pic/${this.localSong.songId}.jpg`)
           .width(Constants.SIZE_IMG_CARD)
           .borderRadius(Constants.RADIUS_IMG)
           .padding({ left: Constants.PADDING_EDGE_DEFAULT })
@@ -61,7 +60,8 @@ export struct FileCard {
     FileCardClickMenu({
       localSong: this.localSong,
       artistsString: this.artistsString,
-      showMatchSheet: this.showMatchSheet
+      showMatchSheet: this.showMatchSheet,
+      playWithList: this.listPlayAction
     })
   }
 

@@ -138,6 +138,12 @@ export async function playQueue(index: number) {
   const playqueue = queue[index]
   PlayQueueUtils.setIndex(index)
   if(playqueue.playmode == 0) { // Play with file
+    if(playqueue.song.duration === -1) {
+      const rootUrl = FileUtils.getFilesDir()
+      const fileUrl = rootUrl + `/${playqueue.fileName}`
+      const metadata = await fetchMetadata(fileUrl)
+      playqueue.song.duration = metadata ? ((metadata.duration) ? parseInt(metadata.duration) : 0) : 0
+    }
     playMusicWithFile(playqueue.song as Song, playqueue.fileName)
   } else { // Play with url
     const isLogged: boolean | undefined = AppStorage.get(StorageConstants.IS_LOGGED)

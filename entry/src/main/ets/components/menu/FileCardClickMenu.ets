@@ -8,12 +8,15 @@ import { playQueue } from "../../common/functions/play/playControl"
 import FileUtils from "../../common/utils/file/FileUtils"
 import PlayQueueUtils from "../../common/utils/play/PlayQueueUtils"
 import { ButtonOptions } from "@pura/harmony-utils/src/main/ets/entity/DialogOptions"
+import { StorageConstants } from "../../common/constants/StorageConstants"
 
 @Component
 export struct FileCardClickMenu {
   @Prop localSong: LocalSong = LocalSong_INITIAL
   @Prop artistsString: string = ''
   @Link showMatchSheet: boolean
+  @StorageLink(StorageConstants.IS_PLAYER_LOADING) isPlayerLoading: boolean = false
+  playWithList: () => void = () => {}
 
   private handlePlay = async (immediately: boolean = true) => {
     try {
@@ -44,6 +47,12 @@ export struct FileCardClickMenu {
       LogUtil.error('Play local song error: ' + e.message)
       ToastUtil.showToast('播放失败')
     }
+  }
+
+  private handleListPlay = async () => {
+    this.isPlayerLoading = true
+    this.playWithList()
+    this.isPlayerLoading = false
   }
 
   private handleDelete = async () => {
@@ -123,8 +132,11 @@ export struct FileCardClickMenu {
       MenuItem(this.MenuItem($r('app.media.ic_public_add_filled'), '下一首播放', $r('app.color.reverse')))
         .onClick(() => this.handlePlay(false))
 
-      MenuItem(this.MenuItem($r('app.media.ic_play_fill'), '立即播放', $r('app.color.reverse')))
+      MenuItem(this.MenuItem($r('app.media.ic_public_play_norm'), '单曲播放', $r('app.color.reverse')))
         .onClick(() => this.handlePlay(true))
+
+      MenuItem(this.MenuItem($r('app.media.ic_play_fill'), '随列表播放', $r('app.color.reverse')))
+        .onClick(this.handleListPlay)
 
       MenuItem(this.MenuItem($r('app.media.ic_public_search_filled'), '匹配歌曲'))
         .onClick(() => {

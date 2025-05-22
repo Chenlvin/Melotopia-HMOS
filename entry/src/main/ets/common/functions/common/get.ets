@@ -64,7 +64,7 @@ export async function checkValidUrl(): Promise<boolean> {
   }
 }
 
-export async function getLocalSongArtistsString(localSongArtists: string): Promise<string> {
+export function getLocalSongArtistsString(localSongArtists: string): string {
   let artists: string = localSongArtists
   try {
     const artistsArr: Artist[] = JSON.parse(localSongArtists)

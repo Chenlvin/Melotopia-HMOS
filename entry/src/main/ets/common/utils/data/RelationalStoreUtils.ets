@@ -60,12 +60,15 @@ class RelationalStoreUtils {
   }
 
   /**
-   * 获取所有歌曲
+   * 获取歌曲
    * @returns LocalSong[]
    */
-  async getAllSongs(): Promise<LocalSong[]> {
+  async getLocalSongs(limit: number = 0, offset: number = 0): Promise<LocalSong[]> {
     const columns = ['id', 'songId', 'name', 'artists', 'picFile', 'songFile', 'lyricFile']
     const predicates = new relationalStore.RdbPredicates(TABLE_SONGS)
+      .orderByDesc('id')
+      .limitAs(limit)
+      .offsetAs(offset)
 
     try {
       const resultSet = await this.store.query(predicates, columns)

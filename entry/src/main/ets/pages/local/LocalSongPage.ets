@@ -11,7 +11,6 @@ import { EmitterConstants } from '../../common/constants/EmitterConstants';
 import { PlayAllButton } from '../../components/buttons/PlayAllButton';
 import PlayQueueUtils from '../../common/utils/play/PlayQueueUtils';
 import { LocalSong, Song } from '../../common/entities/Song';
-import { fetchMetadata } from '../../common/functions/common/convert';
 import { getLocalSongArtists } from '../../common/functions/common/get';
 import { Album_INITIAL } from '../../common/entities/Album';
 import { playQueue } from '../../common/functions/play/playControl';
@@ -28,7 +27,6 @@ export struct LocalSongPage {
   @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
   @StorageProp('topRectHeight') topRectHeight: number = 0
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) breakpoint: string = 'sm'
-  @State filesList: string[] = []
   @State searchKeyword: string = ''
   @State filteredSongs: LocalSong[] = new Array()
   @State isSorted: boolean = false
@@ -39,8 +37,8 @@ export struct LocalSongPage {
   @State dataSource: LazyData<LocalSong> = new LazyData()
   @State dataSourceFiltered: LazyData<LocalSong> = new LazyData()
   @State isLoading: boolean = false
-  private originalOrderList: LocalSong[] = []
   @Consume('pageInfos') pageInfos: NavPathStack
+  private originalOrderList: LocalSong[] = []
 
   menus: NavigationMenuItem[] = [
     {
@@ -74,8 +72,7 @@ export struct LocalSongPage {
 
   async aboutToAppear(): Promise<void> {
     this.isLoading = true
-    this.refreshList()
-    this.filesList = await FileUtils.getFileName()
+    await this.refreshList()
     this.isLoading = false
     EmitterUtil.onSubscribe(EmitterConstants.REFRESH_LOCALSONGS, () => {
       this.refreshList()
@@ -86,16 +83,13 @@ export struct LocalSongPage {
     EmitterUtil.unSubscribe(EmitterConstants.REFRESH_LOCALSONGS)
   }
 
-  private handlePlayAll = async () => {
+  private handlePlayAll = async (index: number = 0) => {
     let playSongs: PlayQueue[] = []
     for(let localSong of this.localSongs) {
       try {
-        const rootUrl = FileUtils.getFilesDir()
-        const fileUrl = rootUrl + `/${localSong.songFile}`
-        const metadata = await fetchMetadata(fileUrl)
         let artists = await getLocalSongArtists(localSong.artists)
         let song: Song = { id: localSong.songId, name: localSong.name, artists: artists, album: Album_INITIAL,
-          duration: metadata ? ((metadata.duration) ? parseInt(metadata.duration) : 0) : 0, alias: [], fee: 0
+          duration: -1, alias: [], fee: 0
         }
         playSongs.push({ playmode: 0, song: song, fileName: localSong.songFile, picUrl: '' })
       } catch (e) {
@@ -104,7 +98,7 @@ export struct LocalSongPage {
     }
     await PlayQueueUtils.cleanQueue()
     await PlayQueueUtils.queueAdd_array(playSongs)
-    playQueue(0)
+    playQueue(index)
   }
 
   private handleSave = () => {
@@ -316,9 +310,8 @@ export struct LocalSongPage {
   }
 
   private async refreshList() {
-    this.localSongs = await RelationalStoreUtils.getAllSongs()
+    this.localSongs = await RelationalStoreUtils.getLocalSongs()
     this.originalOrderList = this.localSongs
-    this.localSongs.reverse()
     this.isSelecting = false
     this.selectedSongs = []
     this.dataSource.setData(this.localSongs)
@@ -369,7 +362,8 @@ export struct LocalSongPage {
         GridCol() {
           Row({ space: 5 }) {
             FileCard({
-              localSong: item
+              localSong: item,
+              listPlayAction: async() => { await this.handlePlayAll(index) }
             })
               .padding({ left: 5, right: 5 })
               .layoutWeight(1)
