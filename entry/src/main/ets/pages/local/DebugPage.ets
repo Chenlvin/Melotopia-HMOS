@@ -7,6 +7,7 @@ import { AppConstants } from "../../common/constants/AppConstants";
 import PreferencesUtils from "../../common/utils/data/PreferencesUtils";
 import { FloatLyric_INITIAL, LyricStyle_INITIAL } from "../../common/model/Settings";
 import { bundle } from "@kit.AbilityKit";
+import { window } from "@kit.ArkUI";
 
 @Component
 export struct DebugPage {
@@ -16,6 +17,7 @@ export struct DebugPage {
   @StorageProp(StorageConstants.BUNDLE_NAME) bundleName: string = ''
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) widBp: string = 'sm'
   @StorageProp(StorageConstants.BREAKPOINT_HEIGHT) heightBp: string = 'sm'
+  @StorageProp(StorageConstants.WINDOW_STATUS_TYPE) windowStatusType: window.WindowStatusType = window.WindowStatusType.UNDEFINED
   @State apiUrl: string = ''
   @State result: string = ''
 
@@ -38,6 +40,8 @@ export struct DebugPage {
           Text(`Width Breakpoint: ${this.widBp}`)
             .textStyle()
           Text(`Height Breakpoint: ${this.heightBp}`)
+            .textStyle()
+          Text(`Current WindowStatusType: ${this.windowStatusType}`)
             .textStyle()
           // Button('Reset Lyric Persistent Settings')
           //   .onClick(() => {

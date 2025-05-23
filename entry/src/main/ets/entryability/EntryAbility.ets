@@ -40,12 +40,19 @@ export default class EntryAbility extends UIAbility {
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
     AppUtil.init(this.context)
+    AppStorage.setOrCreate(StorageConstants.WINDOW_STATUS_TYPE, windowStage.getMainWindowSync().getWindowStatus())
+
     windowStage.getMainWindow((err: BusinessError, data) => {
       const errCode: number = err.code
       if(errCode) {
+        LogUtil.error('EntryAbility ', `Failed to obtain the main window.`)
         return
       }
+      data.on('windowStatusChange', (windowType: window.WindowStatusType) => {
+        AppStorage.setOrCreate(StorageConstants.WINDOW_STATUS_TYPE, windowType)
+      })
     })
+
     windowStage.loadContent('pages/Index', async (err, data) => {
       if (err.code) {
         return

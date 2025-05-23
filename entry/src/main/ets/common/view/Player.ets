@@ -22,6 +22,7 @@ import { PLAYMODE } from "../model/Enum"
 import { PersonalFmMenu } from "../../components/menu/PersonalFmMenu"
 import { PlaySettingSinglePage } from "../../pages/settings/PlaySettingsPage"
 import AVPlayerUtils from "../utils/play/AVPlayerUtils"
+import Storage from "@system.storage"
 
 @Component
 export struct Player {
@@ -41,6 +42,7 @@ export struct Player {
   @StorageProp(StorageConstants.BREAKPOINT_WIDTH) widBp: string = 'sm'
   @StorageProp(StorageConstants.BREAKPOINT_HEIGHT) heightBp: string = 'sm'
   @StorageProp(StorageConstants.DEVICE_TYPE) deviceType: resourceManager.DeviceType = resourceManager.DeviceType.DEVICE_TYPE_PHONE
+  @StorageProp(StorageConstants.WINDOW_STATUS_TYPE) windowStatusType: window.WindowStatusType = window.WindowStatusType.UNDEFINED
   @StorageLink(StorageConstants.IS_PLAYER_SHOW) isPlayerShow: boolean = false
   @Link isShow: boolean
   @State sliderThickness: number = 10
@@ -157,7 +159,7 @@ export struct Player {
        this.PhoneLandscapeUI()
      }
      // Pura X Small
-     else if(this.heightBp === 'sm' && this.widBp === 'sm') {
+     else if(this.heightBp === 'sm' && this.widBp === 'sm' && this.windowStatusType !== window.WindowStatusType.FLOATING) {
        this.SmallUI()
      }
      // Default - Phone
@@ -652,7 +654,7 @@ export struct Player {
             Column() {
               Image(this.playmode === 0 ? this.picUrl : this.picUrl + '?param=512y512')
                 .aspectRatio(1)
-                .height(this.song.id === 0 ? '70%' : '100%')
+                .width(this.song.id === 0 ? '70%' : '100%')
                 .borderRadius(5)
                 .scale({ x: this.isPaused ? 0.9 : 1.0, y: this.isPaused ? 0.9 : 1.0})
                 .animation({ duration: 300, curve: Curve.Smooth })
@@ -662,11 +664,10 @@ export struct Player {
                   }).onAction(this.handleLike)
                 )
             }
-            .layoutWeight(1)
+            .width('100%')
             .height('100%')
-            .aspectRatio(1)
+            .layoutWeight(1)
             .justifyContent(FlexAlign.Center)
-            .aspectRatio(1)
 
             Row() {
               Column({ space: 10 }) {

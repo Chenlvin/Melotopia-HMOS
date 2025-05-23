@@ -223,6 +223,12 @@ export class StorageConstants {
    * @description AppStorage
    */
   static readonly BUNDLE_NAME: string = 'bundleName'
+  /**
+   * Window Status Type
+   * @description AppStorage
+   */
+  static readonly WINDOW_STATUS_TYPE: string = 'windowStatusType'
+
 
 
   /**
