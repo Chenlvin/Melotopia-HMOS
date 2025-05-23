@@ -45,9 +45,11 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 ---
 
-## 📧 联系邮箱
+## 📧 联系方式
 
 **Email:** chenlvin126@outlook.com
+
+**QQ交流群:** 1019225012
 
 ---
 
