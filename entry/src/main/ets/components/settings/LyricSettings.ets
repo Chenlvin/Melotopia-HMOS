@@ -14,16 +14,16 @@ export struct LyricTranslate {
 
   build() {
     Column({ space: 5 }) {
-      Text('启用歌词翻译')
+      Text($r('app.string.lyric_translate'))
         .fontSize(Constants.FONT_SIZE_COMMON)
         .fontWeight(FontWeight.Bold)
         .textAlign(TextAlign.Start)
         .width('100%')
 
       Row({ space: 10 }) {
-        this.LyricTranItem(0, '无')
-        this.LyricTranItem(1, '翻译')
-        this.LyricTranItem(2, '罗马音')
+        this.LyricTranItem(0, $r('app.string.none'))
+        this.LyricTranItem(1, $r('app.string.translate'))
+        this.LyricTranItem(2, $r('app.string.roman'))
       }
       .width('100%')
       .justifyContent(FlexAlign.Start)
@@ -32,7 +32,7 @@ export struct LyricTranslate {
     .justifyContent(FlexAlign.SpaceEvenly)
   }
 
-  @Builder LyricTranItem(type: number, text: string) {
+  @Builder LyricTranItem(type: number, text: string | ResourceStr) {
     Row() {
       Radio({ value: `${type}` , group: 'lyricTranslation' })
         .checked(this.lyricStyle.mode === type)
@@ -71,21 +71,21 @@ export struct SetLyricStyle {
 
   build() {
     Column({ space: 20 }) {
-      ToggleSettingItem({ name: '歌词居中显示', value: this.isCenter ,
+      ToggleSettingItem({ name: $r('app.string.align_center'), value: this.isCenter ,
         onaction: () => { this.lyricStyle.align = 'center' },
         offaction: () => { this.lyricStyle.align = 'start' },
         action: () => { this.updateLyricStyle() }
       })
       .padding({ top: Constants.PADDING_EDGE_DEFAULT })
 
-      SliderSettingItem({ name: '歌词字体大小', showValue: true, targetValue: this.fontSize,
+      SliderSettingItem({ name: $r('app.string.font_size'), showValue: true, targetValue: this.fontSize,
         min: 10, max: 40, changeAction: () => {
           this.lyricStyle.size = this.fontSize
           this.updateLyricStyle()
         }
       })
 
-      SliderSettingItem({ name: '歌词字体粗细', targetValue: this.fontWeight, step: 100,
+      SliderSettingItem({ name: $r('app.string.font_weight'), targetValue: this.fontWeight, step: 100,
         min: 300, max: 700, changeAction: () => {
           this.lyricStyle.weight = this.fontWeight
           this.updateLyricStyle()

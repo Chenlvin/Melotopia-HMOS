@@ -91,13 +91,13 @@ struct PlaySettings {
     List({ space: 10 }) {
       ListItem() {
         Row() {
-          Text('在线播放音质')
+          Text($r('app.string.play_quality'))
             .fontSize(Constants.FONT_SIZE_COMMON)
             .fontWeight(FontWeight.Bold)
-          Select([{ value: '标准' }, { value: '高' }, { value: '极高' }, { value: '无损/Hi-Res' }])
+          Select([{ value: $r('app.string.standard') }, { value: $r('app.string.high') }, { value: $r('app.string.exhigh') }, { value: $r('app.string.lossless') }])
             .selectedOptionFontColor($r('app.color.app_red'))
             .selected(this.qualitySelected)
-            .value(this.qualitySelected ? PlayConstants.QUALITY_NAME[this.qualitySelected] : '标准')
+            .value(this.qualitySelected ? PlayConstants.QUALITY_NAME[this.qualitySelected] : $r('app.string.standard'))
             .constraintSize({
               minHeight: 0,
               maxHeight: '100%'
@@ -117,7 +117,7 @@ struct PlaySettings {
 
       ListItem() {
         Row() {
-          Text('允许与其他应用同时播放')
+          Text($r('app.string.mix_with_others'))
             .fontSize(Constants.FONT_SIZE_COMMON)
             .fontWeight(FontWeight.Bold)
           Toggle({ type: ToggleType.Switch, isOn: this.isActived })
@@ -140,7 +140,7 @@ struct PlaySettings {
       this.deviceType === resourceManager.DeviceType.DEVICE_TYPE_TABLET) {
         ListItem() {
           CommonSettingsCard({
-            title: '浮动歌词设置',
+            title: $r('app.string.float_lyric'),
             action: this.floatLyricAction
           })
         }

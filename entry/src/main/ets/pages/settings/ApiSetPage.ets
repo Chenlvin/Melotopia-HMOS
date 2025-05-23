@@ -49,17 +49,15 @@ export struct ApiSetPage {
             Span('当前配置: ')
             Span(this.customApiUrl)
           }
-          .fontColor($r('app.color.reverse'))
 
           Text() {
-            Span(`配置连通性: `).fontColor($r('app.color.reverse'))
+            Span(`配置连通性: `)
             Span(`${ this.isCheckingApi ? '正在测试' : this.validApiUrl ? '正常' : '不可用' }`)
               .fontWeight(FontWeight.Bold)
               .fontColor(this.isCheckingApi ? Color.Orange : this.validApiUrl ? Color.Green : $r('app.color.app_red'))
           }
           .width('100%')
           .textAlign(TextAlign.Center)
-          .fontColor($r('app.color.reverse'))
           .fontSize(Constants.FONT_SIZE_COMMON)
           .padding(Constants.PADDING_EDGE_DEFAULT)
           this.SetApiUrl()
@@ -273,7 +271,6 @@ export struct ApiSetPage {
   .textAlign(TextAlign.Start)
   .fontSize(Constants.FONT_SIZE_COMMON)
   .fontWeight(FontWeight.Bold)
-  .fontColor($r('app.color.reverse'))
 }
 
 @Extend(Button) function setButton() {

@@ -57,7 +57,7 @@ export struct DonatePage {
       .scrollBar(BarState.On)
       .scrollable(ScrollDirection.Vertical)
     }
-    .title('捐赠')
+    .title($r('app.string.sponsor'))
     .backgroundColor($r('app.color.background'))
   }
 }

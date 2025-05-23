@@ -1,7 +1,7 @@
 import Constants from '../../common/constants/Constants'
 
 @Component export struct ToggleSettingItem {
-  name: string = ''
+  name: string | ResourceStr = ''
   onaction = () => {}
   offaction = () => {}
   action = () => {}
@@ -31,7 +31,7 @@ import Constants from '../../common/constants/Constants'
 
 @Component export struct SliderSettingItem {
   @Link targetValue: number
-  name: string = ''
+  name: string | ResourceStr = ''
   isPercent: boolean = false
   min: number = 0
   max: number = 0

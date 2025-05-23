@@ -12,11 +12,10 @@ export struct CommonSettingsCard {
         Text(this.title)
           .fontSize(Constants.FONT_SIZE_COMMON)
           .fontWeight(Constants.FONT_WEIGHT_BOLD)
-          .fontColor($r('app.color.reverse'))
         if (!this.text) {
           Image($r('app.media.ic_public_arrow_right'))
             .width(Constants.FONT_SIZE_TITLE)
-            .fillColor($r('app.color.reverse'))
+            .fillColor(Color.Gray)
         } else {
           Text(this.text)
             .fontSize(Constants.FONT_SIZE_COMMON)

@@ -25,10 +25,6 @@
       "value": "播单"
     },
     {
-      "name": "Settings",
-      "value": "应用设置"
-    },
-    {
       "name": "LocalSongs",
       "value": "本地曲库"
     },
@@ -67,10 +63,6 @@
     {
       "name": "SET_SONGCARD",
       "value": "歌曲卡片设置"
-    },
-    {
-      "name": "New_version_found",
-      "value": "发现新版本"
     },
     {
       "name": "Clean_temp_cache",
@@ -117,16 +109,120 @@
       "value": "正在加载..."
     },
     {
-      "name": "Float_lyric",
-      "value": "浮动歌词"
-    },
-    {
       "name": "SET_UI",
       "value": "界面与动效"
     },
     {
       "name": "clean_song_cache",
       "value": "清理已缓存歌曲"
+    },
+    {
+      "name": "checking_for_update",
+      "value": "正在检查更新"
+    },
+    {
+      "name": "error_occurred",
+      "value": " 发生错误"
+    },
+    {
+      "name": "privacy_policy",
+      "value": "隐私政策"
+    },
+    {
+      "name": "app_log",
+      "value": "应用日志"
+    },
+    {
+      "name": "sponsor",
+      "value": "赞助"
+    },
+    {
+      "name": "new_version_found",
+      "value": "发现新版本"
+    },
+    {
+      "name": "download",
+      "value": "下载"
+    },
+    {
+      "name": "close",
+      "value": "关闭"
+    },
+    {
+      "name": "version",
+      "value": "版本"
+    },
+    {
+      "name": "mix_with_others",
+      "value": "允许与其他应用同时播放"
+    },
+    {
+      "name": "play_quality",
+      "value": "在线播放音质"
+    },
+    {
+      "name": "quality",
+      "value": "音质"
+    },
+    {
+      "name": "exhigh",
+      "value": "极高"
+    },
+    {
+      "name": "standard",
+      "value": "标准"
+    },
+    {
+      "name": "high",
+      "value": "高"
+    },
+    {
+      "name": "lossless",
+      "value": "无损/Hi-Res"
+    },
+    {
+      "name": "settings",
+      "value": "应用设置"
+    },
+    {
+      "name": "app",
+      "value": "应用"
+    },
+    {
+      "name": "float_lyric",
+      "value": "浮动歌词"
+    },
+    {
+      "name": "lyric_translate",
+      "value": "歌词翻译"
+    },
+    {
+      "name": "none",
+      "value": "无"
+    },
+    {
+      "name": "translate",
+      "value": "翻译"
+    },
+    {
+      "name": "roman",
+      "value": "罗马音"
+    },
+    {
+      "name": "align_center",
+      "value": "居中显示"
+    },
+    {
+      "name": "font_size",
+      "value": "字体大小"
+    },
+    {
+      "name": "font_weight",
+      "value": "字体粗细"
+    },
+    {
+      "name": "lyric",
+      "value": "歌词"
     }
   ]
 }

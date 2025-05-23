@@ -17,7 +17,7 @@ export interface PlayListPageParam {
  * 网页参数
  */
 export interface WebPageParam {
-  title: string
+  title: string | ResourceStr
   url: string
 }
 

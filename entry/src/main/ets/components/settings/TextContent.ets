@@ -14,11 +14,10 @@ export struct VersionCard {
         Row() {
           Row({ space: 10 }) {
             Text($r('app.string.About'))
-              .fontColor($r('app.color.reverse'))
               .fontSize(Constants.FONT_SIZE_COMMON)
               .fontWeight(Constants.FONT_WEIGHT_BOLD)
             if(this.appInfo.data.Version.currentVersionCode > AppConstants.VERSIONCODE) {
-              Text($r('app.string.New_version_found'))
+              Text($r('app.string.new_version_found'))
                 .fontWeight(FontWeight.Medium)
                 .fontSize(12)
                 .fontColor($r('app.color.app_red'))
@@ -26,7 +25,7 @@ export struct VersionCard {
           }
           Image($r('app.media.ic_public_arrow_right'))
             .width(Constants.FONT_SIZE_TITLE)
-            .fillColor($r('app.color.reverse'))
+            .fillColor(Color.Gray)
         }
         .width('100%')
         .justifyContent(FlexAlign.SpaceBetween)

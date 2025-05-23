@@ -84,7 +84,7 @@ export struct Me {
         .height( this.isValidAPI ? 80 : 0)
 
         Column() {
-          this.ItemCard($r('app.media.ic_public_settings_filled'), $r('app.string.Settings'), () => {
+          this.ItemCard($r('app.media.ic_public_settings_filled'), $r('app.string.settings'), () => {
             this.isShowSettings = true
           })
         }

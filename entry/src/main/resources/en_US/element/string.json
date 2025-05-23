@@ -25,10 +25,6 @@
       "value": "Lists"
     },
     {
-      "name": "Settings",
-      "value": "Settings"
-    },
-    {
       "name": "LocalSongs",
       "value": "Local Songs"
     },
@@ -67,10 +63,6 @@
     {
       "name": "SET_SONGCARD",
       "value": "Song Card"
-    },
-    {
-      "name": "New_version_found",
-      "value": "New Version"
     },
     {
       "name": "Clean_temp_cache",
@@ -117,16 +109,120 @@
       "value": "Loading..."
     },
     {
-      "name": "Float_lyric",
-      "value": "Floating Lyric"
-    },
-    {
       "name": "SET_UI",
       "value": "UI & Animation"
     },
     {
       "name": "clean_song_cache",
       "value": "Clear Cached Songs"
+    },
+    {
+      "name": "checking_for_update",
+      "value": "Checking for update"
+    },
+    {
+      "name": "error_occurred",
+      "value": "Error Occurred"
+    },
+    {
+      "name": "privacy_policy",
+      "value": "Privacy Policy"
+    },
+    {
+      "name": "app_log",
+      "value": "App Log"
+    },
+    {
+      "name": "sponsor",
+      "value": "Sponsor"
+    },
+    {
+      "name": "new_version_found",
+      "value": "New Version"
+    },
+    {
+      "name": "download",
+      "value": "Download"
+    },
+    {
+      "name": "close",
+      "value": "Close"
+    },
+    {
+      "name": "version",
+      "value": "Version"
+    },
+    {
+      "name": "mix_with_others",
+      "value": "Mix With Others"
+    },
+    {
+      "name": "play_quality",
+      "value": "Play Quality"
+    },
+    {
+      "name": "quality",
+      "value": "Quality"
+    },
+    {
+      "name": "exhigh",
+      "value": "Extra High"
+    },
+    {
+      "name": "high",
+      "value": "High"
+    },
+    {
+      "name": "standard",
+      "value": "Standard"
+    },
+    {
+      "name": "lossless",
+      "value": "Lossless/Hi-Res"
+    },
+    {
+      "name": "settings",
+      "value": "Settings"
+    },
+    {
+      "name": "app",
+      "value": "App"
+    },
+    {
+      "name": "float_lyric",
+      "value": "Float Lyric"
+    },
+    {
+      "name": "lyric_translate",
+      "value": "Lyric Translate"
+    },
+    {
+      "name": "none",
+      "value": "None"
+    },
+    {
+      "name": "translate",
+      "value": "Translate"
+    },
+    {
+      "name": "roman",
+      "value": "Roman"
+    },
+    {
+      "name": "align_center",
+      "value": "Align Center"
+    },
+    {
+      "name": "font_size",
+      "value": "Font Size"
+    },
+    {
+      "name": "font_weight",
+      "value": "Font Weight"
+    },
+    {
+      "name": "lyric",
+      "value": "Lyric"
     }
   ]
 }

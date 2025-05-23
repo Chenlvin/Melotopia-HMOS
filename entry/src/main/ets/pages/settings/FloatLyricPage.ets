@@ -21,7 +21,7 @@ export struct FloatLyricPage {
       .width('100%')
       .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
     }
-    .title($r('app.string.Float_lyric'))
+    .title($r('app.string.float_lyric'))
     .backgroundColor($r('app.color.background'))
   }
 

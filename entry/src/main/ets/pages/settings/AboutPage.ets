@@ -68,7 +68,7 @@ export struct AboutPage {
           action: () => {}
         }
       ],
-      title: '应用日志',
+      title: $r('app.string.app_log'),
       message: '请选择操作'
     })
   }
@@ -104,10 +104,10 @@ export struct AboutPage {
           Button() {
             Row() {
               Row({ space: 10 }) {
-                Text('应用版本')
+                Text($r('app.string.version'))
                   .textStyle()
                 if(this.appInfo.data.Version.currentVersionCode > AppConstants.VERSIONCODE) {
-                  Text('发现新版本')
+                  Text($r('app.string.new_version_found'))
                     .fontWeight(FontWeight.Medium)
                     .fontSize(12)
                     .fontColor($r('app.color.app_red'))
@@ -130,10 +130,10 @@ export struct AboutPage {
                 if(!this.isCheckingUpdate) {
                   this.isCheckingUpdate = true
                   try {
-                    ToastUtil.showToast('正在检查更新...')
+                    ToastUtil.showToast(`${$r('app.string.checking_for_update')}...`)
                     await getAppInfo()
                   } catch (e) {
-                    ToastUtil.showToast('检查更新失败: ' + e.message)
+                    ToastUtil.showToast($r('app.string.error_occurred') + ': ' + e.message)
                     LogUtil.error('Get AppInfo Error: ' + e.message + '\nStack: ' + e.stack)
                   } finally {
                     setTimeout(() => {
@@ -153,7 +153,7 @@ export struct AboutPage {
           if(this.bundleName !== AppConstants.BUNDLE_NAME_AG) {
             ListItem() {
               CommonSettingsCard({
-                title: 'GitHub仓库',
+                title: 'GitHub',
                 action: () => {
                   SystemAppUtils.openInBrowser('https://github.com/Chenlvin/Melotopia-HMOS')
                 }
@@ -162,10 +162,10 @@ export struct AboutPage {
           }
           ListItem() {
             CommonSettingsCard({
-              title: '隐私政策',
+              title: $r('app.string.privacy_policy'),
               action: () => {
                 let param: WebPageParam = {
-                  title: '隐私政策', url: 'https://docs.chenlvin.cc/melotopia/#/privacy'
+                  title: $r('app.string.privacy_policy'), url: 'https://docs.chenlvin.cc/melotopia/#/privacy'
                 }
                 this.pushWebPage(param)
               }
@@ -173,13 +173,13 @@ export struct AboutPage {
           }
           ListItem() {
             CommonSettingsCard({
-              title: '应用日志',
+              title: $r('app.string.app_log'),
               action: this.showLogDialog
             })
           }
           ListItem() {
             CommonSettingsCard({
-              title: '捐赠',
+              title: $r('app.string.sponsor'),
               action: () => {
                 this.settingsPageInfos.pushPathByName('DonatePage', null)
               }
@@ -215,11 +215,11 @@ export struct AboutPage {
 
   private handleUpdate() {
     DialogUtil.showPrimaryDialog({
-      title: '发现新版本',
+      title: $r('app.string.new_version_found'),
       message: `Version ${AppConstants.VERSION} → ${this.appInfo.data.Version.currentVersion}`,
-      primaryButton: "关闭",
+      primaryButton: $r('app.string.close'),
       secondaryButton: {
-        value: '前往下载',
+        value: $r('app.string.download'),
         action: async () => {
           SystemAppUtils.openInBrowser(this.appInfo.data.Version.downloadUrl)
         }
@@ -231,5 +231,4 @@ export struct AboutPage {
 @Extend(Text) function textStyle() {
   .fontSize(16)
   .fontWeight(Constants.FONT_WEIGHT_BOLD)
-  .fontColor($r('app.color.reverse'))
 }

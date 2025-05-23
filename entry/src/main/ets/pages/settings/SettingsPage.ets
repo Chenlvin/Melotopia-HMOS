@@ -3,14 +3,15 @@ import Constants from '../../common/constants/Constants'
 import { WebPageParam } from '../../common/model/PageParams'
 import { CommonSettingsCard } from '../../components/cards/SettingsCard'
 import { SettingsPageMap } from '../../common/model/PageMap'
+import { StorageConstants } from '../../common/constants/StorageConstants'
 
 /**
  * 设置页面
  */
 @Component
 export struct SettingsPage {
-  @StorageProp('bottomRectHeight') bottomRectHeight: number = 0
-  @StorageProp('topRectHeight') topRectHeight: number = 0
+  @StorageProp(StorageConstants.BOTTOM_RECT_HEIGHT) bottomRectHeight: number = 0
+  @StorageProp(StorageConstants.TOP_RECT_HEIGHT) topRectHeight: number = 0
   @Provide('settingsPageInfos') settingsPageInfos: NavPathStack = new NavPathStack()
 
   build() {
@@ -54,7 +55,7 @@ export struct SettingsPage {
       .height('100%')
     }
     .backgroundColor($r('app.color.background'))
-    .title($r('app.string.Settings'))
+    .title($r('app.string.settings'))
     .mode(NavigationMode.Stack)
     .titleMode(NavigationTitleMode.Mini)
     .navDestination(SettingsPageMap)

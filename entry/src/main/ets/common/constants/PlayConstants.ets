@@ -10,7 +10,7 @@ export class PlayConstants {
    * Quality Name
    * 对应 QualityType
    */
-  static readonly QUALITY_NAME: string[] = ['标准', '高', '极高', '无损/Hi-Res']
+  static readonly QUALITY_NAME: string | ResourceStr[] = [$r('app.string.standard'), $r('app.string.high'), $r('app.string.exhigh'), $r('app.string.lossless')]
   /**
    * 循环模式名称
    * 0-顺序播放, 1-单曲循环, 2-顺序循环, 3-随机播放
