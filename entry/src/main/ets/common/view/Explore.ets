@@ -113,7 +113,7 @@ export struct Explore {
               GridItem() {
                 this.Announcement(0)
               }
-            } else if(this.appInfo.data.Announcement.isShow) {
+            } else if(this.appInfo.data.Announcement.isShow && this.bundleName !== AppConstants.BUNDLE_NAME_AG) {
               GridItem() {
                 this.Announcement(1)
               }

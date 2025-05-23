@@ -2,7 +2,7 @@
   "app": {
     "bundleName": "cn.chenlvin.melotopia.hm",
     "patchVersionCode": 2000028,
-    "versionCode": 10450
+    "versionCode": 10550
   },
   "module": {
     "name": "entry",
