@@ -1,6 +1,6 @@
 # Melotopia For HarmonyOS
 
-### ✨ 鸿蒙原生音乐播放器 | 🚀 全场景设备适配
+### 鸿蒙原生音乐播放器
 
 ---
 
@@ -46,19 +46,44 @@ Melotopia自开源以来，始终秉承 GPL 2.0 协议的精神，致力于通�
 
 ## 📦 安装方式
 
-#### 1.源码编译
+### 1.源码编译
 
 ```bash
 git clone https://github.com/Chenlvin/Melotopia-HMOS
 `````
 
-#### 2.侧载安装
+### 2.签名安装Hap包
 
-[ >> Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
+[Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
 
 ---
 
-## ☁ 云端支持
+## 🎵 本地播放
+
+由于鸿蒙系统限制，应用无法实现全局扫描，只能扫描下载目录。
+
+### **导入本地歌曲步骤：**
+
+1.打开系统文件管理器，将本地音频文件、封面图、歌词文件放入“我的手机/Download/Melotopia”根目录
+
+2.在应用首页点击底部“本地”切换至本地Tab页
+
+3.点击本地Tab页右上方的“文件”图标，选择“导入本地歌曲”
+
+4.应用会自动扫描Download目录下的音频、封面、歌词
+
+5.扫描完毕后点击右上方“导入”按钮即可导入歌曲
+
+#### 说明：
+
+- 目前仅支持扫描根目录，暂不支持扫描子文件夹
+- 音频文件支持格式：.mp3 .flac .wav .aac .ogg (更多格式尚未测试: .m4a)
+- 封面图片支持格式：.jpg .png
+- 歌词文件支持格式：.lrc (暂不支持逐字歌词)
+
+---
+
+## ☁️ 云端支持
 
 可在应用“我的”—“应用设置”—“云端”填入接口地址以接入在线平台
 
