@@ -58,6 +58,19 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 ---
 
+## ☁ 云端支持
+
+可在应用“我的”—“应用设置”—“云端”填入接口地址以接入在线平台
+
+支持的API：
+
+- [NeteaseCloudMusicApi](https://www.npmjs.com/package/NeteaseCloudMusicApi)
+- [NeteaseCloudMusicApi Enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)
+
+_ⓘ 本软件仅供学习与技术研究使用，所有音乐内容均通过官方途径获取。仅支持在用户已有合法权限下的播放与下载，严禁用于商业用途或非法传播。请遵守相关法律法规与平台协议。_
+
+---
+
 ## ⚠️ 免责声明
 
 > ❗ **重要提示**：
@@ -111,5 +124,3 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 |           **发现页**            |           **歌词界面**           |
 |:----------------------------:|:----------------------------:|
 | <img src="./images/14.jpg"/> | <img src="./images/15.jpg"/> |
-|           **歌单页**            |
-| <img src="./images/16.jpg"/> |
