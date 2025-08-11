@@ -1,6 +1,7 @@
-# Melotopia For HarmonyOS
+# Melotopia For HarmonyOS - 鸿蒙原生音乐播放器
 
-### 鸿蒙原生音乐播放器
+
+#### 说明：Melotopia不是“网易云音乐”或“QQ音乐”客户端，我们仅对部分三方API进行了适配，应用默认只提供本地播放功能。
 
 ---
 
