@@ -6,15 +6,11 @@
     },
     {
       "name": "REASON_INTERNET_PERMISSION",
-      "value": "用于获取登录信息和音乐信息"
+      "value": "发起网络请求"
     },
     {
       "name": "REASON_KEEP_BACKGROUND_RUNNING",
       "value": "后台播放和下载"
-    },
-    {
-      "name": "REASON_FLOAT_WINDOW",
-      "value": "用于显示浮动歌词"
     }
   ]
 }

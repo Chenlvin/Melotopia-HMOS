@@ -31,26 +31,26 @@
         "name": "hicar",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.cer",
+          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001A437721936CCE66A3E198078714072323C8EA42E11034E3A6FE11DD1BF30BB3375DDC269FEB3F",
-          "profile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p7b",
+          "keyPassword": "0000001B0DB665A0E2A01156E309740B62EAB14B1DEED01297D9E1F959F6DB28A2D151635D1469D51E743C",
+          "profile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p12",
-          "storePassword": "0000001A2929E51C9FDAEFC15EC517DD781DA76530287A6A2E6985DF1654E99253E37400AE8E747EF1CC"
+          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\hicar_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p12",
+          "storePassword": "0000001B11BFDA01DDBB8F01161A3497BD890A2DB95A948F53065D8C2EDAC5BF2766C653AF4A4036442AD4"
         }
       },
       {
         "name": "Melotopia",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.cer",
+          "certpath": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B09A4091E22AB12FE872451682D34DFD1DD27EE283889218EC8D808D6F1FD891C485AF4EADC2909",
-          "profile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p7b",
+          "keyPassword": "0000001B15480F5882604CA6DAE8FB15978CA946D6E43CAAABFE1AC5A21EC3721F31A877590C80706AF070",
+          "profile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_TXb15xYl2oPiI6ajS_vVj6k5KYZZQmdjYyahyle64bk=.p12",
-          "storePassword": "0000001B1AD750E84E778A2A503A5354175CA587B16D79D8D9B12CB481B5F0720F2A59370D6E9D32BB8F4B"
+          "storeFile": "C:\\Users\\zcy01\\.ohos\\config\\Melotopia_Melotopia-HMOS_cM93J5NWC6MyuAKWXzxrDyf35CRmF-S1Mq-S_6bIv1w=.p12",
+          "storePassword": "0000001B9AE1E5595C6F028443141626ACEFF80D6C2CD3BECCCF8F2BD623913E0AAFD8C707AC9969952E5A"
         }
       }
     ],
