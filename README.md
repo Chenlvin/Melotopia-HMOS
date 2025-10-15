@@ -71,7 +71,9 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 ### 2.签名安装Hap包
 
-[Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
+[GitHub Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
+
+注: 由于 HUAWEI HiCar 的白名单限制, 需要签名安装带"-HiCar"字样的Hap包, 连接HiCar后, 需要在HiCar上的应用尝鲜区添加"咪咕音乐", 添加后即可在HiCar上使用Melotopia
 
 ---
 
