@@ -36,6 +36,7 @@ Melotopia自开源以来，始终秉承 GPL 2.0 协议的精神，致力于通�
 ---
 
 ## 📖 项目概述
+
 简洁实用的音乐播放器
 
 【本地曲库】
@@ -72,8 +73,6 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 ### 2.签名安装Hap包
 
 [GitHub Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
-
-注: 由于 HUAWEI HiCar 的白名单限制, 需要签名安装带"-HiCar"字样的Hap包, 连接HiCar后, 需要在HiCar上的应用尝鲜区添加"咪咕音乐", 添加后即可在HiCar上使用Melotopia
 
 ---
 
@@ -112,6 +111,16 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 - [NeteaseCloudMusicApi Enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)
 
 _ⓘ 本软件仅供学习与技术研究使用，所有音乐内容均通过官方途径获取。仅支持在用户已有合法权限下的播放与下载，严禁用于商业用途或非法传播。请遵守相关法律法规与平台协议。_
+
+---
+
+## 🚗 关于 HiCar
+
+由于白名单限制, 需要签名安装带"HiCar"字样的Hap包
+
+此Hap包与主线版本包名不同, 可以共存
+
+安装HiCar版本后, 需要在车机应用市场尝鲜区添加“咪咕音乐”后才能使用
 
 ---
 
