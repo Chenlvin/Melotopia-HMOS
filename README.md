@@ -78,7 +78,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 ## 🎵 本地播放
 
-由于鸿蒙系统限制，应用无法实现全局扫描，只能扫描下载目录。
+由于鸿蒙系统限制，应用无法实现全局扫描，只能扫描下载目录中的文件。
 
 ### **导入本地歌曲步骤：**
 
@@ -97,7 +97,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 - 目前仅支持扫描根目录，暂不支持扫描子文件夹
 - 音频文件支持格式：.mp3 .flac .wav .aac .ogg (更多格式尚未测试: .m4a)
 - 封面图片支持格式：.jpg .png
-- 歌词文件支持格式：.lrc (暂不支持逐字歌词)
+- 歌词文件支持格式：.lrc (暂不支持逐字歌词, 本地歌词暂不支持多语言)
 
 ---
 
@@ -105,7 +105,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 可在应用“我的”—“应用设置”—“云端配置”中填入API接口地址以接入在线平台
 
-支持的API：
+本应用支持以下API：
 
 - [NeteaseCloudMusicApi](https://www.npmjs.com/package/NeteaseCloudMusicApi)
 - [NeteaseCloudMusicApi Enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)
