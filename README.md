@@ -1,8 +1,10 @@
-# Melotopia For HarmonyOS - 鸿蒙原生音乐播放器
+# **Melotopia**
+
+## HamonyOS 原生音乐播放器
 
 ---
 
-## 公告 - 谨防上当受骗！
+## 谨防上当受骗！
 
 **本应用不存在任何收费行为！目前已发现有人在其他平台上售卖此软件，这些都是非授权的行为，谨防上当受骗！**
 
@@ -36,14 +38,11 @@ Melotopia自开源以来，始终秉承 GPL 2.0 协议的精神，致力于通�
 ---
 
 ## 📖 项目概述
-
-简洁实用的音乐播放器
-
 【本地曲库】
 一键扫描并导入本地音乐文件，支持多种音频格式，随时随地畅听。
 
 【在线播放】
-支持 API 连接至在线平台，获取云端歌曲。
+支持通过 API 连接至在线平台，联网获取云端歌曲。
 
 【界面设计】
 简洁流畅，操作直观。支持自定义背景与主题色，打造用户个性化风格。
@@ -74,11 +73,14 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 [GitHub Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
 
+注: 由于 HUAWEI HiCar 的白名单限制, 需要签名安装带"-HiCar"字样的Hap包, 连接HiCar后, 需要在**HiCar上的应用尝鲜区添加"咪咕音乐"**, 添加后即可在HiCar上使用本应用
+（HiCar 是通过修改应用包名实现的，修改的应用包名为咪咕音乐，因此无法和应用市场的咪咕音乐APP共存）
+
 ---
 
 ## 🎵 本地播放
 
-由于鸿蒙系统限制，应用无法实现全局扫描，只能扫描下载目录中的文件。
+由于鸿蒙系统限制，应用无法实现全局扫描，只能扫描下载目录。
 
 ### **导入本地歌曲步骤：**
 
@@ -97,7 +99,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 - 目前仅支持扫描根目录，暂不支持扫描子文件夹
 - 音频文件支持格式：.mp3 .flac .wav .aac .ogg (更多格式尚未测试: .m4a)
 - 封面图片支持格式：.jpg .png
-- 歌词文件支持格式：.lrc (暂不支持逐字歌词, 本地歌词暂不支持多语言)
+- 歌词文件支持格式：.lrc (暂不支持逐字歌词)
 
 ---
 
@@ -105,22 +107,12 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 可在应用“我的”—“应用设置”—“云端配置”中填入API接口地址以接入在线平台
 
-本应用支持以下API：
+支持的API：
 
 - [NeteaseCloudMusicApi](https://www.npmjs.com/package/NeteaseCloudMusicApi)
 - [NeteaseCloudMusicApi Enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)
 
 _ⓘ 本软件仅供学习与技术研究使用，所有音乐内容均通过官方途径获取。仅支持在用户已有合法权限下的播放与下载，严禁用于商业用途或非法传播。请遵守相关法律法规与平台协议。_
-
----
-
-## 🚗 关于 HiCar
-
-由于白名单限制, 需要签名安装带"HiCar"字样的Hap包
-
-此Hap包与主线版本包名不同, 可以共存
-
-安装HiCar版本后, 需要在车机应用市场尝鲜区添加“咪咕音乐”后才能使用
 
 ---
 
