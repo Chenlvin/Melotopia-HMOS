@@ -23,7 +23,7 @@
 应用官方发布渠道请认准：
 - 发布页 https://melotopia.chenlvin.cc
 - GitHub 仓库
-- AppGallery 应用尝鲜邀请测试
+- AppTest https://appgallery.huawei.com/apptest/5bpJTXg3g0m
 - 测试QQ群 ①群 1019225012 | ②群 1104358913
 
 ---
@@ -47,9 +47,9 @@
 |   类别    |         技术实现         |  
 |:-------:|:--------------------:|  
 |  开发语言   |        ArkTS         |  
-| 最低API版本 |     OHOS API 20      |
+| 最低API版本 |     OHOS API 22      |
 | 目标API版本 |     OHOS API 24      |
-|  系统要求   | HarmonyOS 6.0.0.130+ |  
+|  系统要求   | HarmonyOS 6.0.0.328+ |  
 
 ---
 
