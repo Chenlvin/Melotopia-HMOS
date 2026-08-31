@@ -3,28 +3,8 @@
 ## HamonyOS 原生音乐播放器
 
 
-> ## 关于仓库停止更新代码的说明
->
-> 很遗憾地通知大家，由于此前发生的一系列违反开源协议与开源精神的事件，我不得不做出以下决定：
->
-> 自 **v1.5.5** 版本起，本项目将正式停止开源维护，不再以 **GPL-2.0 License** 协议提供源代码。
->
-> 后续版本仅发布可直接安装使用的 **HAP 安装包**，不再同步更新仓库中的源代码。
-> 
-> 同时，为减少维护成本，GitHub Issues 已关闭。后续如需提交问题反馈、功能建议或 Bug 报告，请通过以下问卷进行反馈：
-> 
-> 应用建议&问题反馈入口：
-> [Melotopia 建议与反馈](https://www.wjx.cn/vm/rGLB4BH.aspx#)
->
-> 感谢所有支持、贡献和遵守开源协议的开发者与用户。对于已经发布的开源版本，仍将继续遵循其对应版本所采用的开源协议。
 
-**本应用不存在任何收费行为！目前已发现有人在其他平台上售卖此软件，这些都是非授权的行为，谨防上当受骗！**
-
-应用官方发布渠道请认准：
-- 发布页 https://melotopia.chenlvin.cc
-- GitHub 仓库
-- AppTest https://appgallery.huawei.com/apptest/5bpJTXg3g0m
-- 测试QQ群 ①群 1019225012 | ②群 1104358913
+### 随缘更新~
 
 ---
 
@@ -44,12 +24,11 @@
 ---
 
 ## 🛠️ 技术栈
-|   类别    |         技术实现         |  
-|:-------:|:--------------------:|  
-|  开发语言   |        ArkTS         |  
-| 最低API版本 |     OHOS API 22      |
-| 目标API版本 |     OHOS API 24      |
-|  系统要求   | HarmonyOS 6.0.0.328+ |  
+|    类别     |    技术实现     |
+| :---------: | :-------------: |
+|  开发语言   |      ArkTS      |
+| 最低API版本 |   OHOS API 23   |
+| 目标API版本 | OHOS API 26.0.0 |
 
 ---
 
@@ -65,7 +44,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 [GitHub Releases](https://github.com/Chenlvin/Melotopia-HMOS/releases)
 
-注: 由于 HUAWEI HiCar 的白名单限制, 需要签名安装带"-HiCar"字样的Hap包, 连接HiCar后, 需要在**HiCar上的应用尝鲜区添加"咪咕音乐"**, 添加后即可在HiCar上使用本应用
+注: 由于 HUAWEI HiCar 的白名单限制, 需要签名安装带 "[HiCar]" 的Hap包, 连接 HiCar 后, 需要在 **HiCar上的应用尝鲜区添加"咪咕音乐"**, 添加后即可在HiCar上使用本应用
 （HiCar 是通过修改应用包名实现的，修改的应用包名为咪咕音乐，因此无法和应用市场的咪咕音乐APP共存）
 
 ---
@@ -75,7 +54,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 ### **云端API：**
 
 - 在线播放
-- 每日推荐（支持历史日推、更换不喜欢的日推歌曲）
+- 每日推荐（支持历史日推）
 - 音乐云盘
 - 私人漫游
 - 心动歌单
@@ -88,9 +67,9 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 - 播客详情页（支持收藏）
 - 歌手页面（支持查看热门单曲、所有单曲、专辑）
 - 查看评论（单曲、歌单、歌手、专辑、播客）
-- 本地歌曲在线匹配封面与歌词
-
-（由于API能力限制，在本应用内的听歌记录无法同步到云平台）
+- 本地歌曲在线匹配歌曲信息
+- 无歌词歌曲自动寻找歌词
+- 听歌打卡（播放记录上报云端）
 
 ### **本地功能：**
 
@@ -106,6 +85,8 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 - 定时关闭
 - 播放列表
 - 云端歌曲缓存
+- EQ均衡器（新版播放引擎）
+- 支持读写音频文件元数据
 
 ---
 ## 🎵 本地播放
@@ -118,7 +99,7 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 2.在应用首页点击底部“本地”切换至本地Tab页
 
-3.点击本地Tab页右上方的“文件”图标，选择“导入本地歌曲”
+3.点击本地Tab页右上方的音符图标，选择“导入本地歌曲”
 
 4.应用会自动扫描Download目录下的音频、封面、歌词
 
@@ -136,14 +117,14 @@ git clone https://github.com/Chenlvin/Melotopia-HMOS
 
 ## ☁️ 云端 API
 
-可在应用“我的”—“应用设置”—“云端配置”中填入API接口地址以接入在线平台
+可在应用 “我的”—“应用设置”—“云端” 中填入API接口地址以接入在线平台
 
 支持的API：
 
 - [NeteaseCloudMusicApi](https://www.npmjs.com/package/NeteaseCloudMusicApi)
 - [NeteaseCloudMusicApi Enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)
 
-_ⓘ 本软件仅供学习与技术研究使用，所有音乐内容均通过官方途径获取。仅支持在用户已有合法权限下的播放与下载，严禁用于商业用途或非法传播。请遵守相关法律法规与平台协议。_
+_ⓘ 本应用仅供学习与技术研究使用，所有音乐内容均通过官方途径获取。仅支持在用户已有合法权限下的播放与下载，严禁用于商业用途或非法传播。请遵守相关法律法规与平台协议。_
 
 ---
 
@@ -160,7 +141,9 @@ _ⓘ 本软件仅供学习与技术研究使用，所有音乐内容均通过官
 
 **Email:** chenlvin126@outlook.com
 
-**QQ交流群:** 1019225012 | 1104358913
+**QQ 交流群:**
+- ①群 1019225012
+- ②群 1104358913
 
 ---
 
